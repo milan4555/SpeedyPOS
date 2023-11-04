@@ -19,4 +19,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Home route
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+
+//CashRegister routes
+
+Route::get('/cashRegister', function () {
+    return view('cashRegister/cashRegister');
+});
+
+//CashRegister routes end
