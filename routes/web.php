@@ -24,8 +24,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 
 //CashRegister routes
 
-Route::get('/cashRegister', function () {
-    return view('cashRegister/cashRegister');
-});
+Route::get('/cashRegister', [\App\Http\Controllers\ProductController::class, 'cashRegisterItems']);
 
 //CashRegister routes end

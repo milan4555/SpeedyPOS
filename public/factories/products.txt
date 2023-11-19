@@ -1,0 +1,15 @@
+Asztali számítógép;PC;1000;800;10;1;1
+Okostelefon;Telefon;500;400;5;1;1
+Laptop;Laptop;750;600;7;1;1
+Televízió;TV;1200;960;12;1;1
+Szőnyeg;Szőnyeg;350;280;3;1;1
+Hűtőszekrény;Hűtő;900;720;9;1;1
+Konyhapult;Pult;600;480;6;1;1
+Mikrohullámú sütő;Mikró;850;680;8;1;1
+Mosógép;Mosó;1100;880;11;1;1
+Fényképezőgép;Fényképező;450;360;4;1;1
+Vasaló;Vasaló;1300;1040;13;1;1
+Hajszárító;Hajszárító;300;240;2;1;1
+Vízforraló;Forraló;700;560;7;1;1
+Mikrofon;Mikrofon;950;760;9;1;1
+Hálószoba szett;Szett;800;640;8;1;1
