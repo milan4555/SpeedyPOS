@@ -43,6 +43,9 @@
             @else
                 <ul class="navbar-nav ms-auto">
                     <li>
+                        <a class="dropdown-item px-2" href="/home" >Vissza a főmenübe</a>
+                    </li>
+                    <li>
                         <a class="dropdown-item" href="{{ route('logout') }}"
                            onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">Kijelentkezés</a>

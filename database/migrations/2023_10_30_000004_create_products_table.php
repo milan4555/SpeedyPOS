@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('nPrice');
             $table->integer('stock');
             $table->unsignedBigInteger('categoryId');
-            $table->unsignedBigInteger('companyId');
+            $table->unsignedBigInteger('companyId')->nullable();
             $table->timestamps();
 
             $table->foreign('categoryId')
