@@ -16,7 +16,9 @@ return new class extends Migration
             $table->boolean('isInvoice');
             $table->date('date');
             $table->integer('sumPrice');
+            $table->string('paymentType');
             $table->unsignedBigInteger('employeeId');
+            $table->timestamps();
 
             $table->foreign('employeeId')
                 ->references('employeeId')
