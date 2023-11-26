@@ -18,4 +18,34 @@ class ProductController extends Controller
         }
         return 0;
     }
+
+    public function showAllProduct(Request $request) {
+        if ($request->all() == null or ($request['columnSearch'] == '' and $request['columnOrderBy'] == '')) {
+            $products = DB::table('products')
+                ->join('categories', 'products.categoryId', 'categories.categoryId')
+                ->select('*')
+                ->orderBy('productId')
+                ->get()
+                ->toArray();
+        } else if ($request['columnOrderBy'] != ''){
+            $products = DB::table('products')
+                ->join('categories', 'products.categoryId', 'categories.categoryId')
+                ->select('*')
+                ->orderBy($request['columnOrderBy'] == '' ? 'productId' : $request['columnOrderBy'])
+                ->get()
+                ->toArray();
+        } else {
+            $products = DB::table('products')
+                ->join('categories', 'products.categoryId', 'categories.categoryId')
+                ->select('*')
+                ->where($request['columnSearch'], 'ilike', '%'.$request['search'].'%')
+                ->orderBy($request['columnOrderBy'] == '' ? 'productId' : $request['columnOrderBy'])
+                ->get()
+                ->toArray();
+        }
+        return view('cashRegister/productList', [
+           'products' => $products,
+           'sumPrice' => CashRegisterItemController::getSumPrice()
+        ]);
+    }
 }
