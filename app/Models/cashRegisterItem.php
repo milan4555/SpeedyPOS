@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class recToProd extends Model
+class cashRegisterItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['productId', 'receiptId', 'quantity'];
+
+    protected $fillable = ['productIdReg', 'cashRegisterNumber', 'howMany', 'updated_at'];
 }

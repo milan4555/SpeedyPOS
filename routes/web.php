@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 
 //CashRegister routes
 
-Route::get('/cashRegister', [\App\Http\Controllers\ProductController::class, 'cashRegisterItems']);
+Route::match(array('GET', 'POST'), '/cashRegister', [\App\Http\Controllers\CashRegisterItemController::class, 'getItems']);
+Route::get('/cashRegister/empty', [\App\Http\Controllers\CashRegisterItemController::class, 'emptyCashRegister']);
+Route::get('/cashRegister/deleteItem/{cashRegisterNumber}/{productId}', [\App\Http\Controllers\CashRegisterItemController::class, 'itemDelete']);
+Route::get('/cashRegister/makeReceipt/{paymentType}', [\App\Http\Controllers\ReceiptController::class, 'makeReceipt']);
+Route::post('/cashRegister/changeQuantity', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity']);
 
 //CashRegister routes end
