@@ -32,3 +32,9 @@ Route::get('/cashRegister/makeReceipt/{paymentType}', [\App\Http\Controllers\Rec
 Route::post('/cashRegister/changeQuantity', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity']);
 
 //CashRegister routes end
+
+//ProductList routes
+
+Route::match(array('GET', 'POST'),'/cashRegister/productList', [\App\Http\Controllers\ProductController::class, 'showAllProduct']);
+
+//ProductList routes end

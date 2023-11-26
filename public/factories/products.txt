@@ -13,3 +13,4 @@ Hajszárító;Hajszárító;300;240;2;1;1
 Vízforraló;Forraló;700;560;7;1;1
 Mikrofon;Mikrofon;950;760;9;1;1
 Hálószoba szett;Szett;800;640;8;1;1
+JBL 100TWS;Fejhallgató;20000;22000;8;1;1

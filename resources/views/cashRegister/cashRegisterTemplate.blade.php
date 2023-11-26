@@ -6,26 +6,17 @@
                 @yield('mainSpace')
             </div>
             <div class="col-md-4 bg-white border border-dark border-2 rounded">
-                <button type="button" class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#emptyCashRegisterModal">Megszakítás</button>
-                @include('cashRegister\modals\_emptyCashRegisterModal')
-                <div class="row">
-                    <div class="col-md-6">
-                        <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/K">Kártyás fizetés</a>
+                <div class="row pt-2 pb-2">
+                    <div class="col-md-2">
+                        <a href="/cashRegister" class="btn btn-sm"><img width="150%" src="{{asset('iconsAndLogos/cashRegisterLogo.png')}}"></a>
                     </div>
-                    <div class="col-md-6">
-                        <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/B">Bankártyás fizetés</a>
+                    <div class="col-md-2">
+                        <a href="cashRegister/productList" class="btn btn-sm"><img width="100%" src="{{asset('iconsAndLogos/searchIcon.png')}}"></a>
                     </div>
                 </div>
+                @yield('buttons')
             </div>
-            <div class="col-md-6 bg-white border border-dark border-2 rounded">
-                <form action="{{url('/cashRegister.blade.php')}}" method="post">
-                    @csrf
-                    <input type="number" name="lastProductId" class="form-control w-100 h-100" autocomplete="off" autofocus>
-                </form>
-            </div>
-            <div class="col-md-2 bg-white border border-dark border-2 rounded">
-                <h5 class="mt-1">Teljes összeg: {{$sumPrice}} Ft.</h5>
-            </div>
+            @yield('other')
         </div>
     </div>
 @endsection()
