@@ -133,7 +133,7 @@ class CashRegisterItemController extends Controller
 
     public function emptyCashRegister() {
         cashRegisterItem::truncate();
-        return Redirect('/cashRegister.blade.php');
+        return Redirect('/cashRegister');
     }
 
     public function changeQuantity(Request $request) {
@@ -141,7 +141,7 @@ class CashRegisterItemController extends Controller
             ->where('productIdReg', '=', $request->productId)
             ->update(['howMany' => $request->quantity]);
 
-        return redirect()->to('/cashRegister.blade.php');
+        return redirect()->to('/cashRegister');
     }
 
     public function itemDelete($cashRegisterNumber, $productId) {
