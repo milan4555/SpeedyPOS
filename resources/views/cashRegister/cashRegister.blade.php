@@ -69,7 +69,7 @@
     @include('cashRegister\modals\_emptyCashRegisterModal')
     <div class="row">
         <div class="col-md-6">
-            <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/K">Kártyás fizetés</a>
+            <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/K">Készpénzes fizetés</a>
         </div>
         <div class="col-md-6">
             <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/B">Bankártyás fizetés</a>

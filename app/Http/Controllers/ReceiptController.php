@@ -30,6 +30,6 @@ class ReceiptController extends Controller
         }
         CashRegisterItem::truncate();
 
-        return Redirect::to('/cashRegister.blade.php');
+        return Redirect::to('/cashRegister');
     }
 }
