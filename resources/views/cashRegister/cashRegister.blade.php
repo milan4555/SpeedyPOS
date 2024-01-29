@@ -1,9 +1,19 @@
 @extends('cashRegister/cashRegisterTemplate')
 @section('mainSpace')
     @if($lastProduct == 'Üres a kosár!')
+        @if($companyCurrent != null)
+            <tr>
+                <td colspan="6"><b>Jelenlegi cég:</b> {{$companyCurrent->companyName}} {{$companyCurrent->taxNumber}} ({{$companyCurrent->city}}, {{$companyCurrent->street}} {{$companyCurrent->streetNumber}}.)</td>
+            </tr>
+        @endif
         <h3 class="text-center pt-2 pb-2">{{$lastProduct}}</h3>
     @else
         <table class="table w-100">
+            @if($companyCurrent != null)
+                <tr>
+                    <td colspan="6"><b>Jelenlegi cég:</b> {{$companyCurrent->companyName}} {{$companyCurrent->taxNumber}} ({{$companyCurrent->city}}, {{$companyCurrent->street}} {{$companyCurrent->streetNumber}}.)</td>
+                </tr>
+            @endif
             <thead class="table-dark">
             <tr>
                 <th scope="col">Termék azonosító</th>
@@ -22,22 +32,24 @@
                     </td>
                 </tr>
             @else
-                <tr class="table-active">
-                    <th>{{$lastProduct->categoryId.str_repeat(0,7-strlen($lastProduct->productId)).$lastProduct->productId}}</th>
-                    <td>{{$lastProduct->productName}}</td>
-                    <td><i>{{$lastProduct->categoryName}}</i></td>
-                    <td>{{$lastProduct->bPrice}} Ft</td>
-                    <td>{{$lastProduct->howMany}} db</td>
-                    <td class="d-flex justify-content-end">
-                        <form class="collapse in" id="collapseQuantity{{$lastProduct->productId}}" method="post" action="/cashRegister/changeQuantity">
-                            @csrf
-                            <input type="number" class="form-control" name="quantity">
-                            <input type="hidden" name="productId" value="{{$lastProduct->productId}}">
-                        </form>
-                        <a data-bs-toggle="collapse" href="#collapseQuantity{{$lastProduct->productId}}" role="button" aria-expanded="false" aria-controls="collapseExample"><img src="{{asset('iconsAndLogos/editIcon.png')}}"></a>
-                        <a class="btn-close" href="/cashRegister/deleteItem/1/{{$lastProduct->productId}}" style="text-decoration: none;"></a>
-                    </td>
-                </tr>
+                @if($lastProduct->howMany != -1)
+                    <tr class="table-active">
+                        <th>{{$lastProduct->categoryId.str_repeat(0,7-strlen($lastProduct->productId)).$lastProduct->productId}}</th>
+                        <td>{{$lastProduct->productName}}</td>
+                        <td><i>{{$lastProduct->categoryName}}</i></td>
+                        <td>{{$lastProduct->bPrice}} Ft</td>
+                        <td>{{$lastProduct->howMany}} db</td>
+                        <td class="d-flex justify-content-end">
+                            <form class="collapse in" id="collapseQuantity{{$lastProduct->productId}}" method="post" action="/cashRegister/changeQuantity">
+                                @csrf
+                                <input type="number" class="form-control" name="quantity">
+                                <input type="hidden" name="productId" value="{{$lastProduct->productId}}">
+                            </form>
+                            <a data-bs-toggle="collapse" href="#collapseQuantity{{$lastProduct->productId}}" role="button" aria-expanded="false" aria-controls="collapseExample"><img src="{{asset('iconsAndLogos/editIcon.png')}}"></a>
+                            <a class="btn-close" href="/cashRegister/deleteItem/1/{{$lastProduct->productId}}" style="text-decoration: none;"></a>
+                        </td>
+                    </tr>
+                @endif
             @endif
             @if(isset($products))
                 @foreach($products as $product)
@@ -75,6 +87,19 @@
             <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/B">Bankártyás fizetés</a>
         </div>
     </div>
+    <form class="row" action="/cashRegister/changeCompany" method="get">
+        <div class="col-md-9">
+            <select name="companyId" class="form-control mt-2">
+                <option value="0">Nincs kiválasztva!</option>
+                @foreach(\App\Models\Company::all()->sortBy('companyName') as $company)
+                    <option value="{{$company->companyId}}" {{($companyCurrent != null and $company->companyId == $companyCurrent->companyId) ? 'selected' : ''}}>{{$company->companyName}} ({{$company->city}}, {{$company->street}} {{$company->streetNumber}}.)</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-warning w-100 mt-2" type="submit">Hozzáadás</button>
+        </div>
+    </form>
 @endsection
 
 @section('other')

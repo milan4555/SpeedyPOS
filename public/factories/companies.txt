@@ -1,0 +1,20 @@
+ABC Kft.;12345;Budapest;Kossuth utca;10;true;123456789;John Doe;301234567
+XYZ Zrt.;56789;Debrecen;Petőfi tér;5;false;987654321;Jane Smith;209876543
+KLM Bt.;34567;Szeged;Szálloda utca;15;true;654321789;Robert Johnson;703456789
+EFG Nyrt.;45678;Pécs;Király utca;20;false;789123456;Alice Brown;708765432
+HIJ Kft.;89012;Miskolc;Erzsébet tér;25;true;456789012;Michael White;302345678
+LMN Zrt.;23456;Székesfehérvár;Városház tér;30;false;321098765;Emily Davis;208765432
+OPQ Bt.;67890;Győr;Dunapart;35;true;210987654;Daniel Green;303456789
+RST Kft.;78901;Eger;Bajcsy-Zsilinszky utca;40;false;876543210;Olivia Jones;709876543
+UVW Nyrt.;34561;Nyíregyháza;Szent István út;45;true;543210987;William Taylor;201234567
+XYZ Bt.;12356;Kecskemét;Fő tér;50;false;109876543;Sophia Miller;702345678
+ABC Kft.;45678;Veszprém;Szabadság utca;55;true;876543210;Christopher Martin;308765432
+LMN Zrt.;56789;Sopron;Deák tér;60;false;210987654;Emma Wilson;203456789
+OPQ Bt.;67890;Hajdúböszörmény;Dózsa György utca;65;true;432109876;Alexander Brown;709876543
+HIJ Kft.;78901;Szolnok;Bocskai út;70;false;765432109;Sophie Davis;301234567
+RST Kft.;89012;Salgótarján;Vörösmarty tér;75;true;654321098;David Taylor;202345678
+EFG Nyrt.;23456;Dunaújváros;Kálmán Imre utca;80;false;890123456;Isabella Green;708765432
+UVW Nyrt.;34567;Tatabánya;Arany János utca;85;true;321098765;George Wilson;303456789
+KLM Bt.;45678;Nagykanizsa;Rákóczi út;90;false;543210987;Ava Martin;209876543
+EFG Nyrt.;56789;Szekszárd;Hősök tere;95;true;432109876;Liam Miller;301234567
+RST Kft.;67890;Hatvan;Budai út;100;false;109876543;Mia Brown;702345678

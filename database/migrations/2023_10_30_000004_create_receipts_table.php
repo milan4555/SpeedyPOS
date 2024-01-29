@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             $table->id('receiptId');
-            $table->boolean('isInvoice');
+            $table->integer('isInvoice');
             $table->date('date');
             $table->integer('sumPrice');
             $table->string('paymentType');
