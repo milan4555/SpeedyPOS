@@ -30,6 +30,7 @@ Route::get('/cashRegister/empty', [\App\Http\Controllers\CashRegisterItemControl
 Route::get('/cashRegister/deleteItem/{cashRegisterNumber}/{productId}', [\App\Http\Controllers\CashRegisterItemController::class, 'itemDelete']);
 Route::get('/cashRegister/makeReceipt/{paymentType}', [\App\Http\Controllers\ReceiptController::class, 'makeReceipt']);
 Route::post('/cashRegister/changeQuantity', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity']);
+Route::get('/cashRegister/changeCompany', [\App\Http\Controllers\CompanyController::class, 'addToCurrentCart']);
 
 //CashRegister routes end
 
@@ -38,3 +39,11 @@ Route::post('/cashRegister/changeQuantity', [\App\Http\Controllers\CashRegisterI
 Route::match(array('GET', 'POST'),'/cashRegister/productList', [\App\Http\Controllers\ProductController::class, 'showAllProduct']);
 
 //ProductList routes end
+
+//CompanyList routes
+
+Route::match(array('GET', 'POST'), '/cashRegister/companyList', [\App\Http\Controllers\CompanyController::class, 'showAllCompany']);
+Route::get('/cashRegister/companyList/delete/{companyId}', [\App\Http\Controllers\CompanyController::class, 'deleteCompany']);
+Route::post('/cashRegister/companyList/edit', [\App\Http\Controllers\CompanyController::class, 'editCompany']);
+
+//CompanyList routes end

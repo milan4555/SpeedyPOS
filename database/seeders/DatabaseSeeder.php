@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
+use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -44,6 +46,25 @@ class DatabaseSeeder extends Seeder
                 productCodes::factory()->create([
                     'productIdCode' => $data[0],
                     'productCode' => $data[1]
+                ]);
+            }
+        }
+        fclose($myfile);
+        $myfile = fopen('public/factories/companies.txt', "r") or die("Unable to open file!");
+        while(!feof($myfile)) {
+            $line = fgets($myfile);
+            $data = explode(';',$line);
+            if ($data[0] != null) {
+                Company::create([
+                    'companyName' => $data[0],
+                    'postcode' => $data[1],
+                    'city' => $data[2],
+                    'street' => $data[3],
+                    'streetNumber' => $data[4],
+                    'isSupplier' => $data[5],
+                    'taxNumber' => $data[6],
+                    'owner' => $data[7],
+                    'phoneNumber' => $data[8]
                 ]);
             }
         }

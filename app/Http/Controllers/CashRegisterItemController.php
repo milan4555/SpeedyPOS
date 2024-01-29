@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Models\cashRegisterItem;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -62,7 +63,7 @@ class CashRegisterItemController extends Controller
         } else {
             $lastProduct = 'Üres a kosár!';
         }
-        if (cashRegisterItem::all()->count() >= 0) {
+        if (cashRegisterItem::all()->where('howMany', '!=', -1)->count() >= 0) {
             $productIds = [];
             foreach (DB::table('cash_register_items')->select('productIdReg')->get()->toArray() as $singleItem) {
                 array_push($productIds, $singleItem->productIdReg);
@@ -71,6 +72,7 @@ class CashRegisterItemController extends Controller
                 ->select('*', 'cash_register_items.howMany')
                 ->join('cash_register_items', 'productId', 'productIdReg')
                 ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
+                ->where('howMany', '!=', -1)
                 ->whereIn('productId',  $productIds)->where('productId', '!=', $request->lastProductId)
                 ->get()
                 ->toArray();
@@ -82,8 +84,9 @@ class CashRegisterItemController extends Controller
             $productIds = [];
             $products = null;
             $sumPrice = 0;
+            $companyCurrent = null;
         }
-        if (count($request->all()) == 0 and (cashRegisterItem::all()->count() > 0)) {
+        if (count($request->all()) == 0 and (cashRegisterItem::all()->where('howMany', '!=', -1)->count() > 0)) {
             $productIds = [];
             foreach (DB::table('cash_register_items')->select('productIdReg')->get()->toArray() as $singleItem) {
                 array_push($productIds, $singleItem->productIdReg);
@@ -101,6 +104,7 @@ class CashRegisterItemController extends Controller
                 ->join('cash_register_items', 'productId', 'productIdReg')
                 ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
                 ->where('productId', '!=', $lastProduct[0]->productId)
+                ->where('howMany', '!=', -1)
                 ->whereIn('productId',  $productIds)
                 ->get()
                 ->toArray();
@@ -108,12 +112,19 @@ class CashRegisterItemController extends Controller
         if (is_array($lastProduct)) {
             $lastProduct = $lastProduct[0];
         }
+        $isThereCompany = DB::table('cash_register_items')->select('productIdReg')->where('howMany', '=', -1)->get()->toArray();
+        if ($isThereCompany != null) {
+            $company = Company::find($isThereCompany[0]->productIdReg);
+        } else {
+            $company = null;
+        }
         return view('cashRegister/cashRegister',
             [
                 'lastProduct' => $lastProduct,
                 'products' => $products,
                 'productIds' => $productIds,
                 'sumPrice' => $this->getSumPrice(),
+                'companyCurrent' => $company
             ]);
     }
 
@@ -122,6 +133,7 @@ class CashRegisterItemController extends Controller
         $numbers = DB::table('cash_register_items')
             ->join('products', 'productIdReg', 'productId')
             ->select('products.bPrice', 'cash_register_items.howMany')
+            ->where('howMany', '!=', -1)
             ->get()
             ->toArray();
         foreach ($numbers as $row) {

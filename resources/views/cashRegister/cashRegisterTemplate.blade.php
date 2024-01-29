@@ -11,7 +11,10 @@
                         <a href="/cashRegister" class="btn btn-sm"><img width="150%" src="{{asset('iconsAndLogos/cashRegisterLogo.png')}}"></a>
                     </div>
                     <div class="col-md-2">
-                        <a href="cashRegister/productList" class="btn btn-sm"><img width="100%" src="{{asset('iconsAndLogos/searchIcon.png')}}"></a>
+                        <a href="/cashRegister/productList" class="btn btn-sm"><img width="120%" src="{{asset('iconsAndLogos/searchIcon.png')}}"></a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/cashRegister/companyList" class="btn btn-sm"><img width="120%" src="{{asset('iconsAndLogos/companyIcon.png')}}"></a>
                     </div>
                 </div>
                 @yield('buttons')

@@ -44,8 +44,7 @@ class ProductController extends Controller
                 ->toArray();
         }
         return view('cashRegister/productList', [
-           'products' => $products,
-           'sumPrice' => CashRegisterItemController::getSumPrice()
+           'products' => $products
         ]);
     }
 }
