@@ -47,3 +47,9 @@ Route::get('/cashRegister/companyList/delete/{companyId}', [\App\Http\Controller
 Route::post('/cashRegister/companyList/edit', [\App\Http\Controllers\CompanyController::class, 'editCompany']);
 
 //CompanyList routes end
+
+//ReceiptList routes start
+
+Route::get('/cashRegister/receiptList/{receiptId}', [\App\Http\Controllers\ReceiptController::class, 'showReceipt']);
+
+//ReceiptList routes end
