@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('productId');
             $table->unsignedBigInteger('receiptId');
             $table->integer('quantity');
+            $table->integer('atTimePrice');
             $table->timestamps();
 
             $table->foreign('productId')
