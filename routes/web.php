@@ -53,3 +53,10 @@ Route::post('/cashRegister/companyList/edit', [\App\Http\Controllers\CompanyCont
 Route::get('/cashRegister/receiptList/{receiptId}', [\App\Http\Controllers\ReceiptController::class, 'showReceipt']);
 
 //ReceiptList routes end
+
+//Setting routes start
+
+Route::match(array('GET', 'POST'), '/settings', [\App\Http\Controllers\VariableController::class, 'getAllVariables']);
+Route::post('/saveSettings', [\App\Http\Controllers\VariableController::class, 'updateVariables']);
+
+//Setting routes end

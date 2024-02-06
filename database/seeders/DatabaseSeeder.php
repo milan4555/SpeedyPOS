@@ -8,6 +8,8 @@ use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
 use App\Models\User;
+use App\Models\UserRight;
+use App\Models\Variable;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -69,5 +71,29 @@ class DatabaseSeeder extends Seeder
             }
         }
         fclose($myfile);
+
+        $shortNames = ['companyName', 'companyAddress', 'shopName', 'shopAddress', 'taxNumber'];
+        $variables = ['Cég neve', 'Cég címe', 'Üzlet neve', 'Üzlet címe', 'Adószám'];
+        for ($i = 0; $i < count($shortNames); $i++) {
+            Variable::create([
+                'variableShortName' => $shortNames[$i],
+               'variableName' => $variables[$i]
+            ]);
+        }
+        UserRight::factory()->create([
+            'isSuperior' => false,
+            'canCreateProduct' => false,
+            'canUpdateProduct' => false,
+            'canDeleteProduct' => false,
+        ]);
+        User::factory()->create([
+            'username' => 'admin',
+            'password' => 'admin',
+            'firstName' => 'admin',
+            'lastName' => 'admin',
+            'phoneNumber' => 704176989,
+            'position' => 'admin',
+            'rightsId' => 1
+        ]);
     }
 }

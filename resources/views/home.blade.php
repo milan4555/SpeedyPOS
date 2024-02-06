@@ -32,6 +32,7 @@
                             </div>
                         </div>
                     </div>
+                    <a href="/settings" class="btn btn-sm btn-primary m-2">Beállítások</a>
                 </div>
             </div>
         </div>
