@@ -6,6 +6,7 @@ use App\Models\cashRegisterItem;
 use App\Models\Product;
 use App\Models\Receipt;
 use App\Models\recToProd;
+use App\Models\Variable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +36,7 @@ class ReceiptController extends Controller
                 'productId' => $item->productIdReg,
                 'receiptId' => $receipt->receiptId,
                 'quantity' => $item->howMany,
-                'atTimePrice' => Product::find($item->productIdReg)->get('bPrice')
+                'atTimePrice' => Product::find($item->productIdReg)->bPrice
             ];
             recToProd::create($helperAdd);
         }
@@ -45,10 +46,15 @@ class ReceiptController extends Controller
     }
 
     public function showReceipt($receiptId) {
+        $variables = [];
+        foreach (Variable::all() as $item) {
+            $variables[$item['variableShortName']] = $item['variableValue'];
+        }
         if ($receiptId == 0) {
             return view('cashRegister/receiptList', [
                 'receipts' => Receipt::all(),
-                'receiptNumbers' => Receipt::pluck('receiptId')
+                'receiptNumbers' => Receipt::pluck('receiptId'),
+                'variables' => $variables
             ]);
         } else {
             $receiptAllData = DB::table('rec_to_prods')
@@ -61,7 +67,8 @@ class ReceiptController extends Controller
             return view('cashRegister/receiptList', [
                 'receipts' => Receipt::all(),
                 'receiptNumbers' => Receipt::pluck('receiptId'),
-                'receiptData' => $receiptAllData
+                'receiptData' => $receiptAllData,
+                'variables' => $variables
             ]);
         }
     }

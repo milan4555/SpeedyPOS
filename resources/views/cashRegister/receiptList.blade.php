@@ -44,11 +44,11 @@
                 @if(isset($receiptData))
                     @php($receiptInfo = \App\Models\Receipt::find($receiptData[0]->receiptId))
                     <div class="border border-2 border-dark p-2 mt-1" style="text-transform: uppercase;">
-                        <p class="text-center">Cég neve<br>
-                        Cég telephely<br>
-                        Üzlet neve<br>
-                        Üzlet címe<br>
-                        Cég adószáma</p>
+                        <p class="text-center">{{$variables['companyName']}}<br>
+                            {{$variables['companyAddress']}}<br>
+                            {{$variables['shopName']}}<br>
+                            {{$variables['shopAddress']}}<br>
+                            {{$variables['taxNumber']}}</p>
                         <br>
                         <h5 class="text-center">-----------&ensp;&ensp;NYUGTA&ensp;&ensp;-----------</h5>
                         <br>
