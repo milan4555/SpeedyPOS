@@ -14,7 +14,7 @@ class VariableController extends Controller
     }
 
     public function getAllVariables() {
-        return view('settings', [
+        return view('settings.variablesPage', [
            'variables' => Variable::all()
         ]);
     }
