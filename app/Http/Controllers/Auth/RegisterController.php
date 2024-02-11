@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\UserRight;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -25,7 +27,6 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
-    protected $redirectTo = RouteServiceProvider::HOME;
     public function __construct()
     {
         $this->middleware('guest');
@@ -39,7 +40,7 @@ class RegisterController extends Controller
             'position' => ['required', 'string', 'max:255']
         ]);
     }
-    protected function create(array $data)
+    public function create(array $data)
     {
         $baseUsername = $data['firstName'].$data['lastName'][0];
         $nameCount = DB::table('users')->where('username', '=', $baseUsername)->count();
@@ -54,7 +55,7 @@ class RegisterController extends Controller
             'canDeleteProduct' => false,
         ]);
 
-        return User::create([
+        User::create([
             'firstName' => $data['firstName'],
             'lastName' => $data['lastName'],
             'username' => $baseUsername,
@@ -63,5 +64,8 @@ class RegisterController extends Controller
             'position' => $data['position'],
             'rightsId' => $rights->rightsId
         ]);
+
+        return Redirect::back();
     }
+
 }

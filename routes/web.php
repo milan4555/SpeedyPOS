@@ -56,7 +56,10 @@ Route::get('/cashRegister/receiptList/{receiptId}', [\App\Http\Controllers\Recei
 
 //Setting routes start
 
-Route::match(array('GET', 'POST'), '/settings', [\App\Http\Controllers\VariableController::class, 'getAllVariables']);
+Route::match(array('GET', 'POST'), '/settings/variables', [\App\Http\Controllers\VariableController::class, 'getAllVariables']);
 Route::post('/saveSettings', [\App\Http\Controllers\VariableController::class, 'updateVariables']);
+Route::match(array('GET', 'POST'),'/settings/newEmployee', [\App\Http\Controllers\UserController::class, 'newEmployee']);
+Route::get('/settings/userRights', [\App\Http\Controllers\UserRightController::class, 'getView']);
+Route::get('/settings/userRights/{rightsId}/{optionName}', [\App\Http\Controllers\UserRightController::class, 'changeRight']);
 
 //Setting routes end
