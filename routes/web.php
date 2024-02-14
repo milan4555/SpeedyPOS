@@ -45,6 +45,7 @@ Route::match(array('GET', 'POST'),'/cashRegister/productList', [\App\Http\Contro
 Route::match(array('GET', 'POST'), '/cashRegister/companyList', [\App\Http\Controllers\CompanyController::class, 'showAllCompany']);
 Route::get('/cashRegister/companyList/delete/{companyId}', [\App\Http\Controllers\CompanyController::class, 'deleteCompany']);
 Route::post('/cashRegister/companyList/edit', [\App\Http\Controllers\CompanyController::class, 'editCompany']);
+Route::match(array('GET', 'POST'), '/cashRegister/companyList/newCompany', [\App\Http\Controllers\CompanyController::class, 'newCompany']);
 
 //CompanyList routes end
 

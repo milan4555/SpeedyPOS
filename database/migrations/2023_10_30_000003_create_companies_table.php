@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('streetNumber');
             $table->boolean('isSupplier');
             $table->string('taxNumber');
-            $table->string('owner');
-            $table->bigInteger('phoneNumber');
+            $table->string('owner')->nullable();
+            $table->bigInteger('phoneNumber')->nullable();
             $table->timestamps();
         });
     }

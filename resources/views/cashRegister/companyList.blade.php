@@ -8,7 +8,9 @@
             <th scope="col">Adószám</th>
             <th scope="col">Tulajdonos</th>
             <th scope="col">Telefonszám</th>
-            <th scope="col"></th>
+            <th scope="col">
+                <a href="/cashRegister/companyList/newCompany" class="btn btn-primary btn-sm">Új felvétele</a>
+            </th>
         </tr>
         @foreach($companies as $company)
             <tr>
@@ -40,11 +42,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     Telefonszám:
-                                    <input class="form-control" type="text" name="phoneNumber" value="{{$company->phoneNumber}}" autocomplete="off">
+                                    <input class="form-control" type="number" name="phoneNumber" value="{{$company->phoneNumber}}" autocomplete="off">
                                 </div>
                                 <div class="col-md-3">
                                     Irányítószám
-                                    <input class="form-control" type="text" name="postcode" value="{{$company->postcode}}" autocomplete="off">
+                                    <input class="form-control" type="number" name="postcode" value="{{$company->postcode}}" autocomplete="off">
                                 </div>
                                 <div class="col-md-3">
                                     Város:
@@ -56,13 +58,13 @@
                                 </div>
                                 <div class="col-md-3">
                                     Házszám:
-                                    <input class="form-control" type="text" name="streetNumber" value="{{$company->streetNumber}}" autocomplete="off">
+                                    <input class="form-control" type="number" name="streetNumber" value="{{$company->streetNumber}}" autocomplete="off">
                                 </div>
                                 <div class="col-md-3">
                                     Beszállító-e?
                                     <select class="form-control" name="isSupplier">
                                         <option value="True" {{$company->isSupplier ? 'selected' : ''}}>Igen</option>
-                                        <option value="True" {{$company->isSupplier ? '' : 'selected'}}>Nem</option>
+                                        <option value="False" {{$company->isSupplier ? '' : 'selected'}}>Nem</option>
                                     </select>
                                 </div>
                             </div>
