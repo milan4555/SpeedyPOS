@@ -95,6 +95,28 @@ class CompanyController extends Controller
         ]);
         return Redirect::back();
     }
+    public function newCompany(Request $request) {
+        if ($request->all() == null) {
+            return view('cashRegister/companyNew');
+        }
+        $validated = $request->validate([
+            'companyName' => 'required',
+            'postcode' => 'required',
+        ]);
+        $newCompany = [
+            'companyName' => $validated['companyName'],
+            'postcode' => $validated['postcode'],
+            'city' => $request['city'],
+            'street' => $request['street'],
+            'streetNumber' => $request['streetNumber'],
+            'isSupplier' => $request['isSupplier'],
+            'taxNumber' => $request['taxNumber'],
+            'owner' => $request['owner'],
+            'phoneNumber' => $request['phoneNumber']
+        ];
 
+        Company::create($newCompany);
 
+        return Redirect::back();
+    }
 }
