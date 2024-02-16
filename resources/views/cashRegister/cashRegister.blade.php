@@ -81,16 +81,41 @@
     @include('cashRegister\modals\_emptyCashRegisterModal')
     <div class="row">
         <div class="col-md-6">
-            <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/K">Készpénzes fizetés</a>
+            <button class="btn btn-primary w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChange" aria-expanded="false" aria-controls="collapseChange">
+                Készpénzes fizetés
+            </button>
         </div>
         <div class="col-md-6">
-            <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/B">Bankártyás fizetés</a>
+            <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/B/0">Bankártyás fizetés</a>
+        </div>
+        <div class="collapse row mt-2" id="collapseChange">
+            <div class="col-md-7">
+                <input type="number" pattern="[0-5][0]{1}" class="form-control" id="changeAmount" min="{{$sumPrice}}" placeholder="Visszajáró" required>
+            </div>
+            <div class="col-md-5">
+                <a type="button" id="success" class="btn btn-danger w-100">Véglegesít</a>
+            </div>
         </div>
     </div>
+    <script>
+        const input = document.getElementById('changeAmount');
+        const successButton = document.getElementById('success');
+        input.addEventListener('change', (event) => {
+            if (input.validity.valid && (input.value % 5 === 0 || input.value % 10 === 0)) {
+                successButton.classList.add('btn-success')
+                successButton.classList.remove('btn-danger')
+                successButton.href = '/cashRegister/makeReceipt/K/' + input.value;
+            } else {
+                successButton.classList.add('btn-danger')
+                successButton.classList.remove('btn-success')
+                successButton.removeAttribute("href");
+            }
+        });
+    </script>
     <form class="row" action="/cashRegister/changeCompany" method="get">
         <div class="col-md-9">
             <select name="companyId" class="form-control mt-2">
-                <option value="0">Nincs kiválasztva!</option>
+                <option value="0">Cég: Nincs kiválasztva!</option>
                 @foreach(\App\Models\Company::all()->sortBy('companyName') as $company)
                     <option value="{{$company->companyId}}" {{($companyCurrent != null and $company->companyId == $companyCurrent->companyId) ? 'selected' : ''}}>{{$company->companyName}} ({{$company->city}}, {{$company->street}} {{$company->streetNumber}}.)</option>
                 @endforeach

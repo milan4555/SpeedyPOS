@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('receiptId');
             $table->integer('isInvoice');
             $table->date('date');
+            $table->integer('change');
             $table->integer('sumPrice');
             $table->string('paymentType');
             $table->unsignedBigInteger('employeeId');

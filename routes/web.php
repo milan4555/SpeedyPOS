@@ -28,7 +28,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 Route::match(array('GET', 'POST'), '/cashRegister', [\App\Http\Controllers\CashRegisterItemController::class, 'getItems']);
 Route::get('/cashRegister/empty', [\App\Http\Controllers\CashRegisterItemController::class, 'emptyCashRegister']);
 Route::get('/cashRegister/deleteItem/{cashRegisterNumber}/{productId}', [\App\Http\Controllers\CashRegisterItemController::class, 'itemDelete']);
-Route::get('/cashRegister/makeReceipt/{paymentType}', [\App\Http\Controllers\ReceiptController::class, 'makeReceipt']);
+Route::get('/cashRegister/makeReceipt/{paymentType}/{cashGiven}', [\App\Http\Controllers\ReceiptController::class, 'makeReceipt']);
 Route::post('/cashRegister/changeQuantity', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity']);
 Route::get('/cashRegister/changeCompany', [\App\Http\Controllers\CompanyController::class, 'addToCurrentCart']);
 
