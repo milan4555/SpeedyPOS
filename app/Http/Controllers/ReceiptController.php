@@ -21,11 +21,13 @@ class ReceiptController extends Controller
      * Inputként megkapja, hogy milyen fizetési móddal történt a vásárlás, majd létrehozza az új sort a táblában,
      * majd a kapcsolótáblában, és legvégül kiüríti a CashRegister táblát, ezzel elindítva az újabb folyamatot.
      */
-    public function makeReceipt($paymentType) {
+    public function makeReceipt($paymentType, $cashGiven) {
         $companyId = DB::table('cash_register_items')->select('productIdReg')->where('howMany', '=', -1)->get()->toArray();
+        $change = $cashGiven - CashRegisterItemController::getSumPrice();
         $receiptAdd = [
             'isInvoice' => $companyId == null ? 0 : $companyId[0]->productIdReg,
             'date' => date('Y.m.d h:i:s'),
+            'change' => $paymentType == 'B' ? 0 : $change,
             'sumPrice' => CashRegisterItemController::getSumPrice(),
             'employeeId' => Auth::user()->employeeId,
             'paymentType' => $paymentType
@@ -40,6 +42,17 @@ class ReceiptController extends Controller
             ];
             recToProd::create($helperAdd);
         }
+        $dividers = [10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5];
+        $cashAmounts = [];
+        foreach ($dividers as $divider) {
+            if ($divider >= $change) {
+                continue;
+            }
+            $data = (int) ($change / $divider);
+            $cashAmounts[] = [$divider => $data];
+            $change -= $data*$divider;
+        }
+        //TODO Visszadási segédlet megjelenítése
         CashRegisterItem::truncate();
 
         return Redirect::to('/cashRegister');
