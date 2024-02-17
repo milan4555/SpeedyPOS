@@ -38,27 +38,38 @@ class CashRegisterItemController extends Controller
     }
     public function getItems(Request $request) {
         if (isset($request->lastProductId)) {
-            if (DB::table('cash_register_items')->where('productIdReg', '=', $request->lastProductId)->count() == 0) {
-                $addItem = [
-                    'productIdReg' => $request->lastProductId,
-                    'cashRegisterNumber' => 1,
-                    'howMany' => 1
-                ];
-                cashRegisterItem::create($addItem);
-            } else {
-                DB::table('cash_register_items')->where('productIdReg', '=', $request->lastProductId)->increment('howMany');
-            }
-        }
-        if (isset($request->lastProductId)) {
+            $input = explode('*', $request->lastProductId);
+            $productId = count($input) == 1 ? $input[0] : $input[1];
             $lastProduct = DB::table('products')
                 ->select('*', 'cash_register_items.howMany')
                 ->leftJoin('cash_register_items', 'productId', 'productIdReg')
                 ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
-                ->where('productId', '=', $request->lastProductId)
+                ->join('product_codes', 'products.productId', 'product_codes.productIdCode')
+                ->where('productId', '=', $productId)
+                ->orWhere('productCode', '=', $productId)
                 ->get()
                 ->toArray();
             if ($lastProduct == null) {
                 $lastProduct = 'Nem megfelelő kódot adtál meg!';
+            } else {
+                $productIdReg = DB::table('products')
+                    ->select('productId')
+                    ->join('product_codes', 'products.productId', 'product_codes.productIdCode')
+                    ->where('productId', '=', $productId)
+                    ->orWhere('productCode', '=', $productId)
+                    ->distinct()
+                    ->get()
+                    ->toArray();
+                if (DB::table('cash_register_items')->where('productIdReg', '=', $productIdReg[0]->productId)->count() == 0) {
+                    $addItem = [
+                        'productIdReg' => $productIdReg[0]->productId,
+                        'cashRegisterNumber' => 1,
+                        'howMany' => count($input) == 2 ? $input[0] : 1
+                    ];
+                    cashRegisterItem::create($addItem);
+                } else {
+                    DB::table('cash_register_items')->where('productIdReg', '=', $productIdReg[0]->productId)->increment('howMany', count($input) == 2 ? $input[0] : 1);
+                }
             }
         } else {
             $lastProduct = 'Üres a kosár!';
@@ -73,18 +84,12 @@ class CashRegisterItemController extends Controller
                 ->join('cash_register_items', 'productId', 'productIdReg')
                 ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
                 ->where('howMany', '!=', -1)
-                ->whereIn('productId',  $productIds)->where('productId', '!=', $request->lastProductId)
+                ->whereIn('productId',  $productIds)->where('productId', '!=', $productIdReg[0]->productId ?? 0)
                 ->get()
                 ->toArray();
-            $sumPrice = DB::table('products')
-                ->select('bPrice')
-                ->whereIn('productId', $productIds)
-                ->sum('bPrice');
         } else {
             $productIds = [];
             $products = null;
-            $sumPrice = 0;
-            $companyCurrent = null;
         }
         if (count($request->all()) == 0 and (cashRegisterItem::all()->where('howMany', '!=', -1)->count() > 0)) {
             $productIds = [];
