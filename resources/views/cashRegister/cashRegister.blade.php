@@ -62,7 +62,7 @@
                         <td class="d-flex justify-content-end">
                             <form class="collapse in" id="collapseQuantity{{$product->productId}}" method="post" action="/cashRegister/changeQuantity">
                                 @csrf
-                                <input type="number" class="form-control" name="quantity">
+                                <input type="text" class="form-control" name="quantity">
                                 <input type="hidden" name="productId" value="{{$product->productId}}">
                             </form>
                             <a data-bs-toggle="collapse" href="#collapseQuantity{{$product->productId}}" role="button" aria-expanded="false" aria-controls="collapseExample"><img src="{{asset('iconsAndLogos/editIcon.png')}}"></a>
@@ -131,7 +131,7 @@
     <div class="col-md-6 bg-white border border-dark border-2 rounded">
         <form action="{{url('/cashRegister')}}" method="post">
             @csrf
-            <input type="number" name="lastProductId" class="form-control w-100 h-100" autocomplete="off" autofocus>
+            <input type="text" name="lastProductId" class="form-control w-100 h-100" autocomplete="off" autofocus>
         </form>
     </div>
     <div class="col-md-2 bg-white border border-dark border-2 rounded">
