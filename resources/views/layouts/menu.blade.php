@@ -66,6 +66,7 @@
 </nav>
 <main class="py-4">
     @yield('content')
+    @include('cashRegister/modals/_changeModal')
 </main>
 </body>
 </html>

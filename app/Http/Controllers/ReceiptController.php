@@ -44,18 +44,21 @@ class ReceiptController extends Controller
         }
         $dividers = [10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5];
         $cashAmounts = [];
+        $usedDividers = [];
         foreach ($dividers as $divider) {
             if ($divider >= $change) {
                 continue;
             }
             $data = (int) ($change / $divider);
-            $cashAmounts[] = [$divider => $data];
+            $cashAmounts[$divider] = $data;
             $change -= $data*$divider;
+            if (!in_array($divider, $usedDividers)) {
+                $usedDividers[] = $divider;
+            }
         }
-        //TODO Visszadási segédlet megjelenítése
         CashRegisterItem::truncate();
 
-        return Redirect::to('/cashRegister');
+        return Redirect::back()->with('change', $cashAmounts);
     }
 
     public function showReceipt($receiptId) {
