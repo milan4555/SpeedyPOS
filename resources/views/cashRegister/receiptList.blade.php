@@ -42,7 +42,10 @@
             </div>
             <div class="col-md-5 table-wrapper-scroll-y my-custom-scrollbar">
                 @if(isset($receiptData))
-                    @php($receiptInfo = \App\Models\Receipt::find($receiptData[0]->receiptId))
+                    @php
+                        $receiptInfo = \App\Models\Receipt::find($receiptData[0]->receiptId);
+                        $handler = \App\Models\User::find($receiptInfo->employeeId);
+                    @endphp
                     <div class="border border-2 border-dark p-2 mt-1" style="text-transform: uppercase;">
                         <p class="text-center">{{$variables['companyName']}}<br>
                             {{$variables['companyAddress']}}<br>
@@ -61,15 +64,15 @@
                         @endforeach
                         <p>Részösszeg: <b>{{$receiptInfo->sumPrice}} Ft.</b></p>
                         <hr>
-                        <p>Készpénz: <b>{{$receiptInfo->paymentType == 'B' ? 'Bankártyás fizetés' : 'TODO'}}</b></p>
-                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0 Ft.' : 'TODO'}}</b></p>
+                        <p>Készpénz: <b>{{$receiptInfo->paymentType == 'B' ? 'Bankártyás fizetés' : $receiptInfo->sumPrice+$receiptInfo->change}} Ft.</b></p>
+                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0 Ft.' : $receiptInfo->change}} Ft.</b></p>
                         <hr>
                         <p><b>Összesen: {{$receiptInfo->sumPrice}} Ft.</b></p>
-                        {{$receiptInfo->paymentType == 'B' ? '' : "..."}}
-                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0 Ft.' : 'TODO'}}</b></p>
+                        <p>Készpénz: <b>{{$receiptInfo->paymentType == 'B' ? '' : $receiptInfo->sumPrice+$receiptInfo->change}} Ft.</b></p>
+                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0 Ft.' : $receiptInfo->change}} Ft.</b></p>
                         <hr>
                         <div class="d-flex justify-content-around">
-                            <p>Kezelő: TODO</p>
+                            <p>Kezelő: {{$handler->firstName}} {{$handler->lastName}}</p>
                             <p>Kassza: {{$receiptInfo->employeeId}}</p>
                             <p>TR.SZÁM: {{$receiptInfo->receiptId}}</p>
                         </div>
@@ -78,7 +81,7 @@
                         <br>
                         <div class="d-flex justify-content-around">
                             <p>NYUGTASZÁM:</p>
-                            <p>TODO</p>
+                            <p></p>
                         </div>
                         <div class="d-flex justify-content-around">
                             <p>{{date('Y.m.d', strtotime($receiptInfo->created_at))}}</p>

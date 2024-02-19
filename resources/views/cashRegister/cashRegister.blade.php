@@ -77,7 +77,7 @@
 @endsection
 
 @section('buttons')
-    <button type="button" class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#emptyCashRegisterModal">Megszakítás</button>
+    <button type="button" class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#changeModal">Megszakítás</button>
     @include('cashRegister\modals\_emptyCashRegisterModal')
     <div class="row">
         <div class="col-md-6">
