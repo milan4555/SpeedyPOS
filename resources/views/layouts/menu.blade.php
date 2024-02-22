@@ -22,9 +22,7 @@
             height:100%;
         }
         body {
-            height:100%;
-            background-image: linear-gradient(to bottom right, lightgray, teal);
-            background-repeat: no-repeat;
+            background: #4a5568;
         }
     </style>
 </head>
@@ -66,7 +64,6 @@
 </nav>
 <main class="py-4">
     @yield('content')
-    @include('cashRegister/modals/_changeModal')
 </main>
 </body>
 </html>
