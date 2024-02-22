@@ -64,3 +64,11 @@ Route::get('/settings/userRights', [\App\Http\Controllers\UserRightController::c
 Route::get('/settings/userRights/{rightsId}/{optionName}', [\App\Http\Controllers\UserRightController::class, 'changeRight']);
 
 //Setting routes end
+
+//Storage routes start
+
+Route::match(array('GET', 'POST'), '/storage/productsList', [\App\Http\Controllers\ProductController::class, 'showProductsPage']);
+Route::post('/storage/addProduct', [\App\Http\Controllers\ProductController::class, 'addProduct']);
+Route::post('/storage/updateProduct', [\App\Http\Controllers\ProductController::class, 'updateProduct']);
+
+//Storage routes start

@@ -74,6 +74,7 @@
             @endif
             </tbody>
         </table>
+        @include('cashRegister/modals/_changeModal')
 @endsection
 
 @section('buttons')
