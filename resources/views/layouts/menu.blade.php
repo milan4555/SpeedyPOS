@@ -45,15 +45,18 @@
             </ul>
             @guest
             @else
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto pt-2">
+                    <li>
+                        <p>(Belépve: {{\Illuminate\Support\Facades\Auth::getUser()['firstName']}} {{\Illuminate\Support\Facades\Auth::getUser()['lastName']}})</p>
+                    </li>
                     <li>
                         <a class="dropdown-item px-2" href="/home" >Vissza a főmenübe</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('logout') }}"
+                        <a class="dropdown-item" href="/logout"
                            onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">Kijelentkezés</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        <form id="logout-form" action="/logout" method="POST" class="d-none">
                             @csrf
                         </form>
                     </li>

@@ -67,5 +67,4 @@ class RegisterController extends Controller
 
         return Redirect::back();
     }
-
 }

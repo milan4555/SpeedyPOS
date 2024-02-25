@@ -15,11 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
-Auth::routes();
+Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
 
+Route::post('/logout', [\App\Http\Controllers\UserController::class, 'logout']);
 //Home route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 

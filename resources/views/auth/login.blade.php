@@ -6,7 +6,7 @@
                 <div class="card border border-2 border-dark">
                     <div class="card-header bg-dark text-white">Bejelentkezés</div>
                     <div class="card-body">
-                        <form method="POST" action="{{route('login')}}">
+                        <form method="POST" action="/login">
                             @csrf
                             <div class="row mb-3">
                                 <label for="username"

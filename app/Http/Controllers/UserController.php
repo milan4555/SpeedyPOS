@@ -4,13 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserRight;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
+
+    public function login(Request $request) {
+        $user = User::where('username', '=', $request['username'])->firstOrFail();
+        Auth::login($user);
+        return Redirect::to('/home');
+    }
+
+    public function logout() {
+        Auth::logout();
+        return Redirect::to('/');
+    }
     public function newEmployee(\Illuminate\Http\Request $request) {
         if ($request->all() == []) {
             return view('settings.newEmployee');
@@ -28,7 +41,7 @@ class UserController extends Controller
             'canDeleteProduct' => false,
         ]);
 
-        User::create([
+        $user = User::create([
             'firstName' => $request['firstName'],
             'lastName' => $request['lastName'],
             'username' => $baseUsername,
@@ -38,6 +51,7 @@ class UserController extends Controller
             'rightsId' => $rights->rightsId
         ]);
 
+        Auth::login($user);
         return Redirect::back();
     }
 }
