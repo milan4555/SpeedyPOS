@@ -33,13 +33,27 @@
                                 <input class="form-control" type="number" id="bPrice" name="bPrice" autocomplete="off" required>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label" for="categoryId">Kategória:</label>
-                                <select class="form-control" name="categoryId" id="categoryId" autocomplete="off" required>
-                                    <option value="">...</option>
-                                    @foreach(\App\Models\Category::all() as $category)
-                                        <option value="{{$category->categoryId}}">{{$category->categoryName}}</option>
-                                    @endforeach
-                                </select>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <label class="form-label" for="categoryId">Kategória:</label>
+                                        <select class="form-control" name="categoryId" id="categoryId" autocomplete="off" required>
+                                            <option value="">...</option>
+                                            @foreach(\App\Models\Category::all() as $category)
+                                                <option value="{{$category->categoryId}}">{{$category->categoryName}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <br>
+                                        <button id="newCategoryButton" class="btn btn-primary mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#newCategoryNameInput" aria-expanded="false" aria-controls="newCategoryNameInput">
+                                            +
+                                        </button>
+                                    </div>
+                                    <div class="col-md-12 collapse" id="newCategoryNameInput">
+                                        <label class="form-label" for="newCategoryName">Új kategória neve:</label>
+                                        <input id="newCategoryName" class="form-control" type="text" name="newCategoryName">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label" for="companyId">Beszállító:</label>
@@ -112,5 +126,16 @@
                 document.getElementById('productForm').action = '/storage/addProduct';
             }
         }
+        const newCategoryInput = document.getElementById('newCategoryName');
+        const categorySelect = document.getElementById('categoryId');
+        const newCategoryButton = document.getElementById('newCategoryButton');
+        const newCategoryDiv = document.getElementById('newCategoryNameInput');
+        newCategoryInput.addEventListener('change', function () {
+            categorySelect.disabled = newCategoryInput.value !== '';
+        });
+        categorySelect.addEventListener('change', function () {
+            newCategoryInput.disabled = categorySelect.value !== '';
+            newCategoryButton.disabled = categorySelect.value !== '';
+        });
     </script>
 @endsection

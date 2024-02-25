@@ -62,6 +62,9 @@ class ProductController extends Controller
     }
 
     public function addProduct(Request $request) {
+        if ($request['categoryId'] == '' && $request['newCategoryName'] != '') {
+            $request['categoryId'] = CategoryController::addCategory($request['newCategoryName'])->categoryId;
+        }
         $productHelper = [
             'productName' => $request['productName'],
             'productShortName' => $request['productShortName'],
