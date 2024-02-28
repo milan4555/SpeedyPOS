@@ -77,7 +77,7 @@ class ProductController extends Controller
 
         Product::create($productHelper);
 
-        return Redirect::back();
+        return Redirect::back()->with('success', 'Sikeresen felvetted az új terméket a listába!');
     }
 
     public function updateProduct(Request $request) {
@@ -90,6 +90,6 @@ class ProductController extends Controller
 
         Product::find($request['productId'])->update($productHelper);
 
-        return Redirect::back();
+        return Redirect::back()->with('success', 'Sikeresen megváltoztattad a termék paramétereit!');
     }
 }

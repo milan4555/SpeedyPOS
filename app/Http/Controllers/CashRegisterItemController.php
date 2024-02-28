@@ -150,7 +150,7 @@ class CashRegisterItemController extends Controller
 
     public function emptyCashRegister() {
         cashRegisterItem::truncate();
-        return Redirect('/cashRegister');
+        return Redirect('/cashRegister')->with('success', 'Sikeresen kiürítetted a kosarat! Jöhet a következő vásárló!');
     }
 
     public function changeQuantity(Request $request) {

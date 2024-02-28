@@ -41,7 +41,7 @@ class CompanyController extends Controller
             ->where('companyId', '=', $companyId)
             ->delete();
 
-        return Redirect::back();
+        return Redirect::back()->with('success', 'Sikeresen kitörölted a céget a listából!');
     }
 
     public function editCompany(Request $request) {
@@ -71,7 +71,7 @@ class CompanyController extends Controller
         ];
         $company->update($updatedData);
 
-        Return Redirect::back();
+        Return Redirect::back()->with('success', 'Sikeresen megváltoztattad a paramétereit a cégjegyzéknek!');
     }
 
     /**
@@ -117,6 +117,6 @@ class CompanyController extends Controller
 
         Company::create($newCompany);
 
-        return Redirect::back();
+        return Redirect::back()->with('success', 'Sikeresen felvetted a céget a listába!');
     }
 }

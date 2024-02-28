@@ -52,6 +52,9 @@ class UserController extends Controller
         ]);
 
         Auth::login($user);
-        return Redirect::back();
+        return Redirect::back()->with('success', 'Sikeresen felvetted az új alkalmazottat!<br>
+                                                    A kapott felhasználónév: '.$baseUsername.'
+                                                    <br>Alapértelmezett jelszó: xX123456<br>
+                                                    <b>Az első bejelentkezésnél kérlek változtatsd meg!</b>');
     }
 }
