@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
+use App\Models\StorageUnit;
 use App\Models\User;
 use App\Models\UserRight;
 use App\Models\Variable;
@@ -23,7 +24,15 @@ class DatabaseSeeder extends Seeder
             'categoryId' => 807,
             'categoryName' => 'Random termékek'
         ]);
-
+        for ($j = 0; $j < 5; $j++) {
+            StorageUnit::create([
+                'storageName' => 'Raktárhelység #'.$j,
+                'numberOfRows' => random_int(6,10),
+                'widthNumber' => random_int(5,15),
+                'heightNumber' => random_int(4,8)
+            ]);
+        }
+        $abc = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
         $myfile = fopen('public/factories/products.txt', "r") or die("Unable to open file!");
         while(!feof($myfile)) {
             $line = fgets($myfile);
@@ -35,7 +44,8 @@ class DatabaseSeeder extends Seeder
                     'bPrice' => $data[2],
                     'nPrice' => $data[3],
                     'stock' => $data[4],
-                    'categoryId' => 807
+                    'categoryId' => 807,
+                    'storagePlace' => random_int(1,5).'-'.$abc[6].'5-4'
                 ]);
             }
         }

@@ -71,5 +71,9 @@ Route::get('/settings/userRights/{rightsId}/{optionName}', [\App\Http\Controller
 Route::match(array('GET', 'POST'), '/storage/productsList', [\App\Http\Controllers\ProductController::class, 'showProductsPage']);
 Route::post('/storage/addProduct', [\App\Http\Controllers\ProductController::class, 'addProduct']);
 Route::post('/storage/updateProduct', [\App\Http\Controllers\ProductController::class, 'updateProduct']);
+Route::get('/storage/storageUnits/{storageId}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnit']);
+Route::get('/storage/storageUnit/{storageId}/{letter}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitRow']);
+Route::get('/storage/storageUnit/{storageId}/{letter}/{width}/{height}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitItems']);
+Route::post('/storage/storageUnits/add', [\App\Http\Controllers\StorageUnitController::class, 'addStorageUnit']);
 
 //Storage routes start
