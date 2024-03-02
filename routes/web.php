@@ -75,5 +75,6 @@ Route::get('/storage/storageUnits/{storageId}', [\App\Http\Controllers\StorageUn
 Route::get('/storage/storageUnit/{storageId}/{letter}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitRow']);
 Route::get('/storage/storageUnit/{storageId}/{letter}/{width}/{height}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitItems']);
 Route::post('/storage/storageUnits/add', [\App\Http\Controllers\StorageUnitController::class, 'addStorageUnit']);
+Route::get('/storage/print/{labelType}/{storageId}/{letter?}/{width?}/{height?}', [\App\Http\Controllers\StorageUnitController::class, 'printStorageLabels']);
 
 //Storage routes start
