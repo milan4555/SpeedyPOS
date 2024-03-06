@@ -34,19 +34,24 @@ class DatabaseSeeder extends Seeder
         }
         $abc = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
         $myfile = fopen('public/factories/products.txt', "r") or die("Unable to open file!");
+        $i = 1;
+        $productIds = [];
         while(!feof($myfile)) {
             $line = fgets($myfile);
             $data = explode(';',$line);
             if ($data[0] != null) {
+                $productIds[] = '807'.str_repeat(0,7-strlen($i)).$i;
                 Product::factory()->create([
+                    'productId' => '807'.str_repeat(0,7-strlen($i)).$i,
                     'productName' => $data[0],
                     'productShortName' => $data[1],
                     'bPrice' => $data[2],
-                    'nPrice' => $data[3],
+                    'nPrice' => round($data[2]*1.8),
                     'stock' => $data[4],
                     'categoryId' => 807,
                     'storagePlace' => random_int(1,5).'-'.$abc[6].'5-4'
                 ]);
+                $i++;
             }
         }
         fclose($myfile);
@@ -56,7 +61,7 @@ class DatabaseSeeder extends Seeder
             $data = explode(';',$line);
             if ($data[0] != null) {
                 productCodes::factory()->create([
-                    'productIdCode' => $data[0],
+                    'productIdCode' => $productIds[random_int(0, count($productIds)-1)],
                     'productCode' => $data[1]
                 ]);
             }

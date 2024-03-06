@@ -13,12 +13,12 @@ class StorageUnitController extends Controller
 {
     public function showStorageUnit($storageUnitId) {
         if ($storageUnitId == 0) {
-            return view('storage.storageUnits', [
+            return view('storage.storageUnits.storageUnits', [
                 'storageUnits' => StorageUnit::all(),
                 'selectedStorageId' => $storageUnitId
             ]);
         } else {
-            return view('storage.storageUnits', [
+            return view('storage.storageUnits.storageUnits', [
                 'storageUnits' => StorageUnit::all(),
                 'selectedStorageId' => $storageUnitId,
                 'selectedStorage' => StorageUnit::find($storageUnitId)
@@ -41,7 +41,7 @@ class StorageUnitController extends Controller
     }
 
     public function showStorageUnitRow($storageUnitId, $letter) {
-        return view('storage.storageUnitRow', [
+        return view('storage.storageUnits.storageUnitRow', [
            'letter' => $letter,
            'selectedStorage' => StorageUnit::find($storageUnitId),
            'selectedStorageId' => $storageUnitId,
@@ -50,7 +50,7 @@ class StorageUnitController extends Controller
     }
 
     public function showStorageUnitItems($storageUnitId, $letter, $width, $height) {
-        return view('storage.storageUnitItems', [
+        return view('storage.storageUnits.storageUnitItems', [
             'letter' => $letter,
             'selectedStorage' => StorageUnit::find($storageUnitId),
             'selectedStorageId' => $storageUnitId,

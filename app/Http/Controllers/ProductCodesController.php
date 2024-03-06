@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\productCodes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductCodesController extends Controller
 {
@@ -24,5 +25,17 @@ class ProductCodesController extends Controller
         $tableString .= '</table>';
 
         return $tableString;
+    }
+
+    public static function whichProduct($productCode) {
+        $result = DB::table('product_codes')
+            ->select('productIdCode')
+            ->where('productCode', '=', $productCode)
+            ->get()
+            ->toArray();
+
+        if ($result != null) {
+            return $result[0]->productIdCode;
+        }
     }
 }

@@ -89,7 +89,7 @@
             </tr>
             @foreach($products as $product)
                 <tr id="{{$product->productId}}" onclick="getItemsFromRow({{$product->productId}})" data-productCodes="{{\App\Http\Controllers\ProductCodesController::makeTable($product->productId)}}">
-                    <th id="productId" data-input="{{$product->productId}}">{{$product->categoryId.str_repeat(0,7-strlen($product->productId)).$product->productId}}</th>
+                    <th id="productId" data-input="{{$product->productId}}">{{$product->productId}}</th>
                     <td id="productName" data-input="{{$product->productName}}">{{$product->productName}}</td>
                     <td id="productShortName" data-input="{{$product->productShortName}}">{{$product->productShortName}}</td>
                     <td id="categoryId" data-input="{{$product->categoryId}}">{{$product->categoryName}}</td>

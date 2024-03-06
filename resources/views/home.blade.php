@@ -25,7 +25,7 @@
                                         <div class="card-body d-flex flex-column">
                                             <h5 class="card-title">Raktárkezelő</h5>
                                             <p class="card-text">Raktárkészlet kezelése, árufelvétel, árutasítás, stb.</p>
-                                            <a href="/storage/productsList" class="btn btn-warning mt-auto">Kiválasztás</a>
+                                            <a href="/storage/menu" class="btn btn-warning mt-auto">Kiválasztás</a>
                                         </div>
                                     </div>
                                 </div>

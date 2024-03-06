@@ -1,4 +1,4 @@
-@extends('storage.storageUnitTemplate')
+@extends('storage.storageUnits.storageUnitTemplate')
 @section('storageUnitContent')
     @php($abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         @if(isset($selectedStorageId) and $selectedStorageId != 0)

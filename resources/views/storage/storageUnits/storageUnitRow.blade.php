@@ -1,4 +1,4 @@
-@extends('storage.storageUnitTemplate')
+@extends('storage.storageUnits.storageUnitTemplate')
 @section('storageUnitContent')
     @php($abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     @for($i = $selectedStorage->heightNumber;$i > 0;$i--)
