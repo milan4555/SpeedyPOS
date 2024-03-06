@@ -12,7 +12,7 @@
         </tr>
         @foreach($products as $product)
             <tr>
-                <th>{{$product->categoryId.str_repeat(0,7-strlen($product->productId)).$product->productId}}</th>
+                <th>{{$product->productId}}</th>
                 <td>{{$product->productName}}</td>
                 <td>{{$product->productShortName}}</td>
                 <td>{{$product->categoryName}}</td>

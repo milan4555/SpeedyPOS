@@ -22,11 +22,9 @@
                 </tr>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script>
-                    console.log(document.getElementsByClassName('switch-event')[1].data)
                     for (let i = 1; i <= 4; i++) {
                         document.getElementById('userRights'+i).addEventListener('change', function(event){
                             var elem = event.target;
-                            console.log(elem);
                             $.ajax({
                                 type: 'GET',
                                 url: '/settings/userRights/' + elem.dataset.rightsid + '/' + elem.dataset.optionname,

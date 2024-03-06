@@ -24,7 +24,7 @@
                     Új raktár létrehozás
                 </button>
                 <a class="btn btn-warning" href="/storage/print/{{isset($letter) ? (isset($width) ? 'specific/'.$selectedStorageId.'/'.$letter.'/'.$width.'/'.$height : 'row/'.$selectedStorageId.'/'.$letter) : 'rows/'.$selectedStorageId}}">{{isset($letter) ? (isset($width) ? 'Polccímke' : 'Polccímkék') : 'Sorcímkék'}} nyomtatása</a>
-                <a class="btn btn-danger" href="{{isset($width) ? '/storage/storageUnit/'.$selectedStorageId.'/'.$letter : '/storage/storageUnits/'.$selectedStorageId.'/'}}">Vissza</a>
+                <a class="btn btn-danger" href="{{isset($letter) ? (isset($width) ? '/storage/storageUnit/'.$selectedStorageId.'/'.$letter : '/storage/storageUnits/'.$selectedStorageId.'/') : '/storage/menu'}}">Vissza</a>
                 @include('storage.modals._newStorageUnit')
             </div>
         </div>
