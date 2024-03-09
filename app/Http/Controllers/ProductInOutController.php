@@ -6,8 +6,12 @@ use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
 use App\Models\ProductInOut;
+use App\Models\Variable;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductInOutController extends Controller
 {
@@ -31,7 +35,8 @@ class ProductInOutController extends Controller
         return view('storage.productIn', [
             'products' => $products,
             'suppliers'  => Company::all()->where('isSupplier', '=', true),
-            'selectedSupplierId' => $selectedSupplierId
+            'selectedSupplierId' => $selectedSupplierId,
+            'howManyZeros' => ProductInOut::where('inOrOut', '=', 'IN')->where('howMany', '=', 0)->count()
         ]);
     }
     public function addNewRow($productIdentifier) {
@@ -94,5 +99,61 @@ class ProductInOutController extends Controller
     public function removeRow($productCode) {
         ProductInOut::where('productId', '=', $productCode)->delete();
         return redirect()->back();
+    }
+
+    public function finish() {
+        $fp=pfsockopen("127.0.0.1",9100);
+        $allData = DB::table('product_in_outs')
+            ->join('products', 'product_in_outs.productId', 'products.productId')
+            ->select('*')
+            ->where('inOrOut', '=', 'IN')
+            ->where('howMany', '!=', -1)
+            ->get()
+            ->toArray();
+        $products = [];
+        foreach ($allData as $data) {
+            $product = Product::find($data->productId);
+            $product->update(['bPrice' => $data->newBPrice, 'nPrice' => round($data->newBPrice*1.8, -1)]);
+            $product->increment('stock', $data->howMany);
+
+//            for ($i = 0; $i < $data->howMany; $i++) {
+//                $zpl = '
+//                ^XA
+//                ^FO20,20
+//                ^CI28
+//                ^BY4,3,150
+//                ^B3N,N,N,N
+//                ^FD>:'.$data->productId.'^FS
+//                ^FO230,190
+//                ^A0N,80,80
+//                ^FD'.$data->productId.'^FS
+//                ^FO20,260
+//                ^A0N,60,60
+//                ^FD'.$product->productShortName.'^FS
+//                ^FO20,330
+//                ^A0N,60,60
+//                ^FDÁr: '.$data->newBPrice*1.8.' Ft.^FS
+//                ^XZ
+//                ';
+//                fputs($fp,$zpl);
+//            }
+        }
+        $supplierId = ProductInOut::all()->where('inOrOut', '=', 'IN')->where('howMany', '==', -1)->first()->productId;
+        $supplier = Company::find($supplierId);
+        $viewArray = [
+            'products' => $allData,
+            'user' => Auth::getUser(),
+            'supplier' => $supplier,
+            'worker' => Auth::user()
+        ];
+        Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/pdf/'.date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'pdf');
+        ProductInOut::where('inOrOut', '=', 'IN')->delete();
+
+        return redirect()->back()->with('success', 'Sikeres árubevétel! A cimkék nyomtatása megkezdődött, a bevételről szóló pdf-et pedig a fájlkeresőben találod!');
+    }
+
+    public function fullDelete() {
+        ProductInOut::where('inOrOut', '=', 'IN')->delete();
+        return Redirect::back();
     }
 }

@@ -96,6 +96,8 @@ Route::get('/storage/productIn/changeQuantity/{productId}/{quantity}', [\App\Htt
 Route::get('/storage/productIn/changeBPrice/{productId}/{bPrice}', [\App\Http\Controllers\ProductInOutController::class, 'changeBPrice']);
 Route::get('/storage/productIn/addSupplier/{supplierId}', [\App\Http\Controllers\ProductInOutController::class, 'addSupplier']);
 Route::get('/storage/productIn/removeRow/{productCode}', [\App\Http\Controllers\ProductInOutController::class, 'removeRow']);
+Route::get('/storage/productIn/finish', [\App\Http\Controllers\ProductInOutController::class, 'finish']);
+Route::get('/storage/productIn/fullDelete', [\App\Http\Controllers\ProductInOutController::class, 'fullDelete']);
 
 //ProductIn routes end
 
