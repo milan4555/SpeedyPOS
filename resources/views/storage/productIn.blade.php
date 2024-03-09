@@ -10,7 +10,7 @@
             <thead>
                 <tr>
                     <td colspan="2">
-                        <input type="number" id="productIdentifier" class="form-control border-dark" placeholder="Termék kód helye" name="productIdentifier">
+                        <input type="number" id="productIdentifier" class="form-control border-dark" placeholder="Termék kód helye" name="productIdentifier" autocomplete="off" autofocus>
                     </td>
                     <td colspan="2">
                         <select id="supplierId" class="form-control border-dark" name="supplierId">
@@ -20,7 +20,15 @@
                             @endforeach
                         </select>
                     </td>
-                    <td class="text-center" colspan="3"><a class="btn btn-primary">Befejezés</a></td>
+                    <td class="text-center" colspan="3">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productInFinish" {{(count($products) == 0 or $howManyZeros != 0 or $selectedSupplierId == 0) ? 'disabled' : ''}}>
+                            Befejezés
+                        </button>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#productInFullDelete" {{count($products) == 0 ? 'disabled' : ''}}>
+                            Újrakezdés
+                        </button>
+                        <a href="/storage/menu" class="btn btn-danger">Vissza a menübe</a>
+                    </td>
                 </tr>
                 <tr>
                     <th>Termék azonosító</th>
@@ -39,8 +47,8 @@
                             <td class="col-md-2 align-middle">{{$product->productId}}</td>
                             <td class="align-middle">{{$product->productName}}</td>
                             <td class="align-middle">{{$product->categoryName}}</td>
-                            <td><input type="number" id="quantity.{{$product->productId}}" class=" form-control border-dark" name="quantity" value="{{$product->howMany}}" required></td>
-                            <td><input type="number" id="bPrice.{{$product->productId}}" class="form-control border-dark" name="bPrice" value="{{$product->newBPrice}}" required></td>
+                            <td><input type="number" min="1" id="quantity.{{$product->productId}}" class=" form-control border-dark" name="quantity" value="{{$product->howMany}}" required></td>
+                            <td><input type="number" min="1" id="bPrice.{{$product->productId}}" class="form-control border-dark" name="bPrice" value="{{$product->newBPrice}}" required></td>
                             <td id="nPrice" class="align-middle">{{round($product->newBPrice * 1.8, -1)}} Ft</td>
                             <td class="text-center"><a href="/storage/productIn/removeRow/{{$product->productId}}" class="btn btn-danger">Törlés</a></td>
                             <script>
@@ -75,4 +83,6 @@
             window.location.href = '/storage/productIn/addSupplier/' + supplierId.value;
         });
     </script>
+    @include('storage.modals._storageProductInFinish')
+    @include('storage.modals._storageProductInFullDelete')
 @endsection
