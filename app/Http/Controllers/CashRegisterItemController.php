@@ -5,37 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Models\cashRegisterItem;
 use App\Models\Company;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class CashRegisterItemController extends Controller
 {
-    public function showItems() {
-        $productIds = DB::table('cash_register_items')->select('productIdReg')->get()->toArray();
-        dd($productIds);
-        $lastProduct = DB::table('products')
-            ->join('cash_register_items', 'productIdReg', 'productId')
-            ->select('*')
-            ->orderBy('cash_register_items.updated_at')
-            ->limit(1)
-            ->get()
-            ->toArray();
-        $products = DB::table('products')
-            ->select('*', 'cash_register_items.howMany')
-            ->join('cash_register_items', 'productId', 'productIdReg')
-            ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
-            ->whereIn('productId',  $productIds)->where('productId', '!=', $request->lastProductId)
-            ->get()
-            ->toArray();
-        return view('cashRegister/cashRegister',
-            [
-                'lastProduct' => $lastProduct,
-                'products' => $products,
-                'productIds' => $productIds,
-                'sumPrice' => $this->getSumPrice(),
-            ]);
-    }
     public function getItems(Request $request) {
         if (isset($request->lastProductId)) {
             $input = explode('*', $request->lastProductId);
@@ -67,8 +43,10 @@ class CashRegisterItemController extends Controller
                         'howMany' => count($input) == 2 ? $input[0] : 1
                     ];
                     cashRegisterItem::create($addItem);
+                    Product::find($productIdReg[0]->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);
                 } else {
                     DB::table('cash_register_items')->where('productIdReg', '=', $productIdReg[0]->productId)->increment('howMany', count($input) == 2 ? $input[0] : 1);
+                    Product::find($productIdReg[0]->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);
                 }
             }
         } else {
@@ -154,17 +132,21 @@ class CashRegisterItemController extends Controller
     }
 
     public function changeQuantity(Request $request) {
-        DB::table('cash_register_items')
+        $row = DB::table('cash_register_items')
             ->where('productIdReg', '=', $request->productId)
-            ->update(['howMany' => $request->quantity]);
+            ->first();
+        CashRegisterItem::find($row->id)->update(['howMany' => $request->quantity]);
+        Product::find($row->productIdReg)->increment('stock', ($row->howMany-$request->quantity));
 
         return redirect()->to('/cashRegister');
     }
 
     public function itemDelete($cashRegisterNumber, $productId) {
-        DB::table('cash_register_items')
+        $row = DB::table('cash_register_items')
             ->where([['cashRegisterNumber', '=', $cashRegisterNumber],['productIdReg', '=', $productId]])
-            ->delete();
+            ->first();
+        CashRegisterItem::find($row->id)->delete();
+        Product::find($row->productIdReg)->increment('stock', $row->howMany);
         return redirect()->back();
     }
 }

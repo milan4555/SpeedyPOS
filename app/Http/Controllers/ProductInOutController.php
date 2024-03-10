@@ -40,14 +40,17 @@ class ProductInOutController extends Controller
         ]);
     }
     public function addNewRow($productIdentifier) {
-        if (ProductInOut::where('productId', '=', $productIdentifier)
-                ->orWhere('productId', '=', ProductCodesController::whichProduct($productIdentifier))
-                ->count() > 0)
-        {
+        $tableCount = ProductInOut::where('productId', '=', $productIdentifier)
+            ->orWhere('productId', '=', ProductCodesController::whichProduct($productIdentifier))
+            ->count();
+        if ($tableCount > 0) {
             ProductInOut::where('productId', '=', $productIdentifier)
                 ->orWhere('productId', '=', ProductCodesController::whichProduct($productIdentifier))
                 ->increment('howMany', 1);
             return redirect()->back();
+        }
+        if (Product::find($productIdentifier) == null or ProductCodesController::whichProduct($productIdentifier) == false) {
+
         }
         $product = DB::table('products')
             ->join('categories', 'products.categoryId', 'categories.categoryId')
@@ -59,7 +62,11 @@ class ProductInOutController extends Controller
             ->get()
             ->toArray();
         if ($product == null) {
-            return redirect()->back();
+            return redirect()->back()->with('error',
+                'Ilyen azonosítóval nem szerepel termék az adatbázisban, vagy a termékkód még nincs semelyik termékhez kötve!<br>
+                 Szeretnél újat létrehozni?<br>
+                 <a class="btn btn-outline-success btn-sm mt-2 text-white" href="/storage/productsList">Felvétel</a><br>
+                 ');
         }
         ProductInOut::create([
             'productId' => $product[0]->productId,
@@ -110,12 +117,10 @@ class ProductInOutController extends Controller
             ->where('howMany', '!=', -1)
             ->get()
             ->toArray();
-        $products = [];
         foreach ($allData as $data) {
             $product = Product::find($data->productId);
             $product->update(['bPrice' => $data->newBPrice, 'nPrice' => round($data->newBPrice*1.8, -1)]);
             $product->increment('stock', $data->howMany);
-
 //            for ($i = 0; $i < $data->howMany; $i++) {
 //                $zpl = '
 //                ^XA

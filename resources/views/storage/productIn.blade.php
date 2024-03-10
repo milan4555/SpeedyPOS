@@ -6,6 +6,11 @@
         }
     </style>
     <div class="m-3 p-3 border border-dark rounded-3 bg-white">
+        @if(session()->has('errorProductId'))
+            <div class="d-flex justify-content-center bg-warning m-3 rounded p-2">
+                <h4>{{session('errorProductId')}}</h4>
+            </div>
+        @endif
         <table class="table table-bordered border-dark">
             <thead>
                 <tr>

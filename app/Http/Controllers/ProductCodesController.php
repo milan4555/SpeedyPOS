@@ -36,6 +36,8 @@ class ProductCodesController extends Controller
 
         if ($result != null) {
             return $result[0]->productIdCode;
+        } else {
+            return false;
         }
     }
 }
