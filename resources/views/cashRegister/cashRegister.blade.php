@@ -34,7 +34,7 @@
             @else
                 @if($lastProduct->howMany != -1)
                     <tr class="table-active">
-                        <th>{{$lastProduct->categoryId.str_repeat(0,7-strlen($lastProduct->productId)).$lastProduct->productId}}</th>
+                        <th>{{$lastProduct->productId}}</th>
                         <td>{{$lastProduct->productName}}</td>
                         <td><i>{{$lastProduct->categoryName}}</i></td>
                         <td>{{$lastProduct->bPrice}} Ft</td>
@@ -54,7 +54,7 @@
             @if(isset($products))
                 @foreach($products as $product)
                     <tr>
-                        <th scope="row">{{$product->categoryId.str_repeat(0,7-strlen($product->productId)).$product->productId}}</th>
+                        <th scope="row">{{$product->productId}}</th>
                         <td>{{$product->productName}}</td>
                         <td><i>{{$product->categoryName}}</i></td>
                         <td>{{$product->bPrice}} Ft</td>

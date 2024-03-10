@@ -68,12 +68,6 @@
 <main class="py-4">
     @yield('content')
     <!-- Megkeresni miért nem akar megjelenni a modal! -->
-    @if(session()->has('success') or session()->has('error'))
-        @include('globalModals._popUpModal')
-        <script type="text/javascript">
-            document.getElementById('popUpModal').modal('show');
-        </script>
-    @endif
     @if(session()->has('change'))
         @include('cashRegister.modals._changeModal')
         <script type="text/javascript">
