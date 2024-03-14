@@ -15,14 +15,19 @@ class ProductCodesController extends Controller
 
     public static function makeTable($productId) {
         $productCodes = self::getAllCodesByProductId($productId);
-        $tableString = '<h4>Termékhez tartozó kódok:</h4>
+        $tableString = '
+                   <div class="border rounded-3 border-3 border-dark m-2 p-2" style="overflow: auto; height: 160px">
+                   <h4>Termékhez tartozó kódok:</h4>
                    <table class="table">';
         foreach ($productCodes as $productCode) {
-            $tableString .= '<tr>
+            $tableString .= '
+                  <tr>
                     <td>'.$productCode->productCode.'</td>
                   </tr>';
         }
-        $tableString .= '</table>';
+        $tableString .= '</table>
+                        </div>
+                        <input type="number" placeholder="Új kód felvétele" class="form-control my-2 mx-2 w-50 border-dark" data-productId="'.$productId.'" name="newProductCode">';
 
         return $tableString;
     }

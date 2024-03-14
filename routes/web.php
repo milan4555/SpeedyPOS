@@ -17,12 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
+//Auth routes start
 
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
-
 Route::post('/logout', [\App\Http\Controllers\UserController::class, 'logout']);
-//Home route
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+
+//Auth routes end
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']); //(Home route)
 
 //CashRegister routes
 
@@ -100,5 +102,15 @@ Route::get('/storage/productIn/finish', [\App\Http\Controllers\ProductInOutContr
 Route::get('/storage/productIn/fullDelete', [\App\Http\Controllers\ProductInOutController::class, 'fullDelete']);
 
 //ProductIn routes end
+
+//ProductOut routes start
+
+Route::get('/storage/productOut/selector', [\App\Http\Controllers\ProductOutController::class, 'loadPage']);
+Route::get('/storage/productOut/orders/{orderNumber}', [\App\Http\Controllers\ProductOutController::class, 'loadOrderPage']);
+Route::get('/storage/productOut/orders/{orderNumber}/{productId}', [\App\Http\Controllers\ProductOutController::class, 'foundProduct']);
+Route::get('/storage/productOut/restoreProgress/{orderNumber}', [\App\Http\Controllers\ProductOutController::class, 'restoreProgress']);
+Route::get('/storage/productOut/finishOrder/{orderNumber}', [\App\Http\Controllers\ProductOutController::class, 'finishOrder']);
+
+//ProductOut routes end
 
 //Storage routes start

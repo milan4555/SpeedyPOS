@@ -19,7 +19,6 @@ class ProductInOutController extends Controller
         $products = DB::table('products')
             ->join('product_in_outs', 'products.productId', 'product_in_outs.productId')
             ->join('categories', 'products.categoryId', 'categories.categoryId')
-            ->where('inOrOut', '=', 'IN')
             ->orderBy('product_in_outs.created_at')
             ->get()
             ->toArray();
@@ -36,7 +35,7 @@ class ProductInOutController extends Controller
             'products' => $products,
             'suppliers'  => Company::all()->where('isSupplier', '=', true),
             'selectedSupplierId' => $selectedSupplierId,
-            'howManyZeros' => ProductInOut::where('inOrOut', '=', 'IN')->where('howMany', '=', 0)->count()
+            'howManyZeros' => ProductInOut::where('howMany', '=', 0)->count()
         ]);
     }
     public function addNewRow($productIdentifier) {
@@ -49,12 +48,9 @@ class ProductInOutController extends Controller
                 ->increment('howMany', 1);
             return redirect()->back();
         }
-        if (Product::find($productIdentifier) == null or ProductCodesController::whichProduct($productIdentifier) == false) {
-
-        }
         $product = DB::table('products')
             ->join('categories', 'products.categoryId', 'categories.categoryId')
-            ->join('product_codes' , 'products.productId', 'product_codes.productIdCode')
+            ->leftJoin('product_codes' , 'products.productId', 'product_codes.productIdCode')
             ->select('products.*', 'categories.categoryName')
             ->where('productId', '=', $productIdentifier)
             ->orWhere('productCode', '=', $productIdentifier)
@@ -71,7 +67,6 @@ class ProductInOutController extends Controller
         ProductInOut::create([
             'productId' => $product[0]->productId,
             'howMany' => 0,
-            'inOrOut' => 'IN',
             'newBPrice' => $product[0]->bPrice
         ]);
 
@@ -97,7 +92,6 @@ class ProductInOutController extends Controller
             ProductInOut::create([
                 'productId' => $supplierId,
                 'howMany' => -1,
-                'inOrOut' => 'IN',
             ]);
         }
         return redirect()->back();
@@ -113,7 +107,6 @@ class ProductInOutController extends Controller
         $allData = DB::table('product_in_outs')
             ->join('products', 'product_in_outs.productId', 'products.productId')
             ->select('*')
-            ->where('inOrOut', '=', 'IN')
             ->where('howMany', '!=', -1)
             ->get()
             ->toArray();
@@ -143,7 +136,7 @@ class ProductInOutController extends Controller
 //                fputs($fp,$zpl);
 //            }
         }
-        $supplierId = ProductInOut::all()->where('inOrOut', '=', 'IN')->where('howMany', '==', -1)->first()->productId;
+        $supplierId = ProductInOut::all()->where('howMany', '==', -1)->first()->productId;
         $supplier = Company::find($supplierId);
         $viewArray = [
             'products' => $allData,
@@ -152,13 +145,13 @@ class ProductInOutController extends Controller
             'worker' => Auth::user()
         ];
         Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/pdf/'.date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'pdf');
-        ProductInOut::where('inOrOut', '=', 'IN')->delete();
+        ProductInOut::truncate();
 
         return redirect()->back()->with('success', 'Sikeres árubevétel! A cimkék nyomtatása megkezdődött, a bevételről szóló pdf-et pedig a fájlkeresőben találod!');
     }
 
     public function fullDelete() {
-        ProductInOut::where('inOrOut', '=', 'IN')->delete();
+        ProductInOut::truncate();
         return Redirect::back();
     }
 }
