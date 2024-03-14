@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
+use App\Models\ProductOut;
 use App\Models\StorageUnit;
 use App\Models\User;
 use App\Models\UserRight;
@@ -87,12 +88,14 @@ class DatabaseSeeder extends Seeder
         }
         fclose($myfile);
 
-        $shortNames = ['companyName', 'companyAddress', 'shopName', 'shopAddress', 'taxNumber'];
-        $variables = ['Cég neve', 'Cég címe', 'Üzlet neve', 'Üzlet címe', 'Adószám'];
+        $shortNames = ['companyName', 'companyAddress', 'shopName', 'shopAddress', 'taxNumber', 'phoneNumber'];
+        $variables = ['Cég neve', 'Cég címe', 'Üzlet neve', 'Üzlet címe', 'Adószám', 'Telefonszám'];
+        $variablesValues = ['Kitalált cég', '6078, Jakabszállás Kossuth Lajos utca 76', 'Kitalált üzlet', '6078, Jakabszállás Kossuth Lajos utca 76', '70675432-2-11', '704176989'];
         for ($i = 0; $i < count($shortNames); $i++) {
             Variable::create([
-                'variableShortName' => $shortNames[$i],
-               'variableName' => $variables[$i]
+               'variableShortName' => $shortNames[$i],
+               'variableName' => $variables[$i],
+               'variableValue' => $variablesValues[$i]
             ]);
         }
         UserRight::factory()->create([
@@ -110,5 +113,24 @@ class DatabaseSeeder extends Seeder
             'position' => 'admin',
             'rightsId' => 1
         ]);
+        for ($k = 0; $k < 4; $k++) {
+            $randomNumbers = [];
+            while (count($randomNumbers) != 8) {
+                $randomNumber = rand(0, count($productIds)-1);
+                if (!in_array($randomNumber, $randomNumbers)) {
+                    $randomNumbers[] = $randomNumber;
+                }
+            }
+            for ($l = 0; $l < 8; $l++) {
+                $randomNumber = random_int(5, 15);
+                ProductOut::factory()->create([
+                    'productId' => $productIds[$randomNumbers[$l]],
+                    'howMany' => $randomNumber,
+                    'howManyLeft' => $randomNumber,
+                    'orderNumber' => $k,
+                    'isCompleted' => false
+                ]);
+            }
+        }
     }
 }

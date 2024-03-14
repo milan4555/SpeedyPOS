@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Redirect;
 class VariableController extends Controller
 {
     public static function getVariableValue($variableName) {
-        return Variable::all()->where('variableName', '=', $variableName)->get('variableName');
+        $row = Variable::where('variableShortName', '=', $variableName)->first();
+        return $row->variableValue;
     }
 
     public function getAllVariables() {

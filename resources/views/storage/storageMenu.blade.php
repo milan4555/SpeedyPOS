@@ -9,7 +9,7 @@
 
             <div class="col-md-3 "></div>
             <div onclick="location.href='/storage/productIn';" class="col-md-3 bg-danger"><h4 class="text-center my-3">Termék bevétel</h4></div>
-            <div class="col-md-3 bg-warning"><h4 class="text-center my-3">Termék kiadás</h4></div>
+            <div onclick="location.href='/storage/productOut/selector ';" class="col-md-3 bg-warning"><h4 class="text-center my-3">Termék kiadás</h4></div>
             <div class="col-md-3"></div>
 
             <div class="col-md-3 "></div>
