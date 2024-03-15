@@ -144,10 +144,10 @@ class ProductInOutController extends Controller
             'supplier' => $supplier,
             'worker' => Auth::user()
         ];
-        Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/pdf/'.date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'pdf');
+        Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/PDF/'.date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'PDF');
         ProductInOut::truncate();
 
-        return redirect()->back()->with('success', 'Sikeres árubevétel! A cimkék nyomtatása megkezdődött, a bevételről szóló pdf-et pedig a fájlkeresőben találod!');
+        return redirect()->back()->with('success', 'Sikeres árubevétel! A cimkék nyomtatása megkezdődött, a bevételről szóló PDF-et pedig a fájlkeresőben találod!');
     }
 
     public function fullDelete() {

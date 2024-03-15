@@ -113,7 +113,7 @@ class DatabaseSeeder extends Seeder
             'position' => 'admin',
             'rightsId' => 1
         ]);
-        for ($k = 0; $k < 4; $k++) {
+        for ($k = 0; $k < 8; $k++) {
             $randomNumbers = [];
             while (count($randomNumbers) != 8) {
                 $randomNumber = rand(0, count($productIds)-1);
@@ -127,7 +127,7 @@ class DatabaseSeeder extends Seeder
                     'productId' => $productIds[$randomNumbers[$l]],
                     'howMany' => $randomNumber,
                     'howManyLeft' => $randomNumber,
-                    'orderNumber' => $k,
+                    'orderNumber' => $k+1,
                     'isCompleted' => false
                 ]);
             }
