@@ -110,6 +110,7 @@ Route::get('/storage/productOut/orders/{orderNumber}', [\App\Http\Controllers\Pr
 Route::get('/storage/productOut/orders/{orderNumber}/{productId}', [\App\Http\Controllers\ProductOutController::class, 'foundProduct']);
 Route::get('/storage/productOut/restoreProgress/{orderNumber}', [\App\Http\Controllers\ProductOutController::class, 'restoreProgress']);
 Route::get('/storage/productOut/finishOrder/{orderNumber}', [\App\Http\Controllers\ProductOutController::class, 'finishOrder']);
+Route::get('/storage/productOut/completedOrders', [\App\Http\Controllers\ProductOutController::class, 'completedOrders']);
 
 //ProductOut routes end
 

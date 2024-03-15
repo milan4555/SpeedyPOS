@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FilePath;
 use App\Models\Product;
 use App\Models\ProductOut;
 use App\Models\Variable;
@@ -14,12 +15,23 @@ class ProductOutController extends Controller
 {
     public function loadPage() {
         return view('storage.productOut.productOutSelector', [
-            'orderNumbers' => $this->getOrderNumbers()
+            'orderNumbers' => $this->getOrderNumbers(false)
         ]);
     }
-    public function getOrderNumbers() {
+
+    public function completedOrders() {
+        $orderNumbers = $this->getOrderNumbers(true);
+        if (count($orderNumbers) == 0) {
+            return redirect()->back()->with('error', 'Még nincsenek megjeleníthető adatok!');
+        }
+        return view('storage.productOut.productOutCompletedOrders', [
+            'orderNumbers' => $this->getOrderNumbers(true)
+        ]);
+    }
+    public function getOrderNumbers($isCompleted) {
         return DB::table('product_outs')
             ->select('orderNumber')
+            ->where('isCompleted', '=', $isCompleted)
             ->distinct()
             ->oldest('orderNumber')
             ->get()
@@ -78,7 +90,6 @@ class ProductOutController extends Controller
 //            return redirect()->back()->with('error', 'Sikertelen művelet, még vannak olyan termékek, amelyből nem megfelelő mennyiség van csomagolva!');
 //        }
         ProductOut::where([['orderNumber', '=', $orderNumber],['howMany', '!=', 0]])->update(['isCompleted' => true]);
-        $viewArray = self::getOrderInfo($orderNumber);
         $viewArray = [
             'products' => DB::table('product_outs')
                 ->join('products', 'product_outs.productId', 'products.productId')
@@ -89,7 +100,9 @@ class ProductOutController extends Controller
             'orderInfo' => self::getOrderInfo($orderNumber),
             'worker' => Auth::user()
         ];
-        Pdf::loadView('storage.PDFViews.productOutPDFView', $viewArray)->save('../public/pdf/'.date('Y_m_d').'_'.$orderNumber.'_rendeles.pdf');
+        $fileName = date('Y_m_d').'_'.$orderNumber.'_rendeles.pdf';
+        Pdf::loadView('storage.PDFViews.productOutPDFView', $viewArray)->save('../public/PDF/'.$fileName);
+        FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'productOut', 'outerId' => $orderNumber]);
         return redirect()->to('/storage/productOut/selector')->with('success', 'Sikeresen elkészítetted a rendelést! Az arról szóló dokumnetumot megtalálod a fájlok között!');
     }
 }
