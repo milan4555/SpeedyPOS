@@ -21,19 +21,15 @@
                     <th scope="col">Elérhető mennyiség</th>
                 </tr>
                 @foreach($products as $product)
-                    <tr id="{{$product->productId}}" onclick="getItemsFromRow({{$product->productId}})"
-                        data-productCodes="{{\App\Http\Controllers\ProductCodesController::makeTable($product->productId)}}">
-                        <th id="productId"
-                            data-input="{{$product->productId}}">{{$product->categoryId.str_repeat(0,7-strlen($product->productId)).$product->productId}}</th>
-                        <td id="productName" data-input="{{$product->productName}}">{{$product->productName}}</td>
-                        <td id="productShortName"
-                            data-input="{{$product->productShortName}}">{{$product->productShortName}}</td>
-                        <td id="categoryId" data-input="{{$product->categoryId}}">{{$product->categoryName}}</td>
-                        <td id="companyId" data-input="{{$product->companyId}}"
-                            class="{{$product->companyName == null ? 'text-danger' : ''}}">{{$product->companyName == null ? 'Nincs beállítva!' : $product->companyName}}</td>
-                        <td id="bPrice" data-input="{{$product->bPrice}}">{{$product->bPrice}}</td>
-                        <td id="nPrice" data-input="{{$product->nPrice}}">{{$product->nPrice}}</td>
-                        <td id="stock" data-input="{{$product->stock}}">{{$product->stock}} db</td>
+                    <tr>
+                        <th id="productId">{{$product->productId}}</th>
+                        <td id="productName">{{$product->productName}}</td>
+                        <td id="productShortName">{{$product->productShortName}}</td>
+                        <td id="categoryId">{{$product->categoryName}}</td>
+                        <td id="companyId" class="{{$product->companyName == null ? 'text-danger' : ''}}">{{$product->companyName == null ? 'Nincs beállítva!' : $product->companyName}}</td>
+                        <td id="bPrice">{{$product->bPrice}}</td>
+                        <td id="nPrice">{{$product->nPrice}}</td>
+                        <td id="stock">{{$product->howMany}} db</td>
                     </tr>
                 @endforeach
             @endif

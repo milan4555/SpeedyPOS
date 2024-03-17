@@ -84,7 +84,7 @@ Route::post('/storage/updateProduct', [\App\Http\Controllers\ProductController::
 
 Route::get('/storage/storageUnits/{storageId}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnit']);
 Route::get('/storage/storageUnit/{storageId}/{letter}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitRow']);
-Route::get('/storage/storageUnit/{storageId}/{letter}/{width}/{height}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitItems']);
+Route::get('/storage/storageUnit/{storageId}/{letter}/{height}/{width}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitItems']);
 Route::post('/storage/storageUnits/add', [\App\Http\Controllers\StorageUnitController::class, 'addStorageUnit']);
 Route::get('/storage/print/{labelType}/{storageId}/{letter?}/{width?}/{height?}', [\App\Http\Controllers\StorageUnitController::class, 'printStorageLabels']);
 
@@ -113,5 +113,12 @@ Route::get('/storage/productOut/finishOrder/{orderNumber}', [\App\Http\Controlle
 Route::get('/storage/productOut/completedOrders', [\App\Http\Controllers\ProductOutController::class, 'completedOrders']);
 
 //ProductOut routes end
+
+//ProductBreak routes start
+
+Route::match(['GET', 'POST'], '/storage/productBreak/getProduct/{productId?}', [\App\Http\Controllers\StoragePlaceController::class, 'loadPage']);
+Route::post('/storage/productBreak/addRow', [\App\Http\Controllers\StoragePlaceController::class, 'addRow']);
+
+//ProductBreak routes end
 
 //Storage routes start
