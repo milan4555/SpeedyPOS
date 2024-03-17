@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\StoragePlace;
 use App\Models\StorageUnit;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Zebra\Zpl\Builder;
 
@@ -49,7 +51,7 @@ class StorageUnitController extends Controller
         ]);
     }
 
-    public function showStorageUnitItems($storageUnitId, $letter, $width, $height) {
+    public function showStorageUnitItems($storageUnitId, $letter, $height, $width) {
         return view('storage.storageUnits.storageUnitItems', [
             'letter' => $letter,
             'selectedStorage' => StorageUnit::find($storageUnitId),
@@ -57,7 +59,14 @@ class StorageUnitController extends Controller
             'storageUnits' => StorageUnit::all(),
             'width' => $width,
             'height' => $height,
-            'products' => Product::all()->where('storagePlace', '=', $storageUnitId.'-'.$letter.$height.'-'.$width)
+            'products' => DB::table('products')
+                ->leftJoin('storage_places', 'products.productId', 'storage_places.productId')
+                ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
+                ->leftJoin('companies', 'products.companyId', 'companies.companyId')
+                ->select('*')
+                ->where('storage_places.storagePlace', '=', $storageUnitId.'-'.$letter.$height.'-'.$width)
+                ->get()
+                ->toArray()
         ]);
     }
 

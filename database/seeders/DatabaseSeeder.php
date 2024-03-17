@@ -8,11 +8,13 @@ use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
 use App\Models\ProductOut;
+use App\Models\StoragePlace;
 use App\Models\StorageUnit;
 use App\Models\User;
 use App\Models\UserRight;
 use App\Models\Variable;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -48,9 +50,9 @@ class DatabaseSeeder extends Seeder
                     'productShortName' => $data[1],
                     'bPrice' => $data[2],
                     'nPrice' => round($data[2]*1.8),
-                    'stock' => $data[4],
+                    'stock' => 0,
                     'categoryId' => 807,
-                    'storagePlace' => random_int(1,5).'-'.$abc[6].'5-4'
+                    'storagePlace' => random_int(1,5).'-'.$abc[2].'5-4'
                 ]);
                 $i++;
             }
@@ -130,6 +132,32 @@ class DatabaseSeeder extends Seeder
                     'orderNumber' => $k+1,
                     'isCompleted' => false
                 ]);
+            }
+        }
+        for ($m = 0; $m < 3; $m++) {
+            $randomInt = rand(3,5);
+            $randomProductCode = $productIds[rand(0, count($productIds)-1)];
+            for ($n = 0; $n < $randomInt; $n++) {
+                StoragePlace::factory()->create([
+                   'productId' =>  $randomProductCode,
+                    'index' => $n+1,
+                    'howMany' => rand(5,15),
+                    'storagePlace' => random_int(1,5).'-'.$abc[2].'5-4'
+                ]);
+            }
+        }
+        for ($o = 0; $o < count($productIds); $o++) {
+            if (StoragePlace::where('productId', '=', $productIds[$o])->count() > 0) {
+                Product::find($productIds[$o])->update(['stock' => StoragePlace::where('productId', '=', $productIds[$o])->sum('howMany')]);
+            } else {
+                $randomStock = rand(10, 50);
+                StoragePlace::factory()->create([
+                   'productId' => $productIds[$o],
+                   'index' => 1,
+                   'howMany' => $randomStock,
+                   'storagePlace' => random_int(1,5).'-'.$abc[2].'5-4'
+                ]);
+                Product::find($productIds[$o])->update(['stock' => $randomStock]);
             }
         }
     }
