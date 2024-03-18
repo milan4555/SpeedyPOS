@@ -33,7 +33,11 @@ class StoragePlaceController extends Controller
         if ($request['newStoragePlace'] == $request['oldStoragePlace']) {
             return redirect()->back()->with('error', 'A kettő raktárhelység megegyezik, így nem történt semmilyen változtatás!');
         }
+        $brokenRow = StoragePlace::where([['productId', '=', $request['brokenProductId']],['index', '=', $request['brokenIndex']]])->first();
         $maxIndex = StoragePlace::where('productId', '=', $request['brokenProductId'])->max('index');
+        if ($brokenRow->howMany == $request['selectedQuantity']) {
+            return redirect()->back()->with('error', 'A kettő mennyiség megegyezik, így nem történt semmilyen változtatás!');
+        }
         StoragePlace::create([
            'productId' => $request['brokenProductId'],
            'index' => $maxIndex + 1,
