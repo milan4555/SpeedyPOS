@@ -28,3 +28,5 @@ Megvalósított funkciók:
     - Globális változók beállítása
     - Dolgozói jogosultságok kezelése
     - Dolgozók idejének megtekintése
+
+Tervezett használat: Kiosk és PDA vonalkódolvasó
