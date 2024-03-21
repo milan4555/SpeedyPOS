@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
 use App\Models\ProductInOut;
+use App\Models\StoragePlace;
 use App\Models\Variable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -103,7 +104,7 @@ class ProductInOutController extends Controller
     }
 
     public function finish() {
-        $fp=pfsockopen("127.0.0.1",9100);
+//        $fp=pfsockopen("127.0.0.1",9100);
         $allData = DB::table('product_in_outs')
             ->join('products', 'product_in_outs.productId', 'products.productId')
             ->select('*')
@@ -113,7 +114,12 @@ class ProductInOutController extends Controller
         foreach ($allData as $data) {
             $product = Product::find($data->productId);
             $product->update(['bPrice' => $data->newBPrice, 'nPrice' => round($data->newBPrice*1.8, -1)]);
-            $product->increment('stock', $data->howMany);
+            $maxIndex = StoragePlace::where('productId', '=', $product->productId)->max('index');
+            StoragePlace::create([
+               'productId' => $product->productId,
+               'index' => $maxIndex+1,
+               'howMany' => $data->howMany
+            ]);
 //            for ($i = 0; $i < $data->howMany; $i++) {
 //                $zpl = '
 //                ^XA

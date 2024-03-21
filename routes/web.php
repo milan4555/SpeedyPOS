@@ -114,11 +114,19 @@ Route::get('/storage/productOut/completedOrders', [\App\Http\Controllers\Product
 
 //ProductOut routes end
 
-//ProductBreak routes start
+//ProductBreak/Move routes start
 
 Route::match(['GET', 'POST'], '/storage/productBreak/getProduct/{productId?}', [\App\Http\Controllers\StoragePlaceController::class, 'loadPage']);
-Route::post('/storage/productBreak/addRow', [\App\Http\Controllers\StoragePlaceController::class, 'addRow']);
+Route::post('/storage/productBreak/addRow', [\App\Http\Controllers\StoragePlaceController::class, 'addProductBreakRow']);
+Route::post('/storage/productMove/addRow', [\App\Http\Controllers\StoragePlaceController::class, 'updateProductMoveRow']); //(ProductMove route)
 
-//ProductBreak routes end
+//ProductBreak/Move routes end
+
+//UnassignedProducts routes start
+
+Route::get('/storage/unassignedProducts', [\App\Http\Controllers\StoragePlaceController::class, 'loadUnassignedProductsPage']);
+Route::get('/storage/assignProduct/{productId}/{storagePlace}', [\App\Http\Controllers\StoragePlaceController::class, 'assignProduct']);
+
+//UnassignedProducts routes end
 
 //Storage routes start

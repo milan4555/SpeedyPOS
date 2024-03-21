@@ -13,8 +13,8 @@
             <div class="col-md-3"></div>
 
             <div class="col-md-3 "></div>
-            <div class="col-md-3 bg-danger"><h4 class="text-center my-3">Tétel mozgatás</h4></div>
-            <div onclick="location.href='/storage/productBreak/getProduct';" class="col-md-3 bg-warning"><h4 class="text-center my-3">Tétel bontás</h4></div>
+            <div onclick="location.href='/storage/unassignedProducts';" class="col-md-3 bg-danger"><h4 class="text-center my-3">Elhelyezetlen tételek</h4></div>
+            <div onclick="location.href='/storage/productBreak/getProduct';" class="col-md-3 bg-warning"><h4 class="text-center my-3">Tétel mozgatás/bontás</h4></div>
             <div class="col-md-3"></div>
 
             <div class="col-md-3 "></div>
