@@ -27,8 +27,8 @@
                         <td id="productShortName">{{$product->productShortName}}</td>
                         <td id="categoryId">{{$product->categoryName}}</td>
                         <td id="companyId" class="{{$product->companyName == null ? 'text-danger' : ''}}">{{$product->companyName == null ? 'Nincs beállítva!' : $product->companyName}}</td>
-                        <td id="bPrice">{{$product->bPrice}}</td>
-                        <td id="nPrice">{{$product->nPrice}}</td>
+                        <td id="bPrice">{{$product->bPrice}} Ft.</td>
+                        <td id="nPrice">{{$product->nPrice}} Ft.</td>
                         <td id="stock">{{$product->howMany}} db</td>
                     </tr>
                 @endforeach

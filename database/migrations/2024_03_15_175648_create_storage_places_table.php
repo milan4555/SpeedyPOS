@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('productId');
             $table->integer('index');
             $table->integer('howMany');
-            $table->string('storagePlace');
+            $table->string('storagePlace')->nullable();
             $table->timestamps();
         });
     }
