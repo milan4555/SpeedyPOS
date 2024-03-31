@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('stock');
             $table->unsignedBigInteger('categoryId');
             $table->unsignedBigInteger('companyId')->nullable();
-            $table->string('storagePlace')->nullable();
             $table->timestamps();
 
             $table->foreign('categoryId')
