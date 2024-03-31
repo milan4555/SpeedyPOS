@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         ]);
         for ($j = 0; $j < 5; $j++) {
             StorageUnit::create([
-                'storageName' => 'Raktárhelység #'.$j,
+                'storageName' => 'Raktárhelység #'.$j+1,
                 'numberOfRows' => random_int(6,10),
                 'widthNumber' => random_int(5,15),
                 'heightNumber' => random_int(4,8)
@@ -52,7 +52,6 @@ class DatabaseSeeder extends Seeder
                     'nPrice' => round($data[2]*1.8),
                     'stock' => 0,
                     'categoryId' => 807,
-                    'storagePlace' => random_int(1,5).'-'.$abc[2].'5-4'
                 ]);
                 $i++;
             }

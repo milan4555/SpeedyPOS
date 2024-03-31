@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\StoragePlace;
 use App\Models\StorageUnit;
@@ -81,10 +82,22 @@ class StoragePlaceController extends Controller
                 ->where([['productId', '=', $request['brokenProductId']],['storagePlace', '=', $request['newStoragePlace']]])
                 ->increment('howMany', $movedProduct->howMany);
             $movedProduct->delete();
+            Inventory::where('storagePlaceId', $movedProduct->id)->delete();
+            if (isset($request['redirectStorageId'])) {
+                return redirect()->to('/storage/inventory/'.$request['redirectStorageId'])->with('success', 'Sikeresen áthelyezted a terméket, és mivel ezen a helyen már volt hasonló termék, így a kettő össze lett vonva.')->send();
+            }
             return redirect()->back()->with('success', 'Sikeresen áthelyezted a terméket, és mivel ezen a helyen már volt hasonló termék, így a kettő össze lett vonva.');
         }
         StoragePlace::find($movedProduct->id)->update(['storagePlace' => $request['newStoragePlace']]);
-
+        if (isset($request['redirectStorageId'])) {
+            $row = Inventory::where('storagePlaceId', $movedProduct->id)->first();
+            if ($row != null) {
+                Inventory::where('storagePlaceId', $movedProduct->id)->update(['isFound' => true, 'oldStoragePlace' => $request['oldStoragePlace'], 'changedPlace' => true]);
+            } else {
+                Inventory::create(['storagePlaceId' => $movedProduct->id, 'isFound' => true, 'oldStoragePlace' => $request['oldStoragePlace'], 'changedPlace' => true]);
+            }
+            return redirect()->to('/storage/inventory/'.$request['redirectStorageId'])->send();
+        }
         return redirect()->to('/storage/productBreak/getProduct')->with('success', 'Sikeresen végrehajtott művelet! Az új adatot megtalálod a raktárböngésző oldalon!')->send();
     }
 
@@ -118,5 +131,21 @@ class StoragePlaceController extends Controller
         }
         $unassignedRow->update(['storagePlace' => $storagePlace]);
         return redirect()->back()->with('success', 'Sikeresen elhelyezted a terméket. Jöhet a következő!');
+    }
+
+    public static function getAllUsedPlaces($storageUnitId) {
+        $productsSubQuery = DB::table('storage_places')
+            ->join('products', 'storage_places.productId', 'products.productId')
+            ->selectRaw("storage_places.id, split_part(" . '"storagePlace"' . ", '-', 1) as storage_id")
+            ->get()
+            ->toArray();
+        $rowIds = [];
+        foreach ($productsSubQuery as $data) {
+            if ($data->storage_id == $storageUnitId) {
+                $rowIds[] = $data->id;
+            }
+        }
+
+        return $rowIds;
     }
 }

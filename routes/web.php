@@ -129,4 +129,16 @@ Route::get('/storage/assignProduct/{productId}/{storagePlace}', [\App\Http\Contr
 
 //UnassignedProducts routes end
 
+//InventoryPage routes start
+
+Route::get('/storage/inventory/{storageId}', [\App\Http\Controllers\InventoryController::class, 'showStorageUnitInventory']);
+Route::get('/storage/inventoryFullReset/{storageId}', [\App\Http\Controllers\InventoryController::class, 'fullReset']);
+Route::get('/storage/inventoryInput/{storageId}/{productId}', [\App\Http\Controllers\InventoryController::class, 'checkProductId']);
+Route::get('/storage/inventoryHelper/{storageId}/{productId}', [\App\Http\Controllers\InventoryController::class, 'helperRoute']);
+Route::get('/storage/inventoryChangeQuantity/{rowId}/{quantity}', [\App\Http\Controllers\InventoryController::class, 'updateChangedQuantity']);
+Route::get('/storage/inventoryUnFindItem/{storagePlaceId}', [\App\Http\Controllers\InventoryController::class, 'unFindItem']);
+Route::get('/storage/inventoryMakePDF/{storageUnitId}', [\App\Http\Controllers\InventoryController::class, 'makeInventoryPdfView']);
+
+//InventoryPage routes end
+
 //Storage routes start

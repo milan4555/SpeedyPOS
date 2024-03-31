@@ -86,9 +86,9 @@ class ProductOutController extends Controller
 
     public function finishOrder($orderNumber) {
         $howManyNotZero = ProductOut::where([['orderNumber', '=', $orderNumber],['howMany', '!=', 0]])->count();
-//        if ($howManyNotZero > 0) {
-//            return redirect()->back()->with('error', 'Sikertelen művelet, még vannak olyan termékek, amelyből nem megfelelő mennyiség van csomagolva!');
-//        }
+        if ($howManyNotZero > 0) {
+            return redirect()->back()->with('error', 'Sikertelen művelet, még vannak olyan termékek, amelyből nem megfelelő mennyiség van csomagolva!');
+        }
         ProductOut::where([['orderNumber', '=', $orderNumber],['howMany', '!=', 0]])->update(['isCompleted' => true]);
         $viewArray = [
             'products' => DB::table('product_outs')
