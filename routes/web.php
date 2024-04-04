@@ -141,4 +141,12 @@ Route::get('/storage/inventoryMakePDF/{storageUnitId}', [\App\Http\Controllers\I
 
 //InventoryPage routes end
 
+//RiportPage routes start
+
+Route::get('/storage/riportPage', [\App\Http\Controllers\RiportController::class, 'loadPageDefault']);
+Route::match(['GET', 'POST'],'/storage/riportPage/salesRiport', [\App\Http\Controllers\RiportController::class, 'salesRiport']);
+Route::match(['GET', 'POST'],'/storage/riportPage/salesRiportAll', [\App\Http\Controllers\RiportController::class, 'salesRiportAll']);
+
+//RiportPage routes end
+
 //Storage routes start

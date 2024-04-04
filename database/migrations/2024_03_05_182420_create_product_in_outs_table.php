@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('productId');
             $table->integer('howMany');
             $table->integer('newBPrice')->nullable();
+            $table->boolean('isFinished')->default(false);
             $table->timestamps();
         });
     }

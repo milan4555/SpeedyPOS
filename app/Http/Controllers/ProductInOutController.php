@@ -20,6 +20,7 @@ class ProductInOutController extends Controller
         $products = DB::table('products')
             ->join('product_in_outs', 'products.productId', 'product_in_outs.productId')
             ->join('categories', 'products.categoryId', 'categories.categoryId')
+            ->where('isFinished', '!=', true)
             ->orderBy('product_in_outs.created_at')
             ->get()
             ->toArray();
@@ -40,11 +41,13 @@ class ProductInOutController extends Controller
         ]);
     }
     public function addNewRow($productIdentifier) {
-        $tableCount = ProductInOut::where('productId', '=', $productIdentifier)
+        $tableCount = ProductInOut::where('isFinished', '=', false)
+            ->where('productId', '=', $productIdentifier)
             ->orWhere('productId', '=', ProductCodesController::whichProduct($productIdentifier))
             ->count();
         if ($tableCount > 0) {
-            ProductInOut::where('productId', '=', $productIdentifier)
+            ProductInOut::where('isFinished', '=', false)
+                ->where('productId', '=', $productIdentifier)
                 ->orWhere('productId', '=', ProductCodesController::whichProduct($productIdentifier))
                 ->increment('howMany', 1);
             return redirect()->back();
@@ -75,12 +78,12 @@ class ProductInOutController extends Controller
     }
 
     public function changeQuantity($productId, $quantity) {
-        ProductInOut::where('productId', '=', $productId)->update(['howMany' => $quantity]);
+        ProductInOut::where([['productId', '=', $productId], ['isFinished', '!=', true]])->update(['howMany' => $quantity]);
         return redirect()->back();
     }
 
     public function changeBPrice($productId, $bPrice) {
-        ProductInOut::where('productId', '=', $productId)->update(['newBPrice' => $bPrice]);
+        ProductInOut::where([['productId', '=', $productId], ['isFinished', '!=', true]])->update(['newBPrice' => $bPrice]);
         return redirect()->back();
     }
 
@@ -99,7 +102,7 @@ class ProductInOutController extends Controller
     }
 
     public function removeRow($productCode) {
-        ProductInOut::where('productId', '=', $productCode)->delete();
+        ProductInOut::where([['productId', '=', $productCode], ['isFinished', '!=', true]])->delete();
         return redirect()->back();
     }
 
@@ -151,13 +154,14 @@ class ProductInOutController extends Controller
             'worker' => Auth::user()
         ];
         Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/PDF/'.date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'PDF');
-        ProductInOut::truncate();
+        DB::table('product_in_outs')->update(['isFinished' => true]);
+        ProductInOut::where('howMany', '=', -1)->delete();
 
         return redirect()->back()->with('success', 'Sikeres árubevétel! A cimkék nyomtatása megkezdődött, a bevételről szóló PDF-et pedig a fájlkeresőben találod!');
     }
 
     public function fullDelete() {
-        ProductInOut::truncate();
+        ProductInOut::where('isFinished', '=', false);
         return Redirect::back();
     }
 }
