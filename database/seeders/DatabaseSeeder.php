@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\productCodes;
+use App\Models\ProductInOut;
 use App\Models\ProductOut;
 use App\Models\StoragePlace;
 use App\Models\StorageUnit;
@@ -114,8 +115,10 @@ class DatabaseSeeder extends Seeder
             'position' => 'admin',
             'rightsId' => 1
         ]);
-        for ($k = 0; $k < 8; $k++) {
+        for ($k = 0; $k < 1000; $k++) {
             $randomNumbers = [];
+            $faker = \Faker\Factory::create();
+            $randtime = $faker->dateTimeBetween('2024-01-01', '2024-12-30'." 23:59:59");
             while (count($randomNumbers) != 8) {
                 $randomNumber = rand(0, count($productIds)-1);
                 if (!in_array($randomNumber, $randomNumbers)) {
@@ -129,7 +132,8 @@ class DatabaseSeeder extends Seeder
                     'howMany' => $randomNumber,
                     'howManyLeft' => $randomNumber,
                     'orderNumber' => $k+1,
-                    'isCompleted' => false
+                    'isCompleted' => true,
+                    'created_at' => $randtime
                 ]);
             }
         }
@@ -158,6 +162,15 @@ class DatabaseSeeder extends Seeder
                 ]);
                 Product::find($productIds[$o])->update(['stock' => $randomStock]);
             }
+        }
+        for ($p = 0; $p < 1000; $p++) {
+            ProductInOut::factory()->create([
+               'productId' => $productIds[rand(0, count($productIds)-1)],
+                'howMany' => rand(50,70),
+                'newBPrice' => rand(3000,10000),
+                'isFinished' => true,
+                'created_at' => $faker->dateTimeBetween('2024-01-01', '2024-12-30'." 23:59:59")
+            ]);
         }
     }
 }
