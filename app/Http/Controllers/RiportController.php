@@ -96,7 +96,6 @@ class RiportController extends Controller
             ->limit(10)
             ->get()
             ->toArray();
-        dd($topTenProduct);
         $allBought = [];
         $allSold = [];
         foreach ($wholeYear as $singleDate) {
