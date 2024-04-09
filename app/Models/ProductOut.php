@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProductOut extends Model
 {
     use HasFactory;
+    protected $fillable = ['helper'];
+    protected $casts = [
+        'helper' => 'array'
+    ];
 }

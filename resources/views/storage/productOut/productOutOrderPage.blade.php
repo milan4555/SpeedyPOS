@@ -1,5 +1,6 @@
 @extends('layouts.menu')
 @section('content')
+    <meta http-equiv="refresh" content="15" />
     <div class="m-3 p-3 border border-dark rounded-3 bg-white">
         <table class="table">
             <thead>
@@ -18,21 +19,22 @@
                 <tr>
                     <th>Cikkszám</th>
                     <th>Termék megnevezés</th>
-                    <th>Darabszám</th>
-                    <th>Maradék</th>
+                    <th>Raktár darabszám</th>
+                    <th>Rendelt</th>
                     <th>Raktári helye</th>
                     <th>Állapot</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($orderItems as $orderItem)
+                    @php($storagePlaceInfo = \App\Http\Controllers\ProductOutController::getBestStoragePlaceInfo($orderItem->productId))
                     <tr>
-                        <td>{{$orderItem->productId}}</td>
-                        <td>{{$orderItem->productName}}</td>
-                        <td>{{$orderItem->howMany}} db</td>
+                        <td>{{$storagePlaceInfo->productId}}-{{$storagePlaceInfo->index}}</td>
+                        <td>{{$storagePlaceInfo->productName}}</td>
+                        <td>{{$storagePlaceInfo->howMany}} db</td>
                         <td>{{$orderItem->howManyLeft}} db</td>
-                        <td>{{$orderItem->storagePlace}}</td>
-                        <td class="{{$orderItem->howMany == 0 ? 'bg-success' : 'bg-danger'}}"></td>
+                        <td>{{$storagePlaceInfo->storagePlace}}</td>
+                        <td class="{{$orderItem->howManyLeft == 0 ? 'bg-success' : 'bg-danger'}}"></td>
                     </tr>
                 @endforeach
             </tbody>

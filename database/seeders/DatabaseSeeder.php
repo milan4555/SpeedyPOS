@@ -115,7 +115,7 @@ class DatabaseSeeder extends Seeder
             'position' => 'admin',
             'rightsId' => 1
         ]);
-        for ($k = 0; $k < 1000; $k++) {
+        for ($k = 0; $k < 100; $k++) {
             $randomNumbers = [];
             $faker = \Faker\Factory::create();
             $randtime = $faker->dateTimeBetween('2024-01-01', '2024-12-30'." 23:59:59");
@@ -132,7 +132,7 @@ class DatabaseSeeder extends Seeder
                     'howMany' => $randomNumber,
                     'howManyLeft' => $randomNumber,
                     'orderNumber' => $k+1,
-                    'isCompleted' => true,
+                    'isCompleted' => false,
                     'created_at' => $randtime
                 ]);
             }
@@ -163,7 +163,7 @@ class DatabaseSeeder extends Seeder
                 Product::find($productIds[$o])->update(['stock' => $randomStock]);
             }
         }
-        for ($p = 0; $p < 1000; $p++) {
+        for ($p = 0; $p < 100; $p++) {
             ProductInOut::factory()->create([
                'productId' => $productIds[rand(0, count($productIds)-1)],
                 'howMany' => rand(50,70),
