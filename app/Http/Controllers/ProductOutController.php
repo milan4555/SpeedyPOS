@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FilePath;
 use App\Models\Product;
 use App\Models\ProductOut;
+use App\Models\StoragePlace;
 use App\Models\Variable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -48,9 +49,7 @@ class ProductOutController extends Controller
     }
     public function loadOrderPage($orderNumber) {
         $orderItems = DB::table('product_outs')
-            ->join('products', 'product_outs.productId', 'products.productId')
             ->where('orderNumber', '=', $orderNumber)
-            ->orderBy('storagePlace')
             ->get()
             ->toArray();
         $orderInfo = self::getOrderInfo($orderNumber);
@@ -65,36 +64,72 @@ class ProductOutController extends Controller
            'sameRowCount' => $sameRowCount
         ]);
     }
+    public static function getBestStoragePlaceInfo($productId) {
+        return DB::table('storage_places')
+            ->join('products', 'storage_places.productId', 'products.productId')
+            ->where('storage_places.productId', $productId)
+            ->where('howMany', '!=', 0)
+            ->orderBy('howMany')
+            ->orderBy('storagePlace')
+            ->first();
+    }
     public function foundProduct($orderNumber, $productId) {
-        $product = Product::find($productId);
-        if ($product == null) {
+        $explodedProductId = explode('-', $productId);
+        $productId = $explodedProductId[0];
+        $index = $explodedProductId[1];
+        $productRow = StoragePlace::where([['productId', $productId], ['index', $index]])->first();
+        if ($productRow == null) {
             return redirect()->back()->with('error', 'A cikkszám nem található! Próbáld meg újra, vagy keress utána a megfelelő cikkszámnak!');
         }
         $row = ProductOut::where([['orderNumber', '=', $orderNumber],['productId', '=', $productId]])->first();
         if ($row->howMany == 0) {
             return redirect()->back()->with('error', 'Ebből a cikkszámból már a megfelelő mennyiséget megtaláltad!');
         }
-        ProductOut::find($row->id)->decrement('howManyLeft', 1);
+        $productOutRow = ProductOut::find($row->id);
 
+        $oldHowManyLeft = $productOutRow->howManyLeft;
+        $oldHowMany = $productRow->howMany;
+        $oldHelper = $productOutRow->helper;
+        $oldHelper[] = [intval($orderNumber), $productRow->id, $oldHowManyLeft > $oldHowMany ? $oldHowMany : $oldHowManyLeft];
+        $productRow->decrement('howMany', ($oldHowManyLeft < $oldHowMany ? $oldHowManyLeft : $oldHowMany));
+        $productOutRow->decrement('howManyLeft', ($oldHowManyLeft > $oldHowMany ? $oldHowMany : $oldHowManyLeft));
+        $productOutRow->update(['helper' => $oldHelper]);
         return redirect()->back()->with('success', 'Sikeres találat! Ilyen szerencsét kívánok az ötös lottóhoz is!');
     }
 
     public function restoreProgress($orderNumber) {
         Productout::where('orderNumber', '=', $orderNumber)->update(['howManyLeft' => DB::raw('"howMany"')]);
+        $usedRows = ProductOut::where('helper', 'like', '%['.$orderNumber.',%')->get();
+        foreach ($usedRows as $usedRow) {
+            $helperData = $usedRow->helper;
+            foreach ($helperData as $singleArray) {
+                StoragePlace::find($singleArray[1])->increment('howMany', $singleArray[2]);
+            }
+        }
+        $usedRow->update(['helper' => null]);
         return redirect()->back()->with('success', 'Sikeresen nulláztad a folyamatot, de ezáltal újra is kell kezdened mindent!');
     }
 
     public function finishOrder($orderNumber) {
         $howManyNotZero = ProductOut::where([['orderNumber', '=', $orderNumber],['howMany', '!=', 0]])->count();
-        if ($howManyNotZero > 0) {
-            return redirect()->back()->with('error', 'Sikertelen művelet, még vannak olyan termékek, amelyből nem megfelelő mennyiség van csomagolva!');
+//        if ($howManyNotZero > 0) {
+//            return redirect()->back()->with('error', 'Sikertelen művelet, még vannak olyan termékek, amelyből nem megfelelő mennyiség van csomagolva!');
+//        }
+        $usedRows = ProductOut::where('helper', 'like', '%['.$orderNumber.',%')->get();
+        foreach ($usedRows as $usedRow) {
+            $helperData = $usedRow->helper;
+            for ($i = 0; $i < count($helperData); $i++) {
+                if ($i == (count($helperData)-1)) {
+                    break;
+                }
+                StoragePlace::find($helperData[$i][1])->delete();
+            }
         }
         ProductOut::where([['orderNumber', '=', $orderNumber],['howMany', '!=', 0]])->update(['isCompleted' => true]);
         $viewArray = [
             'products' => DB::table('product_outs')
                 ->join('products', 'product_outs.productId', 'products.productId')
                 ->where('orderNumber', '=', $orderNumber)
-                ->orderBy('storagePlace')
                 ->get()
                 ->toArray(),
             'orderInfo' => self::getOrderInfo($orderNumber),

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('howManyLeft');
             $table->integer('orderNumber');
             $table->boolean('isCompleted');
+            $table->jsonb('helper')->nullable();
             $table->timestamps();
         });
     }
