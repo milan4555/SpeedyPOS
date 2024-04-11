@@ -138,12 +138,13 @@ class ProductOutController extends Controller
         ];
         if ($orderNumber == -1) {
             $fileName = date('Y_m_d').'_bolti_kiadas.pdf';
+            FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'forStore']);
             ProductOut::where('orderNumber', '=', -1)->delete();
         } else {
             $fileName = date('Y_m_d').'_'.$orderNumber.'_rendeles.pdf';
+            FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'productOut', 'outerId' => $orderNumber]);
         }
         Pdf::loadView('storage.PDFViews.productOutPDFView', $viewArray)->save('../public/PDF/'.$fileName);
-        FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'productOut', 'outerId' => $orderNumber]);
         return redirect()->to('/storage/productOut/selector')->with('success', 'Sikeresen elkészítetted a rendelést! Az arról szóló dokumentumot megtalálod a fájlok között!');
     }
 

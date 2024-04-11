@@ -4,6 +4,7 @@
         <div class="text-center pb-3">
             <a href="/storage/productOut/forStore" class="btn btn-primary">Bolti kiadás</a>
             <a href="/storage/productOut/completedOrders" class="btn btn-warning">Váltás elvégzett rendelésekre</a>
+            <a href="/storage/menu" class="btn btn-danger">Vissza</a>
         </div>
         <div class="d-flex justify-content-center">
             <div class="row justify-content-md-center">

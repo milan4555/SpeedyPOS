@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('fileName');
             $table->string('fileType');
             $table->string('category');
-            $table->bigInteger('outerId');
+            $table->bigInteger('outerId')->nullable();
             $table->timestamps();
         });
     }
