@@ -33,6 +33,7 @@ class ProductOutController extends Controller
         return DB::table('product_outs')
             ->select('orderNumber')
             ->where('isCompleted', '=', $isCompleted)
+            ->where('orderNumber', '!=', -1)
             ->distinct()
             ->oldest('orderNumber')
             ->get()
@@ -112,9 +113,9 @@ class ProductOutController extends Controller
 
     public function finishOrder($orderNumber) {
         $howManyNotZero = ProductOut::where([['orderNumber', '=', $orderNumber],['howMany', '!=', 0]])->count();
-//        if ($howManyNotZero > 0) {
-//            return redirect()->back()->with('error', 'Sikertelen művelet, még vannak olyan termékek, amelyből nem megfelelő mennyiség van csomagolva!');
-//        }
+        if ($howManyNotZero > 0) {
+            return redirect()->back()->with('error', 'Sikertelen művelet, még vannak olyan termékek, amelyből nem megfelelő mennyiség van csomagolva!');
+        }
         $usedRows = ProductOut::where('helper', 'like', '%['.$orderNumber.',%')->get();
         foreach ($usedRows as $usedRow) {
             $helperData = $usedRow->helper;
@@ -135,9 +136,63 @@ class ProductOutController extends Controller
             'orderInfo' => self::getOrderInfo($orderNumber),
             'worker' => Auth::user()
         ];
-        $fileName = date('Y_m_d').'_'.$orderNumber.'_rendeles.pdf';
+        if ($orderNumber == -1) {
+            $fileName = date('Y_m_d').'_bolti_kiadas.pdf';
+            ProductOut::where('orderNumber', '=', -1)->delete();
+        } else {
+            $fileName = date('Y_m_d').'_'.$orderNumber.'_rendeles.pdf';
+        }
         Pdf::loadView('storage.PDFViews.productOutPDFView', $viewArray)->save('../public/PDF/'.$fileName);
         FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'productOut', 'outerId' => $orderNumber]);
-        return redirect()->to('/storage/productOut/selector')->with('success', 'Sikeresen elkészítetted a rendelést! Az arról szóló dokumnetumot megtalálod a fájlok között!');
+        return redirect()->to('/storage/productOut/selector')->with('success', 'Sikeresen elkészítetted a rendelést! Az arról szóló dokumentumot megtalálod a fájlok között!');
+    }
+
+    public function forStore() {
+        $storeRows = ProductOut::where('orderNumber', '=', -1)->get();
+        if (count($storeRows) == 0) {
+            return view('storage.productOut.productOutForStore');
+        }
+        return view('storage.productOut.productOutForStore', [
+            'orderItems' => $storeRows
+        ]);
+    }
+
+    public function addProductToList(Request $request) {
+        $product = Product::find($request['productIdOrder']);
+        if ($product == null) {
+            return redirect()->back()->with('error', 'Nem megfelelő termékkódot adtál meg! Próbáld meg újra, vagy adj meg egy másikat!');
+        }
+        $productStock = ProductController::getHowManyInStorage($request['productIdOrder']);
+        if ($productStock < $request['howManyOrder']) {
+            return redirect()->back()->with('error', 'Összesen nincsen ennyi darabszám a raktárban! Elérhető mennyiség: '.$productStock);
+        }
+        ProductOut::create([
+           'productId' => $request['productIdOrder'],
+            'howMany' => $request['howManyOrder'],
+            'howManyLeft' => $request['howManyOrder'],
+            'orderNumber' => -1,
+            'isCompleted' => false,
+            'helper' => null
+        ]);
+        return redirect()->back()->with('success', 'Sikeres felírás!');
+    }
+
+    public function forStoreRemoveRow($orderItemId) {
+        ProductOut::find($orderItemId)->delete();
+        return redirect()->back()->with('success', 'Sikeres törlés!');
+    }
+
+    public function forStoreUpdateRow($orderItemId, $quantity) {
+        ProductOut::find($orderItemId)->update(['howMany' => $quantity, 'howManyLeft' => $quantity]);
+        return redirect()->back()->with('success', 'Sikeres módosítás!');
+    }
+
+    public function forStoreRestart() {
+        $notNullHelper = ProductOut::where([['orderNumber', '=', -1],['helper', '!=', null]])->count();
+        if ($notNullHelper > 0) {
+            return redirect()->back()->with('error', 'Már van olyan elem, amely megtalálásra került a rendszerben! Először ott kell újrakezdeni ha szükséges!');
+        }
+        ProductOut::where('orderNumber', '=', -1)->delete();
+        return redirect()->back()->with('success', 'Sikeres törölted a rendelést!');
     }
 }
