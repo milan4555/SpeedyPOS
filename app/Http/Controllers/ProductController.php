@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\cashRegisterItem;
 use App\Models\Product;
+use App\Models\StoragePlace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -91,5 +92,9 @@ class ProductController extends Controller
         Product::find($request['productId'])->update($productHelper);
 
         return Redirect::back()->with('success', 'Sikeresen megváltoztattad a termék paramétereit!');
+    }
+
+    public static function getHowManyInStorage($productId) {
+        return StoragePlace::where('productId', $productId)->sum('howMany');
     }
 }

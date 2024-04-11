@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductOut extends Model
 {
     use HasFactory;
-    protected $fillable = ['helper'];
+    protected $fillable = ['productId', 'howMany', 'howManyLeft', 'orderNumber', 'isCompleted', 'helper'];
     protected $casts = [
         'helper' => 'array'
     ];

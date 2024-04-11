@@ -2,6 +2,7 @@
 @section('content')
     <div class="m-3 p-3 border border-dark rounded-3 bg-white">
         <div class="text-center pb-3">
+            <a href="/storage/productOut/forStore" class="btn btn-primary">Bolti kiadás</a>
             <a href="/storage/productOut/completedOrders" class="btn btn-warning">Váltás elvégzett rendelésekre</a>
         </div>
         <div class="d-flex justify-content-center">

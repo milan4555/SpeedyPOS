@@ -112,6 +112,16 @@ Route::get('/storage/productOut/restoreProgress/{orderNumber}', [\App\Http\Contr
 Route::get('/storage/productOut/finishOrder/{orderNumber}', [\App\Http\Controllers\ProductOutController::class, 'finishOrder']);
 Route::get('/storage/productOut/completedOrders', [\App\Http\Controllers\ProductOutController::class, 'completedOrders']);
 
+//ForStore route start
+
+Route::get('/storage/productOut/forStore', [\App\Http\Controllers\ProductOutController::class, 'forStore']);
+Route::post('/storage/productOut/forStore/addProductToList', [\App\Http\Controllers\ProductOutController::class, 'addProductToList']);
+Route::get('/storage/productOut/forStore/remove/{orderItemId}', [\App\Http\Controllers\ProductOutController::class, 'forStoreRemoveRow']);
+Route::get('/storage/productOut/forStore/update/{orderItemId}/{quantity}', [\App\Http\Controllers\ProductOutController::class, 'forStoreUpdateRow']);
+Route::get('/storage/productOut/forStore/restart', [\App\Http\Controllers\ProductOutController::class, 'forStoreRestart']);
+
+//ForStore route end
+
 //ProductOut routes end
 
 //ProductBreak/Move routes start
