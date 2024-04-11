@@ -163,14 +163,14 @@ class InventoryController extends Controller
         $user = Auth::User();
         $notFoundCount = Inventory::whereIn('storagePlaceId', $rowIds)->where('isFound', '=', false)->count();
 
-        $fileName = date('Y_m_d').'_'.$storageUnitInfo->storageName.'_leltar.pdf';
+        $fileName = date('Y_m_d').'_'.str_replace(' ', '-', $storageUnitInfo->storageName).'_leltar.pdf';
         $pdf = Pdf::loadView('storage.PDFViews.inventoryPdfView', [
             'storageUnitInfo' => $storageUnitInfo,
             'products' => $products,
             'userInfo' => $user,
             'notFoundCount' => $notFoundCount
         ])->save('../public/PDF/'.$fileName);
-        FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'productOut', 'outerId' => $storageUnitInfo->storageId]);
+        FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'inventory', 'outerId' => $storageUnitInfo->storageId]);
 
         $notFoundRows = Inventory::whereIn('storagePlaceId', $rowIds)->where('isFound', '=', false)->get();
         foreach ($notFoundRows as $notFoundRow) {

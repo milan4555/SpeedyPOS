@@ -21,6 +21,11 @@
             <div onclick="location.href='/storage/inventory/0';" class="col-md-3 bg-danger"><h4 class="text-center my-3">Leltározás</h4></div>
             <div onclick="location.href='/storage/riportPage';" class="col-md-3 bg-warning"><h4 class="text-center my-3">Riportok és analitika</h4></div>
             <div class="col-md-3"></div>
+
+            <div class="col-md-3 "></div>
+            <div onclick="location.href='/storage/documents/productIn';" class="col-md-3 bg-danger"><h4 class="text-center my-3">Dokumentumok</h4></div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
         </div>
     </div>
 @endsection

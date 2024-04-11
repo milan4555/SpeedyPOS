@@ -159,4 +159,12 @@ Route::match(['GET', 'POST'],'/storage/riportPage/salesRiportAll', [\App\Http\Co
 
 //RiportPage routes end
 
-//Storage routes start
+//Documents routes start
+
+Route::get('/storage/documentsMenu', [\App\Http\Controllers\PDFController::class, 'loadSelector']);
+Route::get('/storage/documents/{PDFtype}', [\App\Http\Controllers\PDFController::class, 'getAllPDFByType']);
+Route::post('/storage/documents/getByDate/{PDFtype}', [\App\Http\Controllers\PDFController::class, 'getAllPDFByDate']);
+
+//Documents routes end
+
+//Storage routes end

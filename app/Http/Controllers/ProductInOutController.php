@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\FilePath;
 use App\Models\Product;
 use App\Models\productCodes;
 use App\Models\ProductInOut;
@@ -153,7 +154,9 @@ class ProductInOutController extends Controller
             'supplier' => $supplier,
             'worker' => Auth::user()
         ];
-        Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/PDF/'.date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'PDF');
+        $fileName = date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'PDF';
+        Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/PDF/'.$fileName);
+        FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'productIn']);
         DB::table('product_in_outs')->update(['isFinished' => true]);
         ProductInOut::where('howMany', '=', -1)->delete();
 
