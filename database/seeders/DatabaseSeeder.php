@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\productCodes;
 use App\Models\ProductInOut;
 use App\Models\ProductOut;
+use App\Models\Receipt;
 use App\Models\StoragePlace;
 use App\Models\StorageUnit;
 use App\Models\User;
@@ -170,6 +171,17 @@ class DatabaseSeeder extends Seeder
                 'newBPrice' => rand(3000,10000),
                 'isFinished' => true,
                 'created_at' => $faker->dateTimeBetween('2024-01-01', '2024-12-30'." 23:59:59")
+            ]);
+        }
+
+        for ($q = 0; $q < 50; $q++) {
+            Receipt::factory()->create([
+               'isInvoice' => 0,
+                'date' => date('Y-m-d'),
+                'change' => 0,
+                'sumPrice' => round(rand(4000, 1000)/5)*5,
+                'paymentType' => rand(0,1) == 0 ? 'B' : 'C',
+                'employeeId' => 1
             ]);
         }
     }

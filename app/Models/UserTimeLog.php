@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class UserTimeLog extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['employeeId', 'startTime','breakTime', 'endTime', 'hoursWorked', 'breakSum', 'totalWorkedHours'];
+    protected $casts = [
+        'breakTime' => 'array'
+    ];
 }

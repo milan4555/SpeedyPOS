@@ -35,6 +35,17 @@ Route::get('/cashRegister/makeReceipt/{paymentType}/{cashGiven}', [\App\Http\Con
 Route::post('/cashRegister/changeQuantity', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity']);
 Route::get('/cashRegister/changeCompany', [\App\Http\Controllers\CompanyController::class, 'addToCurrentCart']);
 
+//UserTimeLog routes start
+
+Route::get('/cashRegister/open/{employeeId}', [\App\Http\Controllers\UserTimeLogController::class, 'openCashRegister']);
+Route::get('/cashRegister/close/{employeeId}', [\App\Http\Controllers\UserTimeLogController::class, 'closeCashRegister']);
+Route::get('/cashRegister/haveABreak/{employeeId}', [\App\Http\Controllers\UserTimeLogController::class, 'haveABreak']);
+Route::get('/cashRegister/closeBreak/{employeeId}', [\App\Http\Controllers\UserTimeLogController::class, 'closeBreak']);
+
+//UserTimeLog routes end
+
+Route::get('/cashRegister/closeDay', [\App\Http\Controllers\DailyCloseController::class, 'closeDay']);
+
 //CashRegister routes end
 
 //ProductList routes
