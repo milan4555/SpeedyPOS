@@ -33,7 +33,7 @@
                                     <th><a href="/cashRegister/receiptList/{{$receipt->receiptId}}" style="text-decoration: none">{{$receipt->receiptId}}</a></th>
                                     <td>{{$receipt->created_at}}</td>
                                     <td>{{$receipt->paymentType}}</td>
-                                    <td>{{$receipt->isInvoice == true ? "Számla" : 'Nyugta'}}</td>
+                                    <td>{{$receipt->isInvoice != 0 ? "Számla" : 'Nyugta'}}</td>
                                     <td>{{$receipt->sumPrice}} Ft</td>
                                 </tr>
                         @endforeach

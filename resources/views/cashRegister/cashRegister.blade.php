@@ -82,12 +82,14 @@
     @include('cashRegister\modals\_emptyCashRegisterModal')
     <div class="row">
         <div class="col-md-6">
-            <button class="btn btn-primary w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChange" aria-expanded="false" aria-controls="collapseChange">
+            <button id="collapseBankCardButton" class="btn btn-primary w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChange" aria-expanded="false" aria-controls="collapseChange">
                 Készpénzes fizetés
             </button>
         </div>
         <div class="col-md-6">
-            <a type="button" class="btn btn-primary w-100 mt-2" href="/cashRegister/makeReceipt/B/0">Bankártyás fizetés</a>
+            <button id="collapseChangeButton" class="btn btn-primary w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBankCard" aria-expanded="false" aria-controls="collapseBankCard">
+                Bankkártyás fizetés
+            </button>
         </div>
         <div class="collapse row mt-2" id="collapseChange">
             <div class="col-md-7">
@@ -126,6 +128,31 @@
             <button class="btn btn-warning w-100 mt-2" type="submit">Hozzáadás</button>
         </div>
     </form>
+    <div class="row mt-2">
+        <div class="col-md-6">
+            <a id="cashRegisterOpenButton" class="btn btn-primary w-100" href="/cashRegister/open/{{\Illuminate\Support\Facades\Auth::id()}}">Kassza nyitás</a>
+        </div>
+        <script>
+            const cashRegisterOpenButton = document.getElementById('cashRegisterOpenButton')
+            if ({{\App\Http\Controllers\UserTimeLogController::doesHaveOpenCashRegister(\Illuminate\Support\Facades\Auth::id())}} == true) {
+                cashRegisterOpenButton.href = '/cashRegister/close/{{\Illuminate\Support\Facades\Auth::id()}}';
+                cashRegisterOpenButton.innerText = 'Kassza zárás';
+            }
+        </script>
+        <div class="col-md-6">
+            <a id="cashRegisterBreakButton" class="btn btn-warning w-100" href="/cashRegister/haveABreak/{{\Illuminate\Support\Facades\Auth::id()}}">Pénztáros szünet</a>
+        </div>
+        <script>
+            const cashRegisterBreakButton = document.getElementById('cashRegisterBreakButton')
+            if ({{\App\Http\Controllers\UserTimeLogController::isOnBreak(\Illuminate\Support\Facades\Auth::id())}} == true) {
+                cashRegisterBreakButton.href = '/cashRegister/closeBreak/{{\Illuminate\Support\Facades\Auth::id()}}';
+                cashRegisterBreakButton.innerText = 'Munka folytatás';
+            }
+        </script>
+        <div class="col-md-12 mt-2">
+            <a id="cashRegisterBreakButton" class="btn btn-primary w-100" href="/cashRegister/closeDay">Napi zárás</a>
+        </div>
+    </div>
 @endsection
 
 @section('other')

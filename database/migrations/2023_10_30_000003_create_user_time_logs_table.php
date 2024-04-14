@@ -12,10 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_time_logs', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('employeeId');
-            $table->date('startTime');
-            $table->date('endTime');
-            $table->integer('hoursWorked');
+            $table->timestamp('startTime');
+            $table->jsonb('breakTime')->nullable();
+            $table->timestamp('endTime')->nullable();
+            $table->time('hoursWorked')->nullable();
+            $table->time('breakSum')->nullable();
+            $table->time('totalWorkedHours')->nullable();
             $table->timestamps();
 
             $table->foreign('employeeId')
