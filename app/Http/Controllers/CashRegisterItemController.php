@@ -40,7 +40,8 @@ class CashRegisterItemController extends Controller
                     $addItem = [
                         'productIdReg' => $productIdReg[0]->productId,
                         'cashRegisterNumber' => 1,
-                        'howMany' => count($input) == 2 ? $input[0] : 1
+                        'howMany' => count($input) == 2 ? $input[0] : 1,
+                        'currentPrice' => Product::find($productIdReg[0]->productId)->nPrice
                     ];
                     cashRegisterItem::create($addItem);
                     Product::find($productIdReg[0]->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);
@@ -115,12 +116,12 @@ class CashRegisterItemController extends Controller
         $sumPrice = 0;
         $numbers = DB::table('cash_register_items')
             ->join('products', 'productIdReg', 'productId')
-            ->select('products.bPrice', 'cash_register_items.howMany')
+            ->select('cash_register_items.currentPrice', 'cash_register_items.howMany')
             ->where('howMany', '!=', -1)
             ->get()
             ->toArray();
         foreach ($numbers as $row) {
-            $sumPrice += ($row->bPrice*$row->howMany);
+            $sumPrice += ($row->currentPrice*$row->howMany);
         }
 
         return $sumPrice;
@@ -131,12 +132,44 @@ class CashRegisterItemController extends Controller
         return Redirect('/cashRegister')->with('success', 'Sikeresen kiürítetted a kosarat! Jöhet a következő vásárló!');
     }
 
-    public function changeQuantity(Request $request) {
-        $row = DB::table('cash_register_items')
-            ->where('productIdReg', '=', $request->productId)
-            ->first();
-        CashRegisterItem::find($row->id)->update(['howMany' => $request->quantity]);
-        Product::find($row->productIdReg)->increment('stock', ($row->howMany-$request->quantity));
+    public function changeQuantity($productIds, $value) {
+        if ($value < 1) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! Az ár nem lehet kisebb mint 1 db!');
+        }
+        $productIds = json_decode($productIds);
+        DB::table('cash_register_items')
+            ->whereIn('productIdReg', $productIds)
+            ->update(['howMany' => $value]);
+
+        foreach ($productIds as $productId) {
+            $row = CashRegisterItem::where('productIdReg', $productId)->first();
+            Product::find($row->productIdReg)->increment('stock', ($row->howMany-$value));
+        }
+
+        return redirect()->to('/cashRegister');
+    }
+
+    public function changePrice($productIds, $value) {
+        if ($value < 1) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! Az ár nem lehet kisebb mint 1 Ft!');
+        }
+        $productIds = json_decode($productIds);
+        DB::table('cash_register_items')
+            ->whereIn('productIdReg', $productIds)
+            ->update(['currentPrice' => $value]);
+
+        return redirect()->to('/cashRegister');
+    }
+
+    public function pricePercent($productIds, $value) {
+        if ($value < 1 || $value > 99) {
+            return \redirect()->back()->with('error', 'Sikereteln művelet! A kedvezmény 1% és 99% közötti érték kell hogy legyen!');
+        }
+        $productIds = json_decode($productIds);
+        foreach ($productIds as $productId) {
+            $row = CashRegisterItem::where('productIdReg', '=', $productId)->first();
+            $row->update(['currentPrice' => round($row->currentPrice*(1-($value/100)))]);
+        }
 
         return redirect()->to('/cashRegister');
     }

@@ -32,7 +32,9 @@ Route::match(array('GET', 'POST'), '/cashRegister', [\App\Http\Controllers\CashR
 Route::get('/cashRegister/empty', [\App\Http\Controllers\CashRegisterItemController::class, 'emptyCashRegister']);
 Route::get('/cashRegister/deleteItem/{cashRegisterNumber}/{productId}', [\App\Http\Controllers\CashRegisterItemController::class, 'itemDelete']);
 Route::get('/cashRegister/makeReceipt/{paymentType}/{cashGiven}', [\App\Http\Controllers\ReceiptController::class, 'makeReceipt']);
-Route::post('/cashRegister/changeQuantity', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity']);
+Route::get('/cashRegister/changeQuantity/{productIds}/{value}', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity']);
+Route::get('/cashRegister/changePrice/{productIds}/{value}', [\App\Http\Controllers\CashRegisterItemController::class, 'changePrice']);
+Route::get('/cashRegister/pricePercent/{productIds}/{value}', [\App\Http\Controllers\CashRegisterItemController::class, 'pricePercent']);
 Route::get('/cashRegister/changeCompany', [\App\Http\Controllers\CompanyController::class, 'addToCurrentCart']);
 
 //UserTimeLog routes start

@@ -9,5 +9,5 @@ class CashRegisterItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['productIdReg', 'cashRegisterNumber', 'howMany', 'updated_at'];
+    protected $fillable = ['productIdReg', 'cashRegisterNumber', 'howMany', 'currentPrice', 'updated_at'];
 }
