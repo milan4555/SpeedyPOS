@@ -33,19 +33,14 @@
                 </tr>
             @else
                 @if($lastProduct->howMany != -1)
-                    <tr class="table-active">
+                    <tr class="table-active" data-productid="{{$lastProduct->productId}}">
                         <th>{{$lastProduct->productId}}</th>
                         <td>{{$lastProduct->productName}}</td>
                         <td><i>{{$lastProduct->categoryName}}</i></td>
-                        <td>{{$lastProduct->bPrice}} Ft</td>
+                        <td>{{$lastProduct->currentPrice}} Ft</td>
                         <td>{{$lastProduct->howMany}} db</td>
                         <td class="d-flex justify-content-end">
-                            <form class="collapse in" id="collapseQuantity{{$lastProduct->productId}}" method="post" action="/cashRegister/changeQuantity">
-                                @csrf
-                                <input type="number" class="form-control" name="quantity">
-                                <input type="hidden" name="productId" value="{{$lastProduct->productId}}">
-                            </form>
-                            <a data-bs-toggle="collapse" href="#collapseQuantity{{$lastProduct->productId}}" role="button" aria-expanded="false" aria-controls="collapseExample"><img src="{{asset('iconsAndLogos/editIcon.png')}}"></a>
+                            <input class="form-check-input mx-2 border-dark productCheckBox" type="checkbox" data-productid="{{$lastProduct->productId}}" id="productCheckbox{{$lastProduct->productId}}" style="width: 20px; height: 20px;">
                             <a class="btn-close" href="/cashRegister/deleteItem/1/{{$lastProduct->productId}}" style="text-decoration: none;"></a>
                         </td>
                     </tr>
@@ -53,19 +48,14 @@
             @endif
             @if(isset($products))
                 @foreach($products as $product)
-                    <tr>
+                    <tr data-productid="{{$product->productId}}">
                         <th scope="row">{{$product->productId}}</th>
                         <td>{{$product->productName}}</td>
                         <td><i>{{$product->categoryName}}</i></td>
-                        <td>{{$product->bPrice}} Ft</td>
+                        <td>{{$product->currentPrice}} Ft</td>
                         <td>{{$product->howMany}} db</td>
                         <td class="d-flex justify-content-end">
-                            <form class="collapse in" id="collapseQuantity{{$product->productId}}" method="post" action="/cashRegister/changeQuantity">
-                                @csrf
-                                <input type="text" class="form-control" name="quantity">
-                                <input type="hidden" name="productId" value="{{$product->productId}}">
-                            </form>
-                            <a data-bs-toggle="collapse" href="#collapseQuantity{{$product->productId}}" role="button" aria-expanded="false" aria-controls="collapseExample"><img src="{{asset('iconsAndLogos/editIcon.png')}}"></a>
+                            <input class="form-check-input mx-2 border-dark productCheckBox" data-productid="{{$product->productId}}" type="checkbox" id="productCheckbox{{$product->productId}}" style="width: 20px; height: 20px;">
                             <a class="btn-close" href="/cashRegister/deleteItem/1/{{$product->productId}}" style="text-decoration: none;"></a>
                         </td>
                     </tr>
@@ -75,6 +65,12 @@
             </tbody>
         </table>
         @include('cashRegister/modals/_changeModal')
+        <script>
+            document.addEventListener('click', function(e) {
+                const checkBox = document.getElementById('productCheckbox' + e.target.parentNode.dataset.productid);
+                checkBox.checked = !checkBox.checked;
+            });
+        </script>
 @endsection
 
 @section('buttons')
@@ -128,6 +124,75 @@
             <button class="btn btn-warning w-100 mt-2" type="submit">Hozzáadás</button>
         </div>
     </form>
+    <div class="row">
+        <div class="col-md-4">
+            <button id="cashRegisterQuantityChange" class="btn btn-primary w-100 mt-2" type="button">
+                DB módosítás
+            </button>
+        </div>
+        <div class="col-md-4">
+            <button id="cashRegisterPriceChange" class="btn btn-primary w-100 mt-2" type="button">
+                Árfelülírás
+            </button>
+        </div>
+        <div class="col-md-4">
+            <button id="cashRegisterSale" class="btn btn-primary w-100 mt-2" type="button">
+                Kedvezmény
+            </button>
+        </div>
+        <div id="otherInputDiv" class="row mt-2">
+            <div class="col-md-9">
+                <input id="otherInput" type="number" class="form-control border-dark">
+            </div>
+            <div class="col-md-3">
+                <button id="otherInputButton" data-type="" class="btn btn-danger" disabled>Módosít</button>
+            </div>
+        </div>
+        <script>
+            const quantityChange = document.getElementById('cashRegisterQuantityChange');
+            const priceChange = document.getElementById('cashRegisterPriceChange');
+            const sale = document.getElementById('cashRegisterSale');
+            const otherInput = document.getElementById('otherInput');
+            const otherInputDiv = document.getElementById('otherInputDiv');
+            const otherInputButton = document.getElementById('otherInputButton');
+            otherInput.addEventListener('change', function () {
+                const otherInputValue = otherInput.value;
+                otherInputButton.disabled = (otherInputValue == null || otherInputValue == '');
+            });
+            otherInputButton.addEventListener('click', function () {
+                let type = otherInputButton.dataset.type;
+                if (type != null) {
+                    const productIds = getCheckBoxes();
+                    if (productIds.length != 0) {
+                        window.location.href = '/cashRegister/' + type + '/' + JSON.stringify(productIds) + '/' + otherInput.value;
+                    }
+                }
+            })
+            function getCheckBoxes() {
+                const checkBoxes = document.getElementsByClassName('productCheckBox')
+                let productIds = [];
+                for (let i = 0; i < checkBoxes.length; i++) {
+                    if (checkBoxes[i].checked === true) {
+                        productIds.push(checkBoxes[i].dataset.productid);
+                    }
+                }
+
+                return productIds;
+            }
+            quantityChange.addEventListener('click', function () {
+                otherInput.placeholder = 'Darabszám (db)';
+                otherInputButton.dataset.type = 'changeQuantity';
+            });
+            priceChange.addEventListener('click', function () {
+                otherInput.placeholder = 'Termék ár (Ft)';
+                otherInputButton.dataset.type = 'changePrice';
+            });
+            sale.addEventListener('click', function () {
+                otherInput.placeholder = 'Százalék (%)';
+                otherInputButton.dataset.type = 'pricePercent';
+            });
+        </script>
+    </div>
     <div class="row mt-2">
         <div class="col-md-6">
             <a id="cashRegisterOpenButton" class="btn btn-primary w-100" href="/cashRegister/open/{{\Illuminate\Support\Facades\Auth::id()}}">Kassza nyitás</a>

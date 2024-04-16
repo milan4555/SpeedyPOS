@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('productIdReg');
             $table->integer('cashRegisterNumber');
             $table->integer('howMany');
+            $table->integer('currentPrice');
             $table->timestamps();
         });
     }
