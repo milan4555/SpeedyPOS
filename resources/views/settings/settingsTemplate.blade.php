@@ -11,10 +11,10 @@
                             </button>
                             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                                 <div class="navbar-nav">
-                                    {{request()->is()}}
-                                    <a class="nav-item nav-link {{request()->is('settings/variables') ? 'active' : ''}}" href="/settings/variables">Adatok</a>
+                                    <a class="nav-item nav-link {{request()->is('settings/profile') ? 'active' : ''}}" href="/settings/profile">Profil</a>
+                                    <a class="nav-item nav-link {{request()->is('settings/userRights') ? 'active' : ''}}" href="/settings/userRights">Felhasználók listája</a>
+                                    <a class="nav-item nav-link {{request()->is('settings/variables') ? 'active' : ''}}" href="/settings/variables">Bolt adatai</a>
                                     <a class="nav-item nav-link {{request()->is('settings/newEmployee') ? 'active' : ''}}" href="/settings/newEmployee">Dolgozó felvétele</a>
-                                    <a class="nav-item nav-link {{request()->is('settings/userRights') ? 'active' : ''}}" href="/settings/userRights">Jogosultságok</a>
                                 </div>
                             </div>
                         </nav>

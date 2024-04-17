@@ -19,15 +19,8 @@ return new class extends Migration
             $table->string('lastName');
             $table->bigInteger('phoneNumber');
             $table->string('position');
-            $table->unsignedBigInteger('rightsId');
             $table->rememberToken();
             $table->timestamps();
-
-            $table->foreign('rightsId')
-                ->references('rightsId')
-                ->on('user_rights')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
         });
     }
 

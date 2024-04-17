@@ -4,18 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserRight;
+use Dotenv\Validator;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class UserController extends Controller
 {
 
     public function login(Request $request) {
-        $user = User::where('username', '=', $request['username'])->firstOrFail();
+        $user = User::where('username', '=', $request['username'])->first();
+        if (!Hash::check($request['password'], $user->password)) {
+            return \redirect()->back()->with('error', 'Sikertelen bejelntkezés! Rossz felhasználónév és jelszó páros lett megadva!');
+        }
         Auth::login($user);
         return Redirect::to('/home');
     }
@@ -56,5 +62,38 @@ class UserController extends Controller
                                                     A kapott felhasználónév: '.$baseUsername.'
                                                     <br>Alapértelmezett jelszó: xX123456<br>
                                                     <b>Az első bejelentkezésnél kérlek változtatsd meg!</b>');
+    }
+    public function loadProfilePage() {
+        return view('settings.profile', [
+            'authInfo' => Auth::user()
+        ]);
+    }
+    public function setNewPassword(Request $request) {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'oldPassword' => 'required',
+            'newPassword' => 'required',
+            'reNewPassword' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! Valamelyik mező üresen maradt!');
+        }
+        if ($request['newPassword'] != $request['reNewPassword']) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! A kettő jelszó nem egyezik meg!');
+        }
+        $user = Auth::user();
+        $isSameOldPassword = Hash::check($request['oldPassword'], $user->getAuthPassword());
+        if (!$isSameOldPassword) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! Nem megfelelő régi jelszót adtál meg!');
+        }
+        $user->update(['password' => Hash::make($request['newPassword'])]);
+        return redirect()->back()->with('success', 'Sikeres jelszóváltoztatás! Jegyezd meg jól, mivel csak te vagy egy admin tudja megváltoztatni!');
+    }
+
+    public function setDefaultPassword($employeeId) {
+        $user = User::find($employeeId);
+        $newPassword = Str::password(8, true, true, false);
+        $user->update(['password' => Hash::make($newPassword)]);
+
+        return \redirect()->back()->with('success', 'Jelszó helyreállítás megtörtént!<br>Az új jelszó: <b>'.$newPassword.'</b><br>Kérlek bejelntkezés után egyből változtasd meg!');
     }
 }

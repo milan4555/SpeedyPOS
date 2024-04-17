@@ -13,7 +13,6 @@ class UserRightController extends Controller
 {
     public function getView() {
         $allUsers = DB::table('users')
-            ->join('user_rights', 'users.rightsId', 'user_rights.rightsId')
             ->select('*')
             ->get()
             ->toArray();

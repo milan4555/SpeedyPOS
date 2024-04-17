@@ -42,8 +42,9 @@
                 Pozíció:
                 <select class="form-control" name="position" required>
                     <option value="">...</option>
-                    <option value="owner">Tulajdonos</option>
-                    <option value="storeManager">Üzletvezető</option>
+                    <option value="admin">Admin</option>
+                    <option value="both">Mindkettő</option>
+                    <option value="storage">Raktáros</option>
                     <option value="cashier">Pénztáros</option>
                 </select>
                 @error('position')
