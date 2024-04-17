@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="/settings/variables" class="btn btn-sm btn-primary m-2">Beállítások</a>
+                    <a href="/settings/profile" class="btn btn-sm btn-primary m-2">Profil és beállítások</a>
                 </div>
             </div>
         </div>

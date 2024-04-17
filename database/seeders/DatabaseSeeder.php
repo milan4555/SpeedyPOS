@@ -15,6 +15,7 @@ use App\Models\StorageUnit;
 use App\Models\User;
 use App\Models\UserRight;
 use App\Models\Variable;
+use Faker\Guesser\Name;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 
@@ -101,12 +102,12 @@ class DatabaseSeeder extends Seeder
                'variableValue' => $variablesValues[$i]
             ]);
         }
-        UserRight::factory()->create([
-            'isSuperior' => false,
-            'canCreateProduct' => false,
-            'canUpdateProduct' => false,
-            'canDeleteProduct' => false,
-        ]);
+//        UserRight::factory()->create([
+//            'isSuperior' => false,
+//            'canCreateProduct' => false,
+//            'canUpdateProduct' => false,
+//            'canDeleteProduct' => false,
+//        ]);
         User::factory()->create([
             'username' => 'admin',
             'password' => 'admin',
@@ -114,8 +115,17 @@ class DatabaseSeeder extends Seeder
             'lastName' => 'admin',
             'phoneNumber' => 704176989,
             'position' => 'admin',
-            'rightsId' => 1
         ]);
+        for ($r = 0; $r < 10; $r++) {
+            User::factory()->create([
+                'firstName' => fake()->firstName,
+                'lastName' => fake()->lastName,
+                'username' => fake()->userName,
+                'password' => fake()->password,
+                'phoneNumber' => 701234567,
+                'position' => rand(0,1) == 1 ? 'cashier' : 'storage',
+            ]);
+        }
         for ($k = 0; $k < 100; $k++) {
             $randomNumbers = [];
             $faker = \Faker\Factory::create();
