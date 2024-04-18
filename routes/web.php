@@ -67,7 +67,7 @@ Route::match(array('GET', 'POST'), '/cashRegister/companyList/newCompany', [\App
 
 //ReceiptList routes start
 
-Route::get('/cashRegister/receiptList/{receiptId}', [\App\Http\Controllers\ReceiptController::class, 'showReceipt'])->middleware('ByPositionGroup');
+Route::match(array('GET', 'POST'),'/cashRegister/receiptList', [\App\Http\Controllers\ReceiptController::class, 'showReceipt'])->middleware('ByPositionGroup');
 
 //ReceiptList routes end
 

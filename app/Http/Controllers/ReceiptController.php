@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Receipt;
 use App\Models\recToProd;
 use App\Models\Variable;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,15 @@ class ReceiptController extends Controller
     public function makeReceipt($paymentType, $cashGiven) {
         $companyId = DB::table('cash_register_items')->select('productIdReg')->where('howMany', '=', -1)->get()->toArray();
         $change = $cashGiven - CashRegisterItemController::getSumPrice();
+        $randomSerialNumber = 0;
+        while ($randomSerialNumber == 0) {
+            $random = rand(1111111, 9999999);
+            if (Receipt::where('receiptSerialNumber', '=', $random)->count() == 0) {
+                $randomSerialNumber = $random;
+            }
+        }
         $receiptAdd = [
+            'receiptSerialNumber' => $randomSerialNumber,
             'isInvoice' => $companyId == null ? 0 : $companyId[0]->productIdReg,
             'date' => date('Y.m.d h:i:s'),
             'change' => $paymentType == 'B' ? 0 : $change,
@@ -61,31 +70,57 @@ class ReceiptController extends Controller
         return Redirect::back()->with('change', $cashAmounts);
     }
 
-    public function showReceipt($receiptId) {
+    public function showReceipt(Request $request) {
         $variables = [];
         foreach (Variable::all() as $item) {
             $variables[$item['variableShortName']] = $item['variableValue'];
         }
-        if ($receiptId == 0) {
+        if ($request->all() == []) {
             return view('cashRegister/receiptList', [
                 'receipts' => Receipt::all(),
                 'receiptNumbers' => Receipt::pluck('receiptId'),
                 'variables' => $variables
             ]);
         } else {
-            $receiptAllData = DB::table('rec_to_prods')
-                ->join('receipts', 'rec_to_prods.receiptId', 'receipts.receiptId')
-                ->join('products', 'rec_to_prods.productId', 'products.productId')
-                ->select('*')
-                ->where('rec_to_prods.receiptId', '=', $receiptId)
-                ->get()
+            if ($request['shownReceiptId'] != null) {
+                $receiptAllData = DB::table('rec_to_prods')
+                    ->join('receipts', 'rec_to_prods.receiptId', 'receipts.receiptId')
+                    ->join('products', 'rec_to_prods.productId', 'products.productId')
+                    ->select('*')
+                    ->where('rec_to_prods.receiptId', '=', $request['shownReceiptId'])
+                    ->get()
+                    ->toArray();
+            }
+            $receipts = DB::table('receipts')
+                ->when($request['paymentType'] != null, function (Builder $query) use ($request) {
+                    $query->where('paymentType', '=' ,$request['paymentType']);
+                })
+                ->when($request['receiptType'] != null, function (Builder $query) use ($request) {
+                    if ($request['receiptType'] == 'NY') {
+                        $query->where('isInvoice', '=', 0);
+                    } else {
+                        $query->where('isInvoice', '!=', 0);
+                    }
+                })
+                ->when($request['startDate'] != null, function (Builder $query) use ($request) {
+                    $query->where('created_at', '>=', $request['startDate']);
+                })
+                ->when($request['endDate'] != null, function (Builder $query) use ($request) {
+                    $query->where('created_at', '<=', $request['endDate']);
+                })->get()
                 ->toArray();
-            return view('cashRegister/receiptList', [
-                'receipts' => Receipt::all(),
-                'receiptNumbers' => Receipt::pluck('receiptId'),
-                'receiptData' => $receiptAllData,
-                'variables' => $variables
-            ]);
+            $viewArray = [
+                'receipts' => $receipts,
+                'variables' => $variables,
+                'startDate' => $request['startDate'] != null ? $request['startDate'] : '',
+                'endDate' => $request['endDate'] != null ? $request['endDate'] : '',
+                'receiptType' => $request['receiptType'] != null ? $request['receiptType'] : '',
+                'paymentType' => $request['paymentType'] != null ? $request['paymentType'] : ''
+            ];
+            if (isset($receiptAllData)) {
+                $viewArray['receiptData'] = $receiptAllData;
+            }
+            return view('cashRegister/receiptList', $viewArray);
         }
     }
 }

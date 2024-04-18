@@ -10,6 +10,7 @@ use App\Models\productCodes;
 use App\Models\ProductInOut;
 use App\Models\ProductOut;
 use App\Models\Receipt;
+use App\Models\recToProd;
 use App\Models\StoragePlace;
 use App\Models\StorageUnit;
 use App\Models\User;
@@ -185,14 +186,35 @@ class DatabaseSeeder extends Seeder
         }
 
         for ($q = 0; $q < 50; $q++) {
-            Receipt::factory()->create([
-               'isInvoice' => 0,
+            $sum = 0;
+            $randomSerialNumber = 0;
+            while ($randomSerialNumber == 0) {
+                $random = rand(1111111, 9999999);
+                if (Receipt::where('receiptSerialNumber', '=', $random)->count() == 0) {
+                    $randomSerialNumber = $random;
+                }
+            }
+            $receipt = Receipt::factory()->create([
+                'receiptSerialNumber' => $randomSerialNumber,
+                'isInvoice' => 0,
                 'date' => date('Y-m-d'),
                 'change' => 0,
-                'sumPrice' => round(rand(4000, 1000)/5)*5,
-                'paymentType' => rand(0,1) == 0 ? 'B' : 'C',
+                'sumPrice' => $sum,
+                'paymentType' => rand(0,1) == 0 ? 'B' : 'K',
                 'employeeId' => 1
             ]);
+            for ($s = 0; $s < rand(3,8); $s++) {
+                $atTimePrice = round(rand(1000,10000)/5)*5;
+                $quantity = rand(2,4);
+                recToProd::create([
+                    'productId' => $productIds[rand(0, count($productIds)-1)],
+                    'receiptId' => $q+1,
+                    'quantity' => $quantity,
+                    'atTimePrice' => $atTimePrice
+                ]);
+                $sum += $quantity*$atTimePrice;
+            }
+            $receipt->update(['sumPrice' => $sum]);
         }
     }
 }

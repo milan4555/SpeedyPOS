@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             $table->id('receiptId');
+            $table->bigInteger('receiptSerialNumber')->unique();
             $table->integer('isInvoice');
             $table->date('date');
             $table->integer('change');

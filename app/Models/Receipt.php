@@ -9,6 +9,6 @@ class Receipt extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['isInvoice', 'date', 'change', 'sumPrice', 'employeeId', 'paymentType'];
+    protected $fillable = ['receiptSerialNumber', 'isInvoice', 'date', 'change', 'sumPrice', 'employeeId', 'paymentType'];
     protected $primaryKey = 'receiptId';
 }

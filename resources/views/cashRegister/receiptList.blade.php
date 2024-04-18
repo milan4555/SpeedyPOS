@@ -4,7 +4,7 @@
     <style>
         .my-custom-scrollbar {
             position: relative;
-            height: 490px;
+            height: 440px;
             overflow: auto;
         }
         .table-wrapper-scroll-y {
@@ -29,10 +29,10 @@
                     </thead>
                     <tbody>
                         @foreach($receipts as $receipt)
-                                <tr>
-                                    <th><a href="/cashRegister/receiptList/{{$receipt->receiptId}}" style="text-decoration: none">{{$receipt->receiptId}}</a></th>
+                                <tr class="receiptRows" data-receiptid="{{$receipt->receiptId}}">
+                                    <th>{{$receipt->receiptSerialNumber}}</th>
                                     <td>{{$receipt->created_at}}</td>
-                                    <td>{{$receipt->paymentType}}</td>
+                                    <td>{{$receipt->paymentType == 'B' ? 'Kártyás' : 'Készpénz'}}</td>
                                     <td>{{$receipt->isInvoice != 0 ? "Számla" : 'Nyugta'}}</td>
                                     <td>{{$receipt->sumPrice}} Ft</td>
                                 </tr>
@@ -58,29 +58,29 @@
                         @foreach($receiptData as $data)
                             <div class="d-flex justify-content-between">
                                 <p>{{$data->productName}}</p>
-                                <p>{{$data->quantity}}db ({{$data->bPrice}}Ft.)</p>
-                                <p>{{$data->quantity*$data->bPrice}}Ft.</p>
+                                <p>{{$data->quantity}}db ({{$data->atTimePrice}} Ft.)</p>
+                                <p>{{$data->quantity*$data->atTimePrice}} Ft.</p>
                             </div>
                         @endforeach
                         <p>Részösszeg: <b>{{$receiptInfo->sumPrice}} Ft.</b></p>
                         <hr>
-                        <p>Készpénz: <b>{{$receiptInfo->paymentType == 'B' ? 'Bankártyás fizetés' : $receiptInfo->sumPrice+$receiptInfo->change}} Ft.</b></p>
-                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0 Ft.' : $receiptInfo->change}} Ft.</b></p>
+                        <p>Készpénz: <b>{{$receiptInfo->paymentType == 'B' ? 'Bankártyás fizetés' : $receiptInfo->sumPrice+$receiptInfo->change. 'FT.'}}</b></p>
+                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0' : $receiptInfo->change}} Ft.</b></p>
                         <hr>
                         <p><b>Összesen: {{$receiptInfo->sumPrice}} Ft.</b></p>
-                        <p>Készpénz: <b>{{$receiptInfo->paymentType == 'B' ? '' : $receiptInfo->sumPrice+$receiptInfo->change}} Ft.</b></p>
-                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0 Ft.' : $receiptInfo->change}} Ft.</b></p>
+                        <p>Készpénz: <b>{{$receiptInfo->paymentType == 'B' ? '0' : $receiptInfo->sumPrice+$receiptInfo->change}} Ft.</b></p>
+                        <p>Visszajáró: <b>{{$receiptInfo->paymentType == 'B' ? '0' : $receiptInfo->change}} Ft.</b></p>
                         <hr>
                         <div class="d-flex justify-content-around">
-                            <p>Kezelő: {{$handler->firstName}} {{$handler->lastName}}</p>
-                            <p>Kassza: {{$receiptInfo->employeeId}}</p>
-                            <p>TR.SZÁM: {{$receiptInfo->receiptId}}</p>
+                            <p>Kezelő: {{$handler->firstName}} {{$handler->lastName}}<br>
+                            Kassza: {{$receiptInfo->employeeId}}<br>
+                            TR.SZÁM: {{$receiptInfo->receiptId}}</p>
                         </div>
                         <br>
                         <p class="text-center">KÖSZÖNJÜK A VÁSÁRLÁST!</p>
                         <br>
                         <div class="d-flex justify-content-around">
-                            <p>NYUGTASZÁM:</p>
+                            <p>NYUGTASZÁM: {{$receiptInfo->receiptSerialNumber}}</p>
                             <p></p>
                         </div>
                         <div class="d-flex justify-content-around">
@@ -94,4 +94,71 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('buttons')
+    <h4 class="text-center">Szűrési feltételek</h4>
+    <hr>
+    <form id="receiptListForm" method="post">
+        @csrf
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Fizetés típusa:</label>
+                <select id="paymentTypeSelect" class="form-control border-dark" name="paymentType">
+                    <option value="">Válassz fizetési típust...</option>
+                    <option value="K" {{(isset($paymentType) and $paymentType == 'K') ? 'selected' : ''}}>Készpénz</option>
+                    <option value="B" {{(isset($paymentType) and $paymentType == 'B') ? 'selected' : ''}}>Bankkártya</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Nyugta típusa:</label>
+                <select id="receiptType" class="form-control border-dark" name="receiptType">
+                    <option value="">Válassz típust...</option>
+                    <option value="NY" {{(isset($receiptType) and $receiptType == 'NY') ? 'selected' : ''}}>Nyugta</option>
+                    <option value="SZ" {{(isset($receiptType) and $receiptType == 'SZ') ? 'selected' : ''}}>Számla</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label class="form-label">Kezdő dátum:</label>
+                <input type="date" class="form-control border-dark" id="startDate" name="startDate" value="{{$startDate != null ? $startDate : ''}}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Vég dátum:</label>
+                <input type="date" class="form-control border-dark" id="endDate" name="endDate" value="{{$endDate != null ? $endDate : ''}}">
+            </div>
+        </div>
+        <input type="hidden" id="shownReceiptId" name="shownReceiptId" value="{{isset($receiptData) ? $receiptData[0]->receiptId : ''}}">
+        <div class="d-flex justify-content-center mt-4">
+            <input type="submit" class="form-control bg-primary text-white" value="Szűrés">
+        </div>
+    </form>
+    <script>
+        const receiptRows = document.getElementsByClassName('receiptRows');
+        const shownReceiptId = document.getElementById('shownReceiptId');
+        const receiptListForm = document.getElementById('receiptListForm');
+        for (let i = 0; i < receiptRows.length; i++) {
+            receiptRows[i].addEventListener('click', function () {
+                shownReceiptId.value = receiptRows[i].dataset.receiptid;
+                receiptListForm.submit();
+            });
+        }
+        const startDate = document.getElementById('startDate');
+        const endate = document.getElementById('endDate');
+        startDate.addEventListener('change', function () {
+            if (startDate.value == null) {
+                endate.min = null
+            } else {
+                endate.min = startDate.value
+            }
+        });
+        endate.addEventListener('change', function () {
+            if (endate.value == null) {
+                startDate.max = null
+            } else {
+                startDate.max = endate.value
+            }
+        });
+    </script>
 @endsection
