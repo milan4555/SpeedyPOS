@@ -20,6 +20,7 @@
                         <a href="/cashRegister/receiptList/0" class="btn btn-sm"><img width="100%" src="{{asset('iconsAndLogos/receiptIcon.png')}}"></a>
                     </div>
                 </div>
+                <hr>
                 @yield('buttons')
             </div>
             @yield('other')
