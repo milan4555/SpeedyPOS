@@ -17,10 +17,9 @@
                         <a href="/cashRegister/companyList" class="btn btn-sm"><img width="100%" src="{{asset('iconsAndLogos/companyIcon.png')}}"></a>
                     </div>
                     <div class="col-md-3">
-                        <a href="/cashRegister/receiptList/0" class="btn btn-sm"><img width="100%" src="{{asset('iconsAndLogos/receiptIcon.png')}}"></a>
+                        <a href="/cashRegister/receiptList" class="btn btn-sm"><img width="100%" src="{{asset('iconsAndLogos/receiptIcon.png')}}"></a>
                     </div>
                 </div>
-                <hr>
                 @yield('buttons')
             </div>
             @yield('other')

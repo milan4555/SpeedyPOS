@@ -7,6 +7,7 @@ use App\Models\cashRegisterItem;
 use App\Models\Company;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
@@ -14,41 +15,53 @@ class CashRegisterItemController extends Controller
 {
     public function getItems(Request $request) {
         if (isset($request->lastProductId)) {
+            if (!UserTimeLogController::doesHaveOpenCashRegister(Auth::id())) {
+                return \redirect()->back()->with('error', 'Sikertelen művelet! Először nyisd ki a kasszát, majd próbáld meg újra!');
+            }
+            if (UserTimeLogController::isOnBreak(Auth::id())) {
+                return \redirect()->back()->with('error', 'Sikertelen művelet! Először fejezd be a szüneted, majd próbáld meg újra!');
+            }
             $input = explode('*', $request->lastProductId);
             $productId = count($input) == 1 ? $input[0] : $input[1];
-            $lastProduct = DB::table('products')
-                ->select('*', 'cash_register_items.howMany')
-                ->leftJoin('cash_register_items', 'productId', 'productIdReg')
-                ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
-                ->join('product_codes', 'products.productId', 'product_codes.productIdCode')
+            if (count($input) == 2 and $input[0] < 0) {
+                return \redirect()->back()->with('error', 'Sikertelen művelet! A darabszám csak pozitív szám lehet!');
+            }
+            $product = DB::table('products')
+                ->select('*')
+                ->leftJoin('product_codes', 'products.productId', 'product_codes.productIdCode')
                 ->where('productId', '=', $productId)
                 ->orWhere('productCode', '=', $productId)
-                ->get()
-                ->toArray();
-            if ($lastProduct == null) {
+                ->count();
+            if ($product == 0) {
                 $lastProduct = 'Nem megfelelő kódot adtál meg!';
             } else {
                 $productIdReg = DB::table('products')
                     ->select('productId')
-                    ->join('product_codes', 'products.productId', 'product_codes.productIdCode')
+                    ->leftJoin('product_codes', 'products.productId', 'product_codes.productIdCode')
                     ->where('productId', '=', $productId)
                     ->orWhere('productCode', '=', $productId)
-                    ->distinct()
-                    ->get()
-                    ->toArray();
-                if (DB::table('cash_register_items')->where('productIdReg', '=', $productIdReg[0]->productId)->count() == 0) {
+                    ->first();
+                if (DB::table('cash_register_items')->where('productIdReg', '=', $productIdReg->productId)->count() == 0) {
                     $addItem = [
-                        'productIdReg' => $productIdReg[0]->productId,
+                        'productIdReg' => $productIdReg->productId,
                         'cashRegisterNumber' => 1,
                         'howMany' => count($input) == 2 ? $input[0] : 1,
-                        'currentPrice' => Product::find($productIdReg[0]->productId)->nPrice
+                        'currentPrice' => Product::find($productIdReg->productId)->nPrice
                     ];
                     cashRegisterItem::create($addItem);
-                    Product::find($productIdReg[0]->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);
+                    Product::find($productIdReg->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);
                 } else {
-                    DB::table('cash_register_items')->where('productIdReg', '=', $productIdReg[0]->productId)->increment('howMany', count($input) == 2 ? $input[0] : 1);
-                    Product::find($productIdReg[0]->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);
+                    DB::table('cash_register_items')->where('productIdReg', '=', $productIdReg->productId)->increment('howMany', count($input) == 2 ? $input[0] : 1);
+                    Product::find($productIdReg->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);
                 }
+                $lastProduct = DB::table('products')
+                    ->select('*', 'cash_register_items.howMany')
+                    ->leftJoin('cash_register_items', 'productId', 'productIdReg')
+                    ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
+                    ->leftJoin('product_codes', 'products.productId', 'product_codes.productIdCode')
+                    ->where('productId', '=', $productId)
+                    ->orWhere('productCode', '=', $productId)
+                    ->first();
             }
         } else {
             $lastProduct = 'Üres a kosár!';
@@ -63,7 +76,7 @@ class CashRegisterItemController extends Controller
                 ->join('cash_register_items', 'productId', 'productIdReg')
                 ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
                 ->where('howMany', '!=', -1)
-                ->whereIn('productId',  $productIds)->where('productId', '!=', $productIdReg[0]->productId ?? 0)
+                ->whereIn('productId',  $productIds)->where('productId', '!=', $productIdReg->productId ?? 0)
                 ->get()
                 ->toArray();
         } else {
@@ -76,25 +89,21 @@ class CashRegisterItemController extends Controller
                 array_push($productIds, $singleItem->productIdReg);
             }
             $lastProduct = DB::table('products')
-                ->join('cash_register_items', 'productIdReg', 'productId')
+                ->leftJoin('cash_register_items', 'productIdReg', 'productId')
                 ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
                 ->select('*')
                 ->orderBy('cash_register_items.updated_at')
                 ->limit(1)
-                ->get()
-                ->toArray();
+                ->first();
             $products = DB::table('products')
                 ->select('*', 'cash_register_items.howMany')
-                ->join('cash_register_items', 'productId', 'productIdReg')
+                ->leftJoin('cash_register_items', 'productId', 'productIdReg')
                 ->leftJoin('categories', 'products.categoryId', 'categories.categoryId')
-                ->where('productId', '!=', $lastProduct[0]->productId)
+                ->where('productId', '!=', $lastProduct->productId)
                 ->where('howMany', '!=', -1)
                 ->whereIn('productId',  $productIds)
                 ->get()
                 ->toArray();
-        }
-        if (is_array($lastProduct)) {
-            $lastProduct = $lastProduct[0];
         }
         $isThereCompany = DB::table('cash_register_items')->select('productIdReg')->where('howMany', '=', -1)->get()->toArray();
         if ($isThereCompany != null) {

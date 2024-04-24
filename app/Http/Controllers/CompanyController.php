@@ -7,32 +7,22 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
     public function showAllCompany(Request $request) {
-        if ($request->all() == null or ($request['columnSearch'] == '' and $request['columnOrderBy'] == '')) {
-            $companies = DB::table('companies')
-                ->select('*')
-                ->orderBy('companyId')
-                ->get()
-                ->toArray();
-        } else if ($request['columnOrderBy'] != ''){
-            $companies = DB::table('companies')
-                ->select('*')
-                ->orderBy($request['columnOrderBy'] == '' ? 'companyId' : $request['columnOrderBy'])
-                ->get()
-                ->toArray();
-        } else {
-            $companies = DB::table('companies')
-                ->select('*')
-                ->where($request['columnSearch'], 'ilike', '%'.$request['search'].'%')
-                ->orderBy($request['columnOrderBy'] == '' ? 'companyId' : $request['columnOrderBy'])
-                ->get()
-                ->toArray();
-        }
+        $query = Company::query();
+        $query->select('*')->orderBy($request['columnOrderBy'] == '' ? 'companyId' : $request['columnOrderBy']);
+        $query->when($request['columnSearch'] != null, function ($query) use ($request) {
+           $query->where($request['columnSearch'], 'ilike', '%'.$request['search'].'%');
+        });
+        $companies = $query->get();
         return view('cashRegister/companyList', [
-            'companies' => $companies
+            'companies' => $companies,
+            'columnSearch' => $request['columnSearch'],
+            'columnOrderBy' => $request['columnOrderBy'],
+            'search' => $request['search']
         ]);
     }
 
@@ -45,33 +35,36 @@ class CompanyController extends Controller
     }
 
     public function editCompany(Request $request) {
-        $validatedData = $request->validate([
-            'companyId' => ['required'],
-            'companyName' => ['required'],
-            'taxNumber' => ['required'],
-            'owner' => ['required'],
-            'phoneNumber' => ['required'],
-            'postcode' => ['required'],
-            'city' => ['required'],
-            'street' => ['required'],
-            'streetNumber' => ['required'],
-            'isSupplier' => ['required']
-        ]);
-        $company = Company::find($validatedData['companyId']);
+        $validator = Validator::make($request->all(),
+            [
+                'companyId' => ['required'],
+                'companyName' => ['required'],
+                'taxNumber' => ['required'],
+                'postcode' => ['required'],
+                'city' => ['required'],
+                'street' => ['required'],
+                'streetNumber' => ['required'],
+                'isSupplier' => ['required']
+            ]
+        );
+        if ($validator->fails()) {
+            return redirect()->back()->with('error', 'Sikertelen művelet! Hiányzó adatok voltak a módosítás során!')->with('updatedCompany', $request['companyId']);
+        }
+        $company = Company::find($request['companyId']);
         $updatedData = [
-            'companyName' => $validatedData['companyName'],
-            'taxNumber' => $validatedData['taxNumber'],
-            'owner' => $validatedData['owner'],
-            'phoneNumber' => $validatedData['phoneNumber'],
-            'postcode' => $validatedData['postcode'],
-            'city' => $validatedData['city'],
-            'street' => $validatedData['street'],
-            'streetNumber' => $validatedData['streetNumber'],
-            'isSupplier' => $validatedData['isSupplier']
+            'companyName' => $request['companyName'],
+            'taxNumber' => $request['taxNumber'],
+            'owner' => $request['owner'],
+            'phoneNumber' => $request['phoneNumber'],
+            'postcode' => $request['postcode'],
+            'city' => $request['city'],
+            'street' => $request['street'],
+            'streetNumber' => $request['streetNumber'],
+            'isSupplier' => $request['isSupplier']
         ];
         $company->update($updatedData);
 
-        Return Redirect::back()->with('success', 'Sikeresen megváltoztattad a paramétereit a cégjegyzéknek!');
+        Return Redirect::to('/cashRegister/companyList#row'.$company->companyId)->with('success', 'Sikeresen megváltoztattad a paramétereit a cégjegyzéknek!')->with('updatedCompany', $request['companyId']);
     }
 
     /**
@@ -91,7 +84,8 @@ class CompanyController extends Controller
         CashRegisterItem::create([
             'productIdReg' => $request['companyId'],
             'cashRegisterNumber' => 1,
-            'howMany' => -1
+            'howMany' => -1,
+            'currentPrice' => 0
         ]);
         return Redirect::back();
     }
@@ -99,13 +93,21 @@ class CompanyController extends Controller
         if ($request->all() == null) {
             return view('cashRegister/companyNew');
         }
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'companyName' => 'required',
             'postcode' => 'required',
+            'city' => 'required',
+            'street' => 'required',
+            'streetNumber' => 'required',
+            'isSupplier' => 'required',
+            'taxNumber' => 'required',
         ]);
+        if ($validator->fails()) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! Hiányzó adatok vannak!')->withInput();
+        }
         $newCompany = [
-            'companyName' => $validated['companyName'],
-            'postcode' => $validated['postcode'],
+            'companyName' => $request['companyName'],
+            'postcode' => $request['postcode'],
             'city' => $request['city'],
             'street' => $request['street'],
             'streetNumber' => $request['streetNumber'],
@@ -115,8 +117,8 @@ class CompanyController extends Controller
             'phoneNumber' => $request['phoneNumber']
         ];
 
-        Company::create($newCompany);
+        $row = Company::create($newCompany);
 
-        return Redirect::back()->with('success', 'Sikeresen felvetted a céget a listába!');
+        return Redirect::to('/cashRegister/companyList#row'.$row->companyId)->with('success', 'Sikeresen felvetted a céget a listába!')->with('updatedCompany', $row->companyId);
     }
 }

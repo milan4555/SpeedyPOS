@@ -11,42 +11,26 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProductController extends Controller
 {
-    public static function getHowManyInCart($id, $array) {
-        foreach ($array as $data) {
-            $dataExplode = explode('-', $data);
-            if ($dataExplode[0] == $id){
-                return $dataExplode[1];
-            }
-        }
-        return 0;
-    }
-
     public function showAllProduct(Request $request) {
-        if ($request->all() == null or ($request['columnSearch'] == '' and $request['columnOrderBy'] == '')) {
-            $products = DB::table('products')
-                ->join('categories', 'products.categoryId', 'categories.categoryId')
-                ->select('*')
-                ->orderBy('productId')
-                ->get()
-                ->toArray();
-        } else if ($request['columnOrderBy'] != ''){
-            $products = DB::table('products')
-                ->join('categories', 'products.categoryId', 'categories.categoryId')
-                ->select('*')
-                ->orderBy($request['columnOrderBy'] == '' ? 'productId' : $request['columnOrderBy'])
-                ->get()
-                ->toArray();
-        } else {
-            $products = DB::table('products')
-                ->join('categories', 'products.categoryId', 'categories.categoryId')
-                ->select('*')
-                ->where($request['columnSearch'], 'ilike', '%'.$request['search'].'%')
-                ->orderBy($request['columnOrderBy'] == '' ? 'productId' : $request['columnOrderBy'])
-                ->get()
-                ->toArray();
-        }
+        $query = Product::query();
+        $query->join('categories', 'products.categoryId', 'categories.categoryId')
+            ->select('*');
+        $query->when($request['columnOrderBy'] != '', function ($query) use ($request) {
+           $query->orderBy($request['columnOrderBy']);
+        });
+        $query->when($request['columnSearch'] != '', function ($query) use ($request) {
+            $query->where($request['columnSearch'], 'ilike', '%'.$request['search'].'%');
+        });
+        $products = $query->get();
+        $selectOptions = [
+            ['productId', 'Azonosító'], ['productName', 'Termék neve'], ['productShortName', 'Rövid név'], ['categoryName', 'Kategória']
+        ];
         return view('cashRegister/productList', [
-           'products' => $products
+           'selectOptions' => $selectOptions,
+           'products' => $products,
+           'columnOrderBy' => $request['columnOrderBy'],
+           'columnSearch' => $request['columnSearch'],
+           'search' => $request['search']
         ]);
     }
 

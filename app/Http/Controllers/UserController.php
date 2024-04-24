@@ -18,7 +18,13 @@ class UserController extends Controller
 {
 
     public function login(Request $request) {
+        if ($request['username'] == null) {
+            return \redirect()->back()->with('error', 'Adj meg egy felhasználónevet a bejelentkezéshez!');
+        }
         $user = User::where('username', '=', $request['username'])->first();
+        if ($user == null) {
+            return redirect()->back()->with('error', 'Sikertelen bejelentkezés! Ilyen felhasználónév nem létezik!');
+        }
         if (!Hash::check($request['password'], $user->password)) {
             return \redirect()->back()->with('error', 'Sikertelen bejelntkezés! Rossz felhasználónév és jelszó páros lett megadva!');
         }
