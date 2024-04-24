@@ -122,16 +122,17 @@
         <div class="row mt-2">
             <div class="col-md-6">
                 <label class="form-label">Kezdő dátum:</label>
-                <input type="date" class="form-control border-dark" id="startDate" name="startDate" value="{{$startDate != null ? $startDate : ''}}">
+                <input type="date" class="form-control border-dark" id="startDate" name="startDate" value="{{(isset($startDate) and $startDate != null) ? $startDate : ''}}">
             </div>
             <div class="col-md-6">
                 <label class="form-label">Vég dátum:</label>
-                <input type="date" class="form-control border-dark" id="endDate" name="endDate" value="{{$endDate != null ? $endDate : ''}}">
+                <input type="date" class="form-control border-dark" id="endDate" name="endDate" value="{{(isset($endDate) and $endDate != null) != null ? $endDate : ''}}">
             </div>
         </div>
         <input type="hidden" id="shownReceiptId" name="shownReceiptId" value="{{isset($receiptData) ? $receiptData[0]->receiptId : ''}}">
         <div class="d-flex justify-content-center mt-4">
-            <input type="submit" class="form-control bg-primary text-white" value="Szűrés">
+            <input type="submit" class="form-control bg-primary text-white w-25 mx-1" value="Szűrés">
+            <a href="/cashRegister/receiptList" class="btn btn-danger w-25 mx-1">Törlés</a>
         </div>
     </form>
     <script>

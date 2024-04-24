@@ -38,28 +38,27 @@
             <div class="row">
             <div class="col-md-6">
                 Keresés szöveg alapján:
-                <select class="form-control" name="columnSearch">
+                <select class="form-control border-dark" name="columnSearch">
                     <option value="">Válassz szűrési lehetőséget!</option>
-                    <option value="productId">Azonosító</option>
-                    <option value="productName">Termék név</option>
-                    <option value="productShortName">Rövidnév</option>
-                    <option value="categoryName">Kategória</option>
+                    @foreach($selectOptions as $selectOption)
+                        <option value="{{$selectOption[0]}}" {{(isset($columnSearch) and $columnSearch == $selectOption[0]) ? 'selected' : ''}}>{{$selectOption[1]}}</option>
+                    @endforeach
                 </select>
-                <input class="form-control mt-2" type="text" placeholder="Pl.: Festék" name="search">
+                <input class="form-control mt-2 border-dark" type="text" placeholder="Pl.: Festék" name="search" value="{{isset($search) ? $search : ''}}">
             </div>
             <div class="col-md-6">
                 Rendezés oszlop szerint:
-                <select class="form-control" name="columnOrderBy">
+                <select class="form-control border-dark" name="columnOrderBy">
                     <option value="">Válassz rendezési lehetőséget!</option>
-                    <option value="productId">Azonosító</option>
-                    <option value="productName">Termék név</option>
-                    <option value="productShortName">Rövidnév</option>
-                    <option value="categoryName">Kategória</option>
+                    @foreach($selectOptions as $selectOption)
+                        <option value="{{$selectOption[0]}}" {{(isset($columnOrderBy) and $columnOrderBy == $selectOption[0]) ? 'selected' : ''}}>{{$selectOption[1]}}</option>
+                    @endforeach
                 </select>
             </div>
             </div>
-            <div class="d-flex justify-content-center">
-                <input class="form-control btn btn-primary mt-2 w-50" type="submit" value="Szűrés">
+            <div class="d-flex justify-content-center mt-2">
+                <input class="form-control btn btn-primary w-25 mx-1" type="submit" value="Szűrés">
+                <a href="/cashRegister/productList" class="btn btn-danger w-25 mx-1">Törlés</a>
             </div>
         </form>
     </div>

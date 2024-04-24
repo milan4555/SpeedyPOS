@@ -11,42 +11,42 @@
                 <div class="row">
                     <div class="col-md-3">
                         Cég neve:
-                        <input class="form-control" type="text" name="companyName" value="" autocomplete="off" required>
+                        <input class="form-control border-dark" type="text" name="companyName" value="{{old('companyName')}}" autocomplete="off" >
                     </div>
                     <div class="col-md-3">
                         Adószáma:
-                        <input class="form-control" type="text" name="taxNumber" value="" autocomplete="off" required>
+                        <input class="form-control border-dark" type="text" name="taxNumber" value="{{old('taxNumber')}}" autocomplete="off" >
                     </div>
                     <div class="col-md-3">
                         Tulajdonos:
-                        <input class="form-control" type="text" name="owner" value="" autocomplete="off">
+                        <input class="form-control border-dark" type="text" name="owner" value="{{old('owner')}}" autocomplete="off">
                     </div>
                     <div class="col-md-3">
                         Telefonszám:
-                        <input class="form-control" type="number" name="phoneNumber" value="" autocomplete="off">
+                        <input class="form-control border-dark" type="number" name="phoneNumber" value="{{old('phoneNumber')}}" autocomplete="off">
                     </div>
                     <div class="col-md-3">
                         Irányítószám
-                        <input class="form-control" type="number" name="postcode" value="" autocomplete="off" required>
+                        <input class="form-control border-dark" type="number" name="postcode" value="{{old('postcode')}}" autocomplete="off" >
                     </div>
                     <div class="col-md-3">
                         Város:
-                        <input class="form-control" type="text" name="city" value="" autocomplete="off" required>
+                        <input class="form-control border-dark" type="text" name="city" value="{{old('city')}}" autocomplete="off" >
                     </div>
                     <div class="col-md-3">
                         Utca:
-                        <input class="form-control" type="text" name="street" value="" autocomplete="off" required>
+                        <input class="form-control border-dark" type="text" name="street" value="{{old('street')}}" autocomplete="off" >
                     </div>
                     <div class="col-md-3">
                         Házszám:
-                        <input class="form-control" type="number" name="streetNumber" value="" autocomplete="off" required>
+                        <input class="form-control border-dark" type="number" name="streetNumber" value="{{old('streetNumber')}}" autocomplete="off" >
                     </div>
                     <div class="col-md-3">
                         Beszállító-e?
-                        <select class="form-control" name="isSupplier" required>
+                        <select class="form-control border-dark" name="isSupplier" required>
                             <option value="">...</option>
-                            <option value="True">Igen</option>
-                            <option value="False">Nem</option>
+                            <option value="True" {{old('isSupplier') == 'True' ? 'selected' : ''}}>Igen</option>
+                            <option value="False" {{old('isSupplier') == 'False' ? 'selected' : ''}}>Nem</option>
                         </select>
                     </div>
                 </div>

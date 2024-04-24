@@ -9,11 +9,10 @@
                         <form method="POST" action="/login">
                             @csrf
                             <div class="row mb-3">
-                                <label for="username"
-                                       class="col-md-4 col-form-label text-md-end">Felhasználónév:</label>
+                                <label for="username" class="col-md-4 col-form-label text-md-end">Felhasználónév:</label>
                                 <div class="col-md-6">
                                     <input id="username" type="text"
-                                           class="form-control @error('username') is-invalid @enderror" name="username"
+                                           class="form-control border-dark" name="username"
                                            value="{{ old('username') }}" required autocomplete="username" autofocus>
                                     @error('username')
                                     <span class="invalid-feedback" role="alert">
@@ -26,7 +25,7 @@
                                 <label for="password" class="col-md-4 col-form-label text-md-end">Jelszó:</label>
                                 <div class="col-md-6">
                                     <input id="password" type="password"
-                                           class="form-control @error('password') is-invalid @enderror" name="password"
+                                           class="form-control border-dark" name="password"
                                            required autocomplete="current-password">
                                     @error('password')
                                     <span class="invalid-feedback" role="alert">

@@ -13,15 +13,15 @@
             </th>
         </tr>
         @foreach($companies as $company)
-            <tr>
+            <tr id="row{{$company->companyId}}">
                 <th>{{$company->companyId}}</th>
                 <td>{{$company->companyName}}</td>
                 <td>{{$company->taxNumber}}</td>
-                <td>{{$company->owner}}</td>
-                <td>+36{{$company->phoneNumber}}</td>
+                <td>{{$company->owner != '' ? $company->owner : 'Nincs megadva'}}</td>
+                <td>{{$company->phoneNumber != '' ? '+36'.$company->phoneNumber : 'Nincs megadva'}}</td>
                 <td><a class="btn btn-primary btn-sm" data-bs-toggle="collapse" href="#collapseProductCodes{{$company->companyId}}" role="button" aria-expanded="false" aria-controls="collapseExample">Információk</a></td>
             </tr>
-            <tr class="collapse" id="collapseProductCodes{{$company->companyId}}">
+            <tr class="collapse {{(session()->has('updatedCompany') and session('updatedCompany') == $company->companyId) ? 'show' : ''}}" id="collapseProductCodes{{$company->companyId}}">
                 <td colspan="6">
                     <form method="post" action="/cashRegister/companyList/edit">
                         @csrf
@@ -69,7 +69,10 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <a href="/cashRegister/companyList/delete/{{$company->companyId}}" class="btn btn-danger mx-2">Törlés</a>
+                                <button type="button" class="btn btn-danger mx-2" data-bs-toggle="modal" data-bs-target="#deleteCompany{{$company->companyId}}">
+                                    Törlés
+                                </button>
+                                @include('cashRegister.modals._companyDeleteModal')
                                 <input type="submit" class="btn btn-primary" value="Módosítás">
                             </div>
                         </div>
@@ -87,28 +90,29 @@
             <div class="row">
                 <div class="col-md-6">
                     Keresés szöveg alapján:
-                    <select class="form-control" name="columnSearch">
+                    <select class="form-control border-dark" name="columnSearch">
                         <option value="">Válassz szűrési lehetőséget!</option>
-                        <option value="companyId">Azonosító</option>
-                        <option value="companyName">Cég név</option>
-                        <option value="taxNumber">Adószám</option>
-                        <option value="owner">Tulajdonos</option>
-                        <option value="phoneNumber">Telefonszám</option>
+                        <option value="companyId" {{(isset($columnSearch) and $columnSearch == 'companyId') ? 'selected' : ''}}>Azonosító</option>
+                        <option value="companyName" {{(isset($columnSearch) and $columnSearch == 'companyName') ? 'selected' : ''}}>Cég név</option>
+                        <option value="taxNumber" {{(isset($columnSearch) and $columnSearch == 'taxNumber') ? 'selected' : ''}}>Adószám</option>
+                        <option value="owner" {{(isset($columnSearch) and $columnSearch == 'owner') ? 'selected' : ''}}>Tulajdonos</option>
+                        <option value="phoneNumber" {{(isset($columnSearch) and $columnSearch == 'phoneNumber') ? 'selected' : ''}}>Telefonszám</option>
                     </select>
-                    <input class="form-control mt-2" type="text" placeholder="Pl.: Kiss Pista" name="search">
+                    <input class="form-control mt-2 border-dark" type="text" placeholder="Pl.: Kiss Pista" name="search" value="{{isset($search) ? $search : ''}}">
                 </div>
                 <div class="col-md-6">
                     Rendezés oszlop szerint:
-                    <select class="form-control" name="columnOrderBy">
+                    <select class="form-control border-dark" name="columnOrderBy">
                         <option value="">Válassz rendezési lehetőséget!</option>
-                        <option value="companyId">Azonosító</option>
-                        <option value="companyName">Cég név</option>
-                        <option value="taxNumber">Adószám</option>
+                        <option value="companyId" {{(isset($columnOrderBy) and $columnOrderBy == 'companyId') ? 'selected' : ''}}>Azonosító</option>
+                        <option value="companyName" {{(isset($columnOrderBy) and $columnOrderBy == 'companyName') ? 'selected' : ''}}>Cég név</option>
+                        <option value="taxNumber" {{(isset($columnOrderBy) and $columnOrderBy == 'taxNumber') ? 'selected' : ''}}>Adószám</option>
                     </select>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
-                <input class="form-control btn btn-primary mt-2 w-50" type="submit" value="Szűrés">
+            <div class="d-flex justify-content-center mt-2">
+                <input class="form-control btn btn-primary w-25 mx-1" type="submit" value="Szűrés">
+                <a href="/cashRegister/companyList" class="btn btn-danger w-25 mx-1">Törlés</a>
             </div>
         </form>
     </div>

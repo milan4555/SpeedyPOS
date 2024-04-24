@@ -71,13 +71,6 @@
 </nav>
 <main class="py-4">
     @yield('content')
-    <!-- Megkeresni miért nem akar megjelenni a modal! -->
-    @if(session()->has('change'))
-        @include('cashRegister.modals._changeModal')
-        <script type="text/javascript">
-            document.getElementById('changeModal').modal('show');
-        </script>
-    @endif
 </main>
 </body>
 </html>

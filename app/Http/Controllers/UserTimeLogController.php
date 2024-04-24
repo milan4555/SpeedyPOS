@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CashRegisterItem;
 use App\Models\UserTimeLog;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,6 +26,9 @@ class UserTimeLogController extends Controller
         return redirect()->back()->with('success', 'Sikeres kasszanyitás! Kellemes és eredményes munkát kívánok neked!');
     }
     public function closeCashRegister($employeeId) {
+        if (CashRegisterItem::where('cashRegisterNumber', '=', Auth::id())->count() > 0) {
+            return redirect()->back()->with('error', 'Sikertelen kasszazárás! Először ürítsd ki a kasszát, vagy fejezd be az adott folyamatot!');
+        }
         if (!$this->doesHaveOpenCashRegister($employeeId)) {
             return redirect()->back()->with('error', 'Sikertelen kasszazárás! Nincsen olyan kassza amelynél a felhasználó szerepel!');
         }
@@ -91,6 +95,9 @@ class UserTimeLogController extends Controller
     }
 
     public function haveABreak($employeeId) {
+        if (CashRegisterItem::where('cashRegisterNumber', '=', Auth::id())->count() > 0) {
+            return redirect()->back()->with('error', 'Sikertelen kasszazárás! Először ürítsd ki a kasszát, vagy fejezd be az adott folyamatot!');
+        }
         if (!$this->doesHaveOpenCashRegister($employeeId)) {
             return redirect()->back()->with('error', 'Sikertelen művelet! Nincsen olyan kassza amelynél a felhasználó szerepel! Először nyiss meg egy kasszát majd próbáld újra!');
         }

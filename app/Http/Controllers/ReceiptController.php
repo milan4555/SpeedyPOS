@@ -66,8 +66,16 @@ class ReceiptController extends Controller
             }
         }
         CashRegisterItem::truncate();
-
-        return Redirect::back()->with('change', $cashAmounts);
+        $stringBody = 'Sikeres vásárlás!<br><p>';
+        $arrayKeys = array_keys($cashAmounts);
+        for ($i = 0; $i < count($arrayKeys); $i++) {
+            $stringBody .= $arrayKeys[$i].' Ft x '.$cashAmounts[$arrayKeys[$i]].'<br>';
+        }
+        $stringBody .= '</p>';
+        if ($cashAmounts == null) {
+            $stringBody = 'Pontos összeget kaptál, így nem kell visszajárót adnod!';
+        }
+        return Redirect::back()->with('success', $stringBody);
     }
 
     public function showReceipt(Request $request) {

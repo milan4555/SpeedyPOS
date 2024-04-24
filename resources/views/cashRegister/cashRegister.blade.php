@@ -74,7 +74,9 @@
 @endsection
 
 @section('buttons')
-    <button type="button" class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#popUpModal">Megszakítás</button>
+    <button type="button" class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#emptyCashRegisterModal">
+        Megszakítás
+    </button>
     @include('cashRegister\modals\_emptyCashRegisterModal')
     <div class="row">
         <div class="col-md-6">
@@ -99,7 +101,7 @@
     <script>
         const input = document.getElementById('changeAmount');
         const successButton = document.getElementById('success');
-        input.addEventListener('change', (event) => {
+        input.addEventListener('input', (event) => {
             if (input.validity.valid && (input.value % 5 === 0 || input.value % 10 === 0)) {
                 successButton.classList.add('btn-success')
                 successButton.classList.remove('btn-danger')
@@ -155,7 +157,7 @@
             const otherInput = document.getElementById('otherInput');
             const otherInputDiv = document.getElementById('otherInputDiv');
             const otherInputButton = document.getElementById('otherInputButton');
-            otherInput.addEventListener('change', function () {
+            otherInput.addEventListener('input', function () {
                 const otherInputValue = otherInput.value;
                 otherInputButton.disabled = (otherInputValue == null || otherInputValue == '');
             });

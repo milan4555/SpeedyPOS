@@ -1,5 +1,4 @@
 @if(session()->has('change'))
-    //TODO: Nem jelenik meg valamiért, de a kódban ott van!
     <div id="changeModal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
