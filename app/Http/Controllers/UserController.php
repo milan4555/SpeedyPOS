@@ -40,18 +40,20 @@ class UserController extends Controller
         if ($request->all() == []) {
             return view('settings.newEmployee');
         }
-        $baseUsername = $request['firstName'].$request['lastName'][0];
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+           'firstName' => 'required|string',
+           'lastName' => 'required|string',
+           'phoneNumber' => 'required|integer',
+           'position' => 'required|string'
+        ]);
+        if ($validator->fails()) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! Hiányzó adatok voltak, vagy valamelyik adattag nem megfelően volt megadva!')->withInput();
+        }
+        $baseUsername = strtolower($request['firstName'].$request['lastName'][0]);
         $nameCount = DB::table('users')->where('username', '=', $baseUsername)->count();
         if ($nameCount == 1) {
             $baseUsername .= $nameCount+1;
         }
-
-        $rights = UserRight::create([
-            'isSuperior' => false,
-            'canCreateProduct' => false,
-            'canUpdateProduct' => false,
-            'canDeleteProduct' => false,
-        ]);
 
         $user = User::create([
             'firstName' => $request['firstName'],
@@ -60,13 +62,10 @@ class UserController extends Controller
             'password' => Hash::make('xX123456'),
             'phoneNumber' => $request['phoneNumber'],
             'position' => $request['position'],
-            'rightsId' => $rights->rightsId
         ]);
-
-        Auth::login($user);
         return Redirect::back()->with('success', 'Sikeresen felvetted az új alkalmazottat!<br>
-                                                    A kapott felhasználónév: '.$baseUsername.'
-                                                    <br>Alapértelmezett jelszó: xX123456<br>
+                                                    A kapott felhasználónév: <b>'.$baseUsername.'</b>
+                                                    <br>Alapértelmezett jelszó: <b>xX123456</b><br>
                                                     <b>Az első bejelentkezésnél kérlek változtatsd meg!</b>');
     }
     public function loadProfilePage() {
@@ -97,9 +96,22 @@ class UserController extends Controller
 
     public function setDefaultPassword($employeeId) {
         $user = User::find($employeeId);
+        if ($user == null) {
+            return redirect()->back()->with('error', 'Sikeretelen művelet! Ez a felhasználó nem létezik!');
+        }
         $newPassword = Str::password(8, true, true, false);
         $user->update(['password' => Hash::make($newPassword)]);
 
         return \redirect()->back()->with('success', 'Jelszó helyreállítás megtörtént!<br>Az új jelszó: <b>'.$newPassword.'</b><br>Kérlek bejelntkezés után egyből változtasd meg!');
+    }
+
+    public function userDelete($employeeId) {
+        $user = User::find($employeeId);
+        if ($user == null) {
+            return redirect()->back()->with('error', 'Sikeretelen művelet! Ez a felhasználó már nem is létezik!');
+        }
+        $user->delete();
+
+        return \redirect()->back()->with('success', 'Sikeres művelet! <b>'.$user->firstName.' '.$user->lastName.' ('.$user->username.')</b> nevű felhasználót sikeresen eltávolítottad!');
     }
 }

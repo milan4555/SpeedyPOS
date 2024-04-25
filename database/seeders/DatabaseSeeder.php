@@ -117,7 +117,7 @@ class DatabaseSeeder extends Seeder
             'phoneNumber' => 704176989,
             'position' => 'admin',
         ]);
-        for ($r = 0; $r < 10; $r++) {
+        for ($r = 0; $r < 40; $r++) {
             User::factory()->create([
                 'firstName' => fake()->firstName,
                 'lastName' => fake()->lastName,
