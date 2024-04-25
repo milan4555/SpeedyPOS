@@ -81,6 +81,7 @@ Route::get('/settings/userRights/{rightsId}/{optionName}', [\App\Http\Controller
 Route::get('/settings/profile', [\App\Http\Controllers\UserController::class, 'loadProfilePage'])->middleware('auth');
 Route::post('/settings/setNewPassword', [\App\Http\Controllers\UserController::class, 'setNewPassword'])->middleware('auth');
 Route::get('/settings/setDefaultPassword/{employeeId}', [\App\Http\Controllers\UserController::class, 'setDefaultPassword'])->middleware('adminGroup');
+Route::get('/settings/userDelete/{employeeId}', [\App\Http\Controllers\UserController::class, 'userDelete'])->middleware('adminGroup');
 
 //Setting routes end
 
