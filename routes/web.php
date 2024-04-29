@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('auth.login');
-});
+})->middleware('redirectIfAuth');
 //Auth routes start
 
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
