@@ -40,6 +40,9 @@ class UserController extends Controller
         if ($request->all() == []) {
             return view('settings.newEmployee');
         }
+        if (strlen($request['phoneNumber']) != 9) {
+            return \redirect()->back()->with('error', 'A telefonszám kevesebb/több karakterből áll, mint az elvárt!')->withInput();
+        }
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
            'firstName' => 'required|string',
            'lastName' => 'required|string',
@@ -47,11 +50,12 @@ class UserController extends Controller
            'position' => 'required|string'
         ]);
         if ($validator->fails()) {
+            dd($validator->errors());
             return \redirect()->back()->with('error', 'Sikertelen művelet! Hiányzó adatok voltak, vagy valamelyik adattag nem megfelően volt megadva!')->withInput();
         }
-        $baseUsername = strtolower($request['firstName'].$request['lastName'][0]);
-        $nameCount = DB::table('users')->where('username', '=', $baseUsername)->count();
-        if ($nameCount == 1) {
+        $baseUsername = str_replace(['á', 'é', 'ú', 'ó', 'ü', 'ö', 'ű', 'ő'], ['a', 'e', 'u', 'o', 'u', 'o', 'u', 'o'], strtolower($request['firstName'].$request['lastName'][0]));
+        $nameCount = DB::table('users')->where('username', 'like', '%'.$baseUsername.'%')->count();
+        if ($nameCount > 0) {
             $baseUsername .= $nameCount+1;
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\productCodes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,24 +11,31 @@ class ProductCodesController extends Controller
 {
     public static function getAllCodesByProductId($productId) {
         return productCodes::all()
-            ->where('productIdCode', '=', $productId);
+            ->where('productIdCode', '=', $productId)
+            ->sortByDesc('created_at');
     }
 
     public static function makeTable($productId) {
         $productCodes = self::getAllCodesByProductId($productId);
         $tableString = '
-                   <div class="border rounded-3 border-3 border-dark m-2 p-2" style="overflow: auto; height: 160px">
+                   <div class="row">
+                   <div class="col-md-6">
                    <h4>Termékhez tartozó kódok:</h4>
-                   <table class="table">';
+                        <input type="number" placeholder="Új kód felvétele" class="form-control my-2 border-dark" id="newProductCode'.$productId.'" data-productId="'.$productId.'" name="newProductCode">
+                        <button class="btn button-blue" onclick="addProductCode('.$productId.')">Felvétel</button>
+                   </div>
+                   <div class="col-md-6" style="overflow: auto; height: 200px">
+                   <table class="table border border-2 border-dark">';
         foreach ($productCodes as $productCode) {
             $tableString .= '
                   <tr>
-                    <td>'.$productCode->productCode.'</td>
+                    <td class="align-middle">'.$productCode->productCode.'</td>
                   </tr>';
         }
         $tableString .= '</table>
                         </div>
-                        <input type="number" placeholder="Új kód felvétele" class="form-control my-2 mx-2 w-50 border-dark" data-productId="'.$productId.'" name="newProductCode">';
+                        </div>
+                        ';
 
         return $tableString;
     }
@@ -44,5 +52,18 @@ class ProductCodesController extends Controller
         } else {
             return false;
         }
+    }
+
+    public function newProductCode($productId, $productCode) {
+        $exists = productCodes::where('productCode', $productCode)->first();
+        if ($exists != null) {
+            $product = Product::find($exists->productIdCode);
+            return redirect()
+                ->back()
+                ->with('error', 'Sikertelen művelet! Ez a kód már hozzá van rendelve egy termékhez!<br><b>'.$product->productId.'<br>'.$product->productName.'</0pr></b>')
+                ->with('redirectProductId', $productId);
+        }
+        productCodes::create(['productIdCode' => $productId, 'productCode' => $productCode]);
+        return redirect()->back()->with('success', 'Sikeres művelet! Felvettél egy új kódot a kiválasztott termékhez!')->with('redirectProductId', $productId);
     }
 }

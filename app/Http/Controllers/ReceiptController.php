@@ -94,8 +94,9 @@ class ReceiptController extends Controller
                 $receiptAllData = DB::table('rec_to_prods')
                     ->join('receipts', 'rec_to_prods.receiptId', 'receipts.receiptId')
                     ->join('products', 'rec_to_prods.productId', 'products.productId')
-                    ->select('*')
+                    ->select('receipts.*', 'products.*', 'rec_to_prods.quantity', 'rec_to_prods.atTimePrice')
                     ->where('rec_to_prods.receiptId', '=', $request['shownReceiptId'])
+                    ->orderBy('receipts.created_at')
                     ->get()
                     ->toArray();
             }
@@ -115,7 +116,7 @@ class ReceiptController extends Controller
                 })
                 ->when($request['endDate'] != null, function (Builder $query) use ($request) {
                     $query->where('created_at', '<=', $request['endDate']);
-                })->get()
+                })->orderBy('receipts.created_at', 'DESC')->get()
                 ->toArray();
             $viewArray = [
                 'receipts' => $receipts,

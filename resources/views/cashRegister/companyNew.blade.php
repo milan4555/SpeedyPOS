@@ -2,7 +2,7 @@
 
 @section('mainSpace')
     <div class="p-2">
-    <h3>Új cég adatai:</h3>
+    <h3 class="text-center">Új cég adatai</h3>
         <hr>
         <form method="post" action="/cashRegister/companyList/newCompany">
             @csrf
@@ -50,9 +50,10 @@
                         </select>
                     </div>
                 </div>
+                <hr>
                 <div class="d-flex justify-content-center">
-                    <input type="submit" class="btn btn-primary mx-2" value="Felvétel">
-                    <a href="/cashRegister/companyList" class="btn btn-danger">Mégsem</a>
+                    <input type="submit" class="btn button-blue mx-1" value="Felvétel" style="margin: 0">
+                    <a href="/cashRegister/companyList" class="btn button-red mx-1" style="margin: 0">Mégsem</a>
                 </div>
             </div>
         </form>
@@ -64,9 +65,9 @@
         <form class=" mt-2">
             @csrf
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     Keresés szöveg alapján:
-                    <select class="form-control" name="columnSearch" disabled>
+                    <select class="form-control border-dark" name="columnSearch" disabled>
                         <option value="">Válassz szűrési lehetőséget!</option>
                         <option value="companyId">Azonosító</option>
                         <option value="companyName">Cég név</option>
@@ -74,11 +75,11 @@
                         <option value="owner">Tulajdonos</option>
                         <option value="phoneNumber">Telefonszám</option>
                     </select>
-                    <input class="form-control mt-2" type="text" placeholder="Pl.: Kiss Pista" name="search" disabled>
+                    <input class="form-control border-dark mt-2" type="text" placeholder="Pl.: Kiss Pista" name="search" disabled>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12 mt-2">
                     Rendezés oszlop szerint:
-                    <select class="form-control" name="columnOrderBy" disabled>
+                    <select class="form-control border-dark" name="columnOrderBy" disabled>
                         <option value="">Válassz rendezési lehetőséget!</option>
                         <option value="companyId">Azonosító</option>
                         <option value="companyName">Cég név</option>
@@ -87,7 +88,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <input class="form-control btn btn-primary mt-2 w-50" type="submit" value="Szűrés" disabled>
+                <input class="form-control btn button-blue mt-2 w-50" type="submit" value="Szűrés" disabled>
             </div>
         </form>
     </div>

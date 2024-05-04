@@ -12,9 +12,9 @@
                 @endforeach
             </div>
         </div>
-        <div class="pt-2">
-            <a href="/settings" class="btn btn-danger">Visszaállítás</a>
-            <input class="btn btn-primary" type="submit" value="Mentés">
+        <div class="d-flex justify-content-start mt-2">
+            <a href="/settings" class="btn button-red" style="margin: 2px">Visszaállítás</a>
+            <input class="btn button-blue" type="submit" value="Mentés" style="margin: 2px">
         </div>
     </form>
 @endsection

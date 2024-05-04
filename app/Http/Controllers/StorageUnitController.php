@@ -28,6 +28,23 @@ class StorageUnitController extends Controller
         }
     }
 
+    public function searchStorageUnit($searchedId) {
+        if (!StoragePlaceController::checkIfStoragePlaceExists($searchedId)) {
+            return redirect()->back()->with('error', 'Sikertelen keresés! Ilyen raktárhelykód nem létezik! Próbáld meg újra, vagy adj meg egy másikat!');
+        }
+        $explodedStoragePlace = explode('-', $searchedId);
+        $heightNumber = substr($explodedStoragePlace[1], 1);
+        return redirect()->to('/storage/storageUnit/'.$explodedStoragePlace[0].'/'.$explodedStoragePlace[1][0].'/'.$heightNumber.'/'.$explodedStoragePlace[2]);
+    }
+
+    public static function checkIfStorageItemIsEmpty($storagePlace) {
+        if (StoragePlace::where('storagePlace', '=', $storagePlace)->count() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function addStorageUnit(Request $request) {
         $nextNumber = StorageUnit::where('storageName', 'like', '%Raktárhelység #%')->count();
         $addHelper = [
@@ -71,9 +88,12 @@ class StorageUnitController extends Controller
     }
 
     public function printStorageLabels($labelType, $storageId, $letter = '', $width = 0, $height = 0) {
-        $zpl = '';
         $storage = StorageUnit::find($storageId);
-        $fp=pfsockopen("127.0.0.1",9100);
+        try {
+            $fp = pfsockopen("127.0.0.1", 9100);
+        } catch (Exception $e) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! A nyomatató nem elérhető a számítógép számára a hálózaton keresztül!');
+        }
         if ($labelType == 'rows') {
             $abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             for ($i = 0; $i < $storage->numberOfRows; $i++) {

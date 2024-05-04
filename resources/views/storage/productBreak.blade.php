@@ -1,7 +1,7 @@
 @extends('layouts.menu')
 @section('content')
     <div class="d-flex justify-content-center">
-        <div class="card" style="width: 40rem;">
+        <div class="card border border-2 border-dark" style="width: 40rem;">
             <div class="card-body">
                 <label for="productId">Cikkszám:</label>
                 <input id="productId" class="form-control border-dark" name="productId"
@@ -24,13 +24,13 @@
                     <label for="oldStoragePlace">Raktárhelység neve:</label>
                     <input id="oldStoragePlace" class="form-control border-dark" name="oldStoragePlace"
                            value="{{isset($product) ? $product->storagePlace : ''}}" disabled>
-                    <label for="howMany">Darabszám:</label>
+                    <label for="howMany" class="mt-2">Darabszám:</label>
                     <input id="howMany" class="form-control border-dark" name="howMany"
                            value="{{isset($product) ? $product->howMany : ''}}" disabled>
-                    <label for="selectedQuantity">Szétbontott mennyiség:</label>
+                    <label for="selectedQuantity" class="mt-2">Szétbontott mennyiség:</label>
                     <input type="number" id="selectedQuantity" class="form-control border-dark" name="selectedQuantity"
                            max="{{isset($product) ? ($product->howMany-1) : ''}}" value="" autocomplete="off" required>
-                    <label for="newStoragePlace">Új raktári helye:</label>
+                    <label for="newStoragePlace" class="mt-2">Új raktári helye:</label>
                     <input id="newStoragePlace" class="form-control border-dark" name="newStoragePlace" value=""
                            autocomplete="off" required>
                     @if(isset($product))
@@ -42,9 +42,12 @@
                     @if(session()->get('redirectStorageId') != null)
                         <input type="hidden" name="redirectStorageId" value="{{session()->get('redirectStorageId')}}">
                     @endif
-                    <div class="d-flex justify-content-end pt-3">
-                        <a href="/storage/productBreak/getProduct" class="btn btn-danger mx-2">Törlés</a>
-                        <input id="submitButton" type="submit" class="btn btn-primary" value="Tétel ???">
+                    <div class="d-flex justify-content-between pt-3">
+                        <button type="button" class="btn button-red" onclick="window.location.href = '/storage/menu'" style="margin: 0">Vissza a menübe</button>
+                        <div>
+                            <a href="/storage/productBreak/getProduct" class="btn button-red mx-2" style="margin:0">Törlés</a>
+                            <input id="submitButton" type="submit" class="btn button-blue" value="Tétel ???" style="margin: 0">
+                        </div>
                     </div>
                 </form>
                 <script>

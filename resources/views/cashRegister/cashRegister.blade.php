@@ -74,80 +74,74 @@
 @endsection
 
 @section('buttons')
-    <button type="button" class="btn btn-danger w-100 mt-2" data-bs-toggle="modal" data-bs-target="#emptyCashRegisterModal">
-        Megszakítás
-    </button>
-    @include('cashRegister\modals\_emptyCashRegisterModal')
-    <div class="row">
+    <div class="row border border-2 border-dark p-2">
+        <div class="col-md-12">
+            <button type="button" class="btn button-red w-100" data-bs-toggle="modal" data-bs-target="#emptyCashRegisterModal">
+                Megszakítás
+            </button>
+            @include('cashRegister\modals\_emptyCashRegisterModal')
+        </div>
         <div class="col-md-6">
-            <button id="collapseBankCardButton" class="btn btn-primary w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChange" aria-expanded="false" aria-controls="collapseChange">
+            <button id="collapseChangeButton" class="btn button-blue w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChange" aria-expanded="false" aria-controls="collapseChange">
                 Készpénzes fizetés
             </button>
         </div>
         <div class="col-md-6">
-            <button id="collapseChangeButton" class="btn btn-primary w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBankCard" aria-expanded="false" aria-controls="collapseBankCard">
+            <a id="collapseBankCardButton" class="btn button-blue w-100 mt-2" href="/cashRegister/makeReceipt/B/0">
                 Bankkártyás fizetés
-            </button>
+            </a>
         </div>
-        <div class="collapse row mt-2" id="collapseChange">
-            <div class="col-md-7">
-                <input type="number" pattern="[0-5][0]{1}" class="form-control" id="changeAmount" min="{{$sumPrice}}" placeholder="Visszajáró" required>
+        <div class="collapse row mt-2 mx-auto w-100" id="collapseChange">
+            <div class="col-md-8">
+                <input type="number" pattern="[0-5][0]{1}" class="form-control border-dark" id="changeAmount" min="{{$sumPrice}}" placeholder="Visszajáró" required>
             </div>
-            <div class="col-md-5">
-                <a type="button" id="success" class="btn btn-danger w-100">Véglegesít</a>
+            <div class="col-md-4">
+                <a type="button" id="success" class="btn button-red w-100">Véglegesít</a>
             </div>
         </div>
     </div>
     <script>
         const input = document.getElementById('changeAmount');
         const successButton = document.getElementById('success');
-        input.addEventListener('input', (event) => {
+        input.addEventListener('input', () => {
             if (input.validity.valid && (input.value % 5 === 0 || input.value % 10 === 0)) {
-                successButton.classList.add('btn-success')
-                successButton.classList.remove('btn-danger')
+                successButton.classList.add('button-green')
+                successButton.classList.remove('button-red')
                 successButton.href = '/cashRegister/makeReceipt/K/' + input.value;
             } else {
-                successButton.classList.add('btn-danger')
-                successButton.classList.remove('btn-success')
+                successButton.classList.add('button-red')
+                successButton.classList.remove('button-green')
                 successButton.removeAttribute("href");
             }
         });
     </script>
-    <form class="row" action="/cashRegister/changeCompany" method="get">
-        <div class="col-md-9">
-            <select name="companyId" class="form-control mt-2">
-                <option value="0">Cég: Nincs kiválasztva!</option>
-                @foreach(\App\Models\Company::all()->sortBy('companyName') as $company)
-                    <option value="{{$company->companyId}}" {{($companyCurrent != null and $company->companyId == $companyCurrent->companyId) ? 'selected' : ''}}>{{$company->companyName}} ({{$company->city}}, {{$company->street}} {{$company->streetNumber}}.)</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-warning w-100 mt-2" type="submit">Hozzáadás</button>
-        </div>
-    </form>
-    <div class="row">
-        <div class="col-md-4">
-            <button id="cashRegisterQuantityChange" class="btn btn-primary w-100 mt-2" type="button">
-                DB módosítás
+    <div class="row border border-2 border-dark p-2">
+        <div class="col-md-6">
+            <button id="cashRegisterQuantityChange" class="btn button-blue w-100" type="button">
+                Darabszám
             </button>
         </div>
-        <div class="col-md-4">
-            <button id="cashRegisterPriceChange" class="btn btn-primary w-100 mt-2" type="button">
+        <div class="col-md-6">
+            <button id="cashRegisterPriceChange" class="btn button-blue w-100" type="button">
                 Árfelülírás
             </button>
         </div>
-        <div class="col-md-4">
-            <button id="cashRegisterSale" class="btn btn-primary w-100 mt-2" type="button">
+        <div class="col-md-6">
+            <button id="cashRegisterSale" class="btn button-blue w-100 mt-2" type="button">
                 Kedvezmény
             </button>
         </div>
-        <div id="otherInputDiv" class="row mt-2">
-            <div class="col-md-9">
+        <div class="col-md-6">
+            <button id="cashRegisterSale" class="btn button-red w-100 mt-2" type="button" onclick="window.location.href='/cashRegister/changeCompany/0'">
+                Cég törlés
+            </button>
+        </div>
+        <div id="otherInputDiv" class="row mt-2 mx-auto">
+            <div class="col-md-8">
                 <input id="otherInput" type="number" class="form-control border-dark">
             </div>
-            <div class="col-md-3">
-                <button id="otherInputButton" data-type="" class="btn btn-danger" disabled>Módosít</button>
+            <div class="col-md-4">
+                <button id="otherInputButton" data-type="" class="btn button-red w-100" disabled>Módosít</button>
             </div>
         </div>
         <script>
@@ -195,9 +189,9 @@
             });
         </script>
     </div>
-    <div class="row mt-2">
+    <div class="row border-top border-2 border-dark p-2">
         <div class="col-md-6">
-            <a id="cashRegisterOpenButton" class="btn btn-primary w-100" href="/cashRegister/open/{{\Illuminate\Support\Facades\Auth::id()}}">Kassza nyitás</a>
+            <a id="cashRegisterOpenButton" class="btn button-blue w-100" href="/cashRegister/open/{{\Illuminate\Support\Facades\Auth::id()}}">Kassza nyitás</a>
         </div>
         <script>
             const cashRegisterOpenButton = document.getElementById('cashRegisterOpenButton')
@@ -207,7 +201,7 @@
             }
         </script>
         <div class="col-md-6">
-            <a id="cashRegisterBreakButton" class="btn btn-warning w-100" href="/cashRegister/haveABreak/{{\Illuminate\Support\Facades\Auth::id()}}">Pénztáros szünet</a>
+            <a id="cashRegisterBreakButton" class="btn button-orange w-100" href="/cashRegister/haveABreak/{{\Illuminate\Support\Facades\Auth::id()}}">Pénztáros szünet</a>
         </div>
         <script>
             const cashRegisterBreakButton = document.getElementById('cashRegisterBreakButton')
@@ -217,19 +211,19 @@
             }
         </script>
         <div class="col-md-12 mt-2">
-            <a id="cashRegisterBreakButton" class="btn btn-primary w-100" href="/cashRegister/closeDay">Napi zárás</a>
+            <a id="cashRegisterBreakButton" class="btn button-blue w-100" href="/cashRegister/closeDay">Napi zárás</a>
         </div>
     </div>
 @endsection
 
 @section('other')
-    <div class="col-md-6 bg-white border border-dark border-2 rounded">
-        <form action="{{url('/cashRegister')}}" method="post">
+    <div class="col-md-6 bg-dark border border-dark border-2 h-100 rounded" style="padding: 0">
+        <form action="{{url('/cashRegister')}}" class="" method="post">
             @csrf
-            <input type="text" name="lastProductId" class="form-control w-100 h-100" autocomplete="off" autofocus>
+            <input type="text" name="lastProductId" class="form-control-lg w-100 h-100" autocomplete="off" autofocus>
         </form>
     </div>
     <div class="col-md-2 bg-white border border-dark border-2 rounded">
-        <h5 class="mt-1">Teljes összeg: {{$sumPrice}} Ft.</h5>
+        <h5 class="my-auto">Teljes összeg:<br><b>{{$sumPrice}} Ft.</b></h5>
     </div>
 @endsection

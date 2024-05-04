@@ -1,16 +1,20 @@
 @extends('storage.storageUnits.storageUnitTemplate')
 @section('storageUnitContent')
     <div class="p-2">
-        <h3 class="text-center"><b>{{$selectedStorage->storageId}}-{{$letter}}{{$width}}-{{$height}}</b></h3>
+        <h3 class="text-center pt-2"><b>{{$selectedStorage->storageId}}-{{$letter}}{{$height}}-{{$width}}</b></h3>
         <hr>
         <table id="productTable" class="table w-100">
             @if(count($products) == 0)
                 <tr>
-                    <td class="text-center" colspan="8"><h3>Ezen a polcon nincsen megjeleníthető adat!<br>Töltsd fel
-                            először áruval, aztán térj vissza!</h3></td>
+                    <td class="text-center" colspan="8">
+                        <h3>
+                            Ezen a polcon nincsen megjeleníthető adat!<br>
+                            Töltsd fel először áruval, aztán térj vissza!
+                        </h3>
+                    </td>
                 </tr>
             @else
-                <tr>
+                <tr class="table-dark">
                     <th scope="col">Azonosító</th>
                     <th scope="col">Termék neve</th>
                     <th scope="col">Rövid név</th>
@@ -34,5 +38,6 @@
                 @endforeach
             @endif
         </table>
+        <hr>
     </div>
 @endsection

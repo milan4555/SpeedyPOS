@@ -2,13 +2,16 @@
 @section('storageUnitContent')
     @php($abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         @if(isset($selectedStorageId) and $selectedStorageId != 0)
-            <div class="d-flex justify-content-around">
+            <div class="d-flex flex-wrap justify-content-around my-4 py-3">
                 @for($i = 0;$i < $selectedStorage->numberOfRows;$i++)
-                    <a href="/storage/storageUnit/{{$selectedStorageId}}/{{$abc[$i]}}" style="text-decoration: none">
-                        <div class="border rounded border-2 border-danger p-3" style="height: 300px"><br><br><br><br><br>{{$selectedStorageId}}-{{$abc[$i]}}1-1<br>
-                                                    {{$selectedStorageId}}-{{$abc[$i]}}{{$selectedStorage->widthNumber}}-{{$selectedStorage->heightNumber}}
+                    <div onclick="window.location.href = '/storage/storageUnit/{{$selectedStorageId}}/{{$abc[$i]}}'" class="storage-unit-select">
+                        <div class="d-flex bg-white align-items-center p-3 storage-unit-background"
+                             style="height: 300px; border-bottom: solid 2px black"></div>
+                        <div class="bg-white border border-2 border-dark rounded-bottom-4 p-2">
+                            {{$selectedStorageId}}-{{$abc[$i]}}1-1<br>
+                            {{$selectedStorageId}}-{{$abc[$i]}}{{$selectedStorage->heightNumber}}-{{$selectedStorage->widthNumber}}
                         </div>
-                    </a>
+                    </div>
                 @endfor
             </div>
         @endif

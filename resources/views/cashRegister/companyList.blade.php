@@ -1,25 +1,25 @@
 @extends('cashRegister/cashRegisterTemplate')
 
 @section('mainSpace')
-    <table class="table table-striped">
-        <tr>
+    <table class="table table-hover">
+        <tr class="table-dark">
             <th scope="col">Azonosító</th>
             <th scope="col">Cég neve</th>
             <th scope="col">Adószám</th>
             <th scope="col">Tulajdonos</th>
             <th scope="col">Telefonszám</th>
             <th scope="col">
-                <a href="/cashRegister/companyList/newCompany" class="btn btn-primary btn-sm">Új felvétele</a>
+                <a href="/cashRegister/companyList/newCompany" class="btn button-blue btn-sm">Új felvétele</a>
             </th>
         </tr>
         @foreach($companies as $company)
             <tr id="row{{$company->companyId}}">
-                <th>{{$company->companyId}}</th>
-                <td>{{$company->companyName}}</td>
-                <td>{{$company->taxNumber}}</td>
-                <td>{{$company->owner != '' ? $company->owner : 'Nincs megadva'}}</td>
-                <td>{{$company->phoneNumber != '' ? '+36'.$company->phoneNumber : 'Nincs megadva'}}</td>
-                <td><a class="btn btn-primary btn-sm" data-bs-toggle="collapse" href="#collapseProductCodes{{$company->companyId}}" role="button" aria-expanded="false" aria-controls="collapseExample">Információk</a></td>
+                <th onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->companyId}}</th>
+                <td onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->companyName}}</td>
+                <td onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->taxNumber}}</td>
+                <td onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->owner != '' ? $company->owner : 'Nincs megadva'}}</td>
+                <td onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->phoneNumber != '' ? '+36'.$company->phoneNumber : 'Nincs megadva'}}</td>
+                <td><button type="button" class="btn button-blue btn-sm" data-bs-toggle="collapse" href="#collapseProductCodes{{$company->companyId}}" role="button" aria-expanded="false" aria-controls="collapseExample">Információk</button></td>
             </tr>
             <tr class="collapse {{(session()->has('updatedCompany') and session('updatedCompany') == $company->companyId) ? 'show' : ''}}" id="collapseProductCodes{{$company->companyId}}">
                 <td colspan="6">
@@ -69,11 +69,11 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-danger mx-2" data-bs-toggle="modal" data-bs-target="#deleteCompany{{$company->companyId}}">
+                                <button type="button" class="btn button-red mx-2" data-bs-toggle="modal" data-bs-target="#deleteCompany{{$company->companyId}}">
                                     Törlés
                                 </button>
                                 @include('cashRegister.modals._companyDeleteModal')
-                                <input type="submit" class="btn btn-primary" value="Módosítás">
+                                <input type="submit" class="btn button-blue" value="Módosítás" style="margin: 0">
                             </div>
                         </div>
                     </form>
@@ -88,7 +88,7 @@
         <form class=" mt-2">
             @csrf
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     Keresés szöveg alapján:
                     <select class="form-control border-dark" name="columnSearch">
                         <option value="">Válassz szűrési lehetőséget!</option>
@@ -100,7 +100,7 @@
                     </select>
                     <input class="form-control mt-2 border-dark" type="text" placeholder="Pl.: Kiss Pista" name="search" value="{{isset($search) ? $search : ''}}">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12 mt-2">
                     Rendezés oszlop szerint:
                     <select class="form-control border-dark" name="columnOrderBy">
                         <option value="">Válassz rendezési lehetőséget!</option>
@@ -111,8 +111,8 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center mt-2">
-                <input class="form-control btn btn-primary w-25 mx-1" type="submit" value="Szűrés">
-                <a href="/cashRegister/companyList" class="btn btn-danger w-25 mx-1">Törlés</a>
+                <input class="form-control btn button-blue w-25 mx-1" type="submit" value="Szűrés">
+                <a href="/cashRegister/companyList" class="btn button-red w-25 mx-1">Törlés</a>
             </div>
         </form>
     </div>
