@@ -1,7 +1,8 @@
 @extends('settings.settingsTemplate')
 @section('settingsBody')
+    <input class="form-control mb-2 border-dark" type="text" id="employeeSearchInput" onkeyup="liveSearchEmployee('employeeTable', 'employeeSearchInput', 0)" placeholder="Keresés név alapján.." title="Type in a name">
     <div class="table-responsive" style="height: 400px">
-        <table class="table">
+        <table id="employeeTable" class="table">
             <tbody>
                 @foreach($users as $user)
                     <tr>
@@ -22,4 +23,5 @@
             </tbody>
         </table>
     </div>
+    <script type="text/javascript" src="{{asset('js/liveSearchTable.js')}}"></script>
 @endsection

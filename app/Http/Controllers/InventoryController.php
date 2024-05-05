@@ -21,6 +21,9 @@ class InventoryController extends Controller
                 'selectedStorageId' => $storageUnitId
             ]);
         } else {
+            if (self::didItInThisYear($storageUnitId, date('Y'))) {
+                return redirect()->back()->with('error', 'Ebben az évben a kiválasztott raktár már leltárazásra került, így csak a következő évben lesz újra lehetőséged!');
+            }
             $rowIds = StoragePlaceController::getAllUsedPlaces($storageUnitId);
             foreach ($rowIds as $rowId) {
                 if (Inventory::where('storagePlaceId', '=', $rowId)->count() == 0) {
@@ -181,5 +184,13 @@ class InventoryController extends Controller
         return redirect()->to('/storage/inventory/0')->with('success','
         Sikeresen befejeződött a leltározás! Az arról szóló PDF-et megtalálod a dokumentumok között. Az eltérő mennyiségű termékek megmaradtak, remélhetőleg később megtalálásra kerülnek!
         ');
+    }
+
+    public static function didItInThisYear($storageId, $year) {
+        $pdf = FilePath::where([
+            ['category', '=', 'inventory'],
+            ['outerId', '=', $storageId]
+        ])->whereYear('created_at',$year)->count();
+        return $pdf > 0;
     }
 }

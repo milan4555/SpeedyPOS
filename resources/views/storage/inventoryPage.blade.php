@@ -2,14 +2,14 @@
 @section('content')
     @include('storage.modals._inventoryFullReset')
     @include('storage.modals._inventoryFinish')
-    <div class="bg-white m-3">
+    <div class="bg-white border border-3 border-dark rounded m-3">
         <div class="p-3">
             <div class="row">
                 <div class="col-md-4">
                     <select id="storageUnitSelector" class="form-control border border-3 border-dark">
                         <option value="0">Válassz ki egy raktárhelységet!...</option>
                         @foreach($storageUnits as $storageUnit)
-                            <option value="{{$storageUnit->storageId}}" {{$selectedStorageId == $storageUnit->storageId ? 'selected' : ''}}>
+                            <option value="{{$storageUnit->storageId}}" {{$selectedStorageId == $storageUnit->storageId ? 'selected' : ''}} {{\App\Http\Controllers\InventoryController::didItInThisYear($storageUnit->storageId, date('Y')) ? 'disabled' : ''}}>
                                 {{$storageUnit->storageName}}
                             </option>
                         @endforeach
@@ -19,19 +19,20 @@
                     <input id="inventoryInput" class="form-control border border-3 border-dark" placeholder="Cikkszám helye"  {{$selectedStorageId == 0 ? 'disabled' : ''}}>
                 </div>
                 <div class="col-md-4">
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inventoryFinish" {{$selectedStorageId == 0 ? 'disabled' : ''}}>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <button type="button" class="btn button-blue" data-bs-toggle="modal" data-bs-target="#inventoryFinish" {{$selectedStorageId == 0 ? 'disabled' : ''}}>
                             Befejezés
                         </button>
-                        <button type="button" class="btn btn-warning mx-2" data-bs-toggle="modal" data-bs-target="#inventoryFullReset" {{$selectedStorageId == 0 ? 'disabled' : ''}}>
+                        <button type="button" class="btn button-orange mx-2" data-bs-toggle="modal" data-bs-target="#inventoryFullReset" {{$selectedStorageId == 0 ? 'disabled' : ''}}>
                             Újrakezdés
                         </button>
-                        <a href="/storage/menu" class="btn btn-danger">Vissza</a>
+                        <a href="/storage/menu" class="btn button-red">Vissza</a>
                     </div>
                 </div>
             </div>
             <hr>
             @if(isset($products))
+                <div class="table-responsive" style="height: 400px">
                 <table class="table">
                     <thead class="table-dark">
                     <tr>
@@ -52,7 +53,7 @@
                         <td>{{\App\Models\Category::find($lastProduct->categoryId)->categoryName}}</td>
                         <td>{{$lastProduct->howMany}} db {{$lastProduct->quantityDiff != 0 ? '('.$lastProduct->quantityDiff.'db)' : ''}}</td>
                         <td>{{$lastProduct->storagePlace}}</td>
-                        <td id="{{$lastProduct->storagePlaceId}}"><button class="btn btn-primary btn-sm" onclick="quantityDiff({{$lastProduct->storagePlaceId}})">Eltérő mennyiség</button></td>
+                        <td id="{{$lastProduct->storagePlaceId}}"><button class="btn button-blue btn-sm" onclick="quantityDiff({{$lastProduct->storagePlaceId}})">Eltérő mennyiség</button></td>
                     </tr>
                     @foreach($products as $product)
                         <tr class="border {{\App\Http\Controllers\InventoryController::getBgColor($product->isFound, $product->changedPlace, $product->quantityDiff)}}">
@@ -62,11 +63,14 @@
                             <td>{{\App\Models\Category::find($product->categoryId)->categoryName}}</td>
                             <td>{{$product->howMany}} db {{$product->quantityDiff != 0 ? '('.$product->quantityDiff.'db)' : ''}}</td>
                             <td>{{$product->storagePlace}}</td>
-                            <td class="col-sm-2" id="{{$product->storagePlaceId}}"><button class="btn btn-primary btn-sm" onclick="quantityDiff({{$product->storagePlaceId}})">Eltérő mennyiség</button></td>
+                            <td class="col-sm-2" id="{{$product->storagePlaceId}}"><button class="btn button-blue btn-sm" onclick="quantityDiff({{$product->storagePlaceId}})">Eltérő mennyiség</button></td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
+                </div>
+            @else
+                <h2 class="text-center p-5">A leltárazás megkezdéséhez válassz ki egy raktárhelységet, majd a mellette lévő szövegmezőbe olvasd be a termékkódokat!<br><br><span class="text-danger">Figyelem egy raktárat évente csak egyszer van lehetőség leltárazni, ennek feloldása érdekében kérem keresse a rendszergazdát, vagy a szoftver kezelőjét!</span></h2>
             @endif
             <script>
                 const storageSelector = document.getElementById('storageUnitSelector');
@@ -94,7 +98,7 @@
                 function getButtonBack(rowId) {
                     console.log(rowId);
                     const tableColumn = document.getElementById(rowId)
-                    tableColumn.innerHTML = "<button class='btn btn-primary btn-sm' onclick='quantityDiff(" + rowId + ")'>Eltérő mennyiség</button>"
+                    tableColumn.innerHTML = "<button class='btn button-blue btn-sm' onclick='quantityDiff(" + rowId + ")'>Eltérő mennyiség</button>"
                 }
             </script>
         </div>

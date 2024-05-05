@@ -32,7 +32,7 @@
                                 <div class="row">
                                     <div class="col-md-10">
                                         <label class="form-label" for="categoryId">Kategória:</label>
-                                        <select class="form-control border-dark" name="categoryId" id="categoryId" autocomplete="off" required>
+                                        <select class="form-select border-dark" name="categoryId" id="categoryId" autocomplete="off" required>
                                             <option value="">...</option>
                                             @foreach(\App\Models\Category::all() as $category)
                                                 <option value="{{$category->categoryId}}">{{$category->categoryName}}</option>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label" for="companyId">Beszállító:</label>
-                                <select class="form-control border-dark" name="companyId" id="companyId" autocomplete="off" required>
+                                <select class="form-select border-dark" name="companyId" id="companyId" autocomplete="off" required>
                                     <option value="">...</option>
                                     @foreach(\App\Models\Company::all()->where('isSupplier', '=', true) as $supplier)
                                         <option value="{{$supplier->companyId}}">{{$supplier->companyName}}</option>
@@ -77,6 +77,24 @@
             </div>
         </div>
         <hr>
+{{--        <div class="row">--}}
+{{--            <div class="col-md-5">--}}
+{{--                <div class="row">--}}
+{{--                    <div class="col-md-6">--}}
+{{--                        <input class="form-control mb-2 border-dark" type="text" id="productSearchInput" placeholder="Keresés...">--}}
+{{--                    </div>--}}
+{{--                    <div class="col-md-6">--}}
+{{--                        <select class="form-select border-dark" id="productSearchFilter">--}}
+{{--                            <option selected value="0">Azonosító</option>--}}
+{{--                            <option value="1">Termék neve</option>--}}
+{{--                            <option value="2">Rövid név</option>--}}
+{{--                            <option value="3">Kategória</option>--}}
+{{--                            <option value="4">Beszállító</option>--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="my-custom-scrollbar table-wrapper-scroll-y">
         <table id="productTable" class="table table-hover w-100 border border-2 border-dark">
             <tr class="table-dark">
@@ -116,6 +134,7 @@
             document.getElementById('productForm').action = '/storage/updateProduct';
             document.getElementById('nPrice').disabled = true;
             document.getElementById('bPrice').disabled = true;
+            console.log(row.dataset.productcodes)
             productCodeDiv.innerHTML = row.dataset.productcodes;
             return rowId;
         }
@@ -134,7 +153,7 @@
             supplierSelect.value = '';
             nPrice.disabled = false;
             bPrice.disabled = false;
-            productCodeDiv.innerHTML = '<h2>Válassz ki egy terméket a tabálázatból, vagy hozz létre egy újjat!</h2>';
+            productCodeDiv.innerHTML = '<h2>Válassz ki egy terméket a tábálázatból, vagy hozz létre egy újjat!</h2>';
         }
         const newCategoryInput = document.getElementById('newCategoryName');
         const categorySelect = document.getElementById('categoryId');

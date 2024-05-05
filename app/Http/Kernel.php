@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\PositionMiddleware;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -79,6 +80,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'byPosition' => PositionMiddleware::class,
-        'admin' => AdminMiddleware::class
+        'admin' => AdminMiddleware::class,
+        'redirectIfAuth' => RedirectIfAuthenticated::class
     ];
 }

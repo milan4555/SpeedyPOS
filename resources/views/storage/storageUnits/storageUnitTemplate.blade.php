@@ -34,10 +34,10 @@
                 </script>
             </div>
             <div>
-                <button type="button" class="btn button-blue" data-bs-toggle="modal" data-bs-target="#newStorageModal">
+                <button type="button" class="btn button-blue mr-2" data-bs-toggle="modal" data-bs-target="#newStorageModal">
                     Új raktár létrehozás
                 </button>
-                <a class="btn button-orange mx-2" href="/storage/print/{{isset($letter) ? (isset($width) ? 'specific/'.$selectedStorageId.'/'.$letter.'/'.$width.'/'.$height : 'row/'.$selectedStorageId.'/'.$letter) : 'rows/'.$selectedStorageId}}">{{isset($letter) ? (isset($width) ? 'Polccímke' : 'Polccímkék') : 'Sorcímkék'}} nyomtatása</a>
+                <a class="btn button-orange mr-2" href="/storage/print/{{isset($letter) ? (isset($width) ? 'specific/'.$selectedStorageId.'/'.$letter.'/'.$width.'/'.$height : 'row/'.$selectedStorageId.'/'.$letter) : 'rows/'.$selectedStorageId}}">{{isset($letter) ? (isset($width) ? 'Polccímke' : 'Polccímkék') : 'Sorcímkék'}} nyomtatása</a>
                 <a class="btn button-red" href="{{isset($letter) ? (isset($width) ? '/storage/storageUnit/'.$selectedStorageId.'/'.$letter : '/storage/storageUnits/'.$selectedStorageId.'/') : '/storage/menu'}}">Vissza</a>
                 @include('storage.modals._newStorageUnit')
             </div>

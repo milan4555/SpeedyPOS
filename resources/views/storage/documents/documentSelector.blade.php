@@ -1,8 +1,8 @@
 @extends('layouts.menu')
 @section('content')
-    <div class="d-flex mx-5">
+    <div class="d-flex flex-wrap mx-2">
         <div class="w-25">
-            <ul class="list-group border-dark">
+            <ul class="list-group border border-3 border-dark">
                 <li onclick="location.href='/storage/documents/productIn'" class="list-group-item border-dark {{(isset($PDFtype) and $PDFtype == 'productIn') ? 'active' : ''}}">Termék bevételek</li>
                 <li onclick="location.href='/storage/documents/productOut'" class="list-group-item border-dark {{(isset($PDFtype) and $PDFtype == 'productOut') ? 'active' : ''}}">Termék kiadások</li>
                 <li onclick="location.href='/storage/documents/inventory'" class="list-group-item border-dark {{(isset($PDFtype) and $PDFtype == 'inventory') ? 'active' : ''}}">Leltározás</li>
@@ -10,7 +10,7 @@
                 <li onclick="location.href='/storage/menu'" class="bg-danger text-white list-group-item border-dark">Vissza a menübe</li>
             </ul>
         </div>
-        <div class="w-75 bg-white rounded-end">
+        <div class="w-75 bg-white border border-3 border-dark rounded">
             <form action="/storage/documents/getByDate/{{isset($PDFtype) ? $PDFtype : ''}}" method="post">
                 @csrf
                 <div class="row m-3">
@@ -24,10 +24,10 @@
                         @if(isset($PDFtype))
                             <input type="hidden" name="PDFtype" value="{{$PDFtype}}">
                         @endif
-                        <input class="form-control btn btn-primary" type="submit" value="Szűrés">
+                        <input class="form-control btn button-blue" type="submit" value="Szűrés">
                     </div>
                     <div class="col-md-1">
-                        <a class="btn btn-danger mx-1" href="/storage/documents/{{isset($PDFtype) ? $PDFtype : ''}}">Törlés</a>
+                        <a class="btn button-red mx-1" href="/storage/documents/{{isset($PDFtype) ? $PDFtype : ''}}">X</a>
                     </div>
                 </div>
             </form>

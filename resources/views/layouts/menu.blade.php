@@ -35,23 +35,24 @@
 <body>
 @guest
 @else
-<nav class="navbar navbar-expand-lg navbar-light bg-dark text-white align-middle">
+<nav class="navbar navbar-dark navbar-expand-lg navbar-light bg-dark text-white align-middle">
     <div class="container-fluid">
+        <img
+            src="{{asset('iconsAndLogos/littleLogoRemoved.png')}}"
+            alt="Logo"
+            loading="lazy"
+            class="mx-2 navbar-img"
+        /><h3 class="pt-2">Speedy<span class="text-primary">POS</span></h3>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <img
-                src="{{asset('iconsAndLogos/littleLogoRemoved.png')}}"
-                    width="3%"
-                    alt="Logo"
-                    loading="lazy"
-                    class="mx-2"
-                />
-            <h3 class="pt-2">Speedy<span class="text-primary">POS</span></h3>
-                <ul class="navbar-nav ms-auto pt-2">
+                <ul class="navbar-nav ms-auto pt-3">
                     <li>
-                        <p>(Belépve: {{\Illuminate\Support\Facades\Auth::getUser()['firstName']}} {{\Illuminate\Support\Facades\Auth::getUser()['lastName']}})</p>
+                        <p style="padding-right: 10px">(Belépve: {{\Illuminate\Support\Facades\Auth::getUser()['firstName']}} {{\Illuminate\Support\Facades\Auth::getUser()['lastName']}})</p>
                     </li>
                     <li>
-                        <a class="dropdown-item px-2" href="/home" >Vissza a főmenübe</a>
+                        <p onclick="window.location.href = '/home'" class="dropdown-item" style="padding-right: 10px">Vissza a főmenübe</p>
                     </li>
                     <li>
                         <a class="dropdown-item" href="/logout"

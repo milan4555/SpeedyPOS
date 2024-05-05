@@ -24,11 +24,14 @@
                               value="{{isset($endDate) ? $endDate : ''}}" required>
                    </div>
                    <div class="col-md-6 mt-2">
-                       <input type="submit" class="btn btn-primary" value="Indítás">
+                       <input type="submit" class="btn button-blue" value="Indítás">
                    </div>
                </form>
             </div>
         </div>
+        @if(!isset($sumQuantity))
+            <div class="col-md-6 align-middle"><h2>A riport elkezdéséhez válaszd ki a megfelelő szűrőket!</h2></div>
+        @else
         <div class="col-md-6">
             <div>
                 <canvas id="priceChange"></canvas>
@@ -44,6 +47,7 @@
                 <canvas id="soldItems"></canvas>
             </div>
         </div>
+        @endif
     </div>
     @if(isset($sumQuantity) and isset($quantityBoughtList))
         <script>

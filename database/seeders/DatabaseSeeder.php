@@ -137,6 +137,7 @@ class DatabaseSeeder extends Seeder
                     $randomNumbers[] = $randomNumber;
                 }
             }
+            $finished = rand(0,1) == 1;
             for ($l = 0; $l < 8; $l++) {
                 $randomNumber = random_int(5, 15);
                 ProductOut::factory()->create([
@@ -144,7 +145,7 @@ class DatabaseSeeder extends Seeder
                     'howMany' => $randomNumber,
                     'howManyLeft' => $randomNumber,
                     'orderNumber' => $k+1,
-                    'isCompleted' => false,
+                    'isCompleted' => $finished,
                     'created_at' => $randtime
                 ]);
             }

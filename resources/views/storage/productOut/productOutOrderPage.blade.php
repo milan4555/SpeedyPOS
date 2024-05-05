@@ -1,22 +1,22 @@
 @extends('layouts.menu')
 @section('content')
-    <meta http-equiv="refresh" content="15" />
-    <div class="m-3 p-3 border border-dark rounded-3 bg-white">
-        <table class="table">
+    <meta http-equiv="refresh" content="15"/>
+    <div class="m-3 p-3 table-responsive border border-dark rounded-3 bg-white">
+        <table class="table table-hover border border-dark">
             <thead>
-                <tr class="border border-dark">
+                <tr>
                     <td>
                         <input id="productIdOrder" class="form-control border-dark" placeholder="Cikkszám helye" autofocus>
                     </td>
                     <td colspan="5">
                         <div class="d-flex justify-content-end">
-                            <a href="/storage/productOut/finishOrder/{{$orderNumber}}" class="btn btn-primary" {{$howManyNotZero != 0 ? 'disabled' : ''}}>Befejezés</a>
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#productOutRestoreProgress" class="btn btn-warning mx-2" {{$sameRowCount == count($orderItems) ? 'disabled' : ''}}>Újrakezdés</button>
-                            <a href="/storage/menu" class="btn btn-danger">Vissza a menübe</a>
+                            <a href="/storage/productOut/finishOrder/{{$orderNumber}}" class="btn button-blue" {{$howManyNotZero != 0 ? 'disabled' : ''}}  style="margin:0">Befejezés</a>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#productOutRestoreProgress" class="btn button-orange mx-2" {{$sameRowCount == count($orderItems) ? 'disabled' : ''}}>Újrakezdés</button>
+                            <a href="/storage/productOut/selector" class="btn button-red"  style="margin:0">Vissza a menübe</a>
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="table-dark">
                     <th>Cikkszám</th>
                     <th>Termék megnevezés</th>
                     <th>Raktár darabszám</th>

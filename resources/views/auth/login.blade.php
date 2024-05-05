@@ -13,12 +13,12 @@
             <form method="POST" action="/login">
                 @csrf
                 <input id="username" type="text"
-                       class="form-control border-dark w-50 mx-auto mt-3" name="username"
+                       class="form-control border-dark login-input-width mx-auto mt-3" name="username"
                        value="{{ old('username') }}" required autocomplete="username" placeholder="Felhasználónév" autofocus>
                 <input id="password" type="password"
-                       class="form-control border-dark w-50 mx-auto mt-3" name="password"
+                       class="form-control border-dark login-input-width mx-auto mt-3" name="password"
                        required autocomplete="current-password" placeholder="Jelszó">
-                <input type="submit" class="form-control button-blue mt-3 w-25" value="Bejelentkezés">
+                <input type="submit" class="form-control button-blue mt-3 mx-auto login-button" value="Bejelentkezés">
             </form>
         </div>
     </div>

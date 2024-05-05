@@ -26,11 +26,18 @@ class ProductCodesController extends Controller
                    </div>
                    <div class="col-md-6" style="overflow: auto; height: 200px">
                    <table class="table border border-2 border-dark">';
-        foreach ($productCodes as $productCode) {
+        if (count($productCodes) == 0) {
             $tableString .= '
                   <tr>
-                    <td class="align-middle">'.$productCode->productCode.'</td>
+                    <td class="align-middle">Ehhez a termékhez nem tartozik egyetlen kód sem!</td>
                   </tr>';
+        } else {
+            foreach ($productCodes as $productCode) {
+                $tableString .= '
+                  <tr>
+                    <td class="align-middle">' . $productCode->productCode . '</td>
+                  </tr>';
+            }
         }
         $tableString .= '</table>
                         </div>
