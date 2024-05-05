@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-secondary text-white">
                 <h5 class="modal-title" id="newStorageModalLabel">Új raktárhelység felvétele</h5>
-                <button type="button" class="btn btn-lg" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn btn-lg" data-dismiss="modal" style="margin-left: auto">
                     <span aria-hidden="true">X</span>
                 </button>
             </div>
@@ -29,8 +29,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end pt-2">
-                        <input type="submit" class="btn btn-primary mx-2" value="Felvétel">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Mégsem</button>
+                        <button type="button" class="btn button-red" data-dismiss="modal">Mégsem</button>
+                        <input type="submit" class="btn button-blue mx-2" value="Felvétel">
                     </div>
                 </form>
             </div>

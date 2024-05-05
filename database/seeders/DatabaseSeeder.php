@@ -28,15 +28,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Category::factory()->create([
-            'categoryId' => 807,
+            'categoryId' => 800,
             'categoryName' => 'Random termékek'
         ]);
         for ($j = 0; $j < 5; $j++) {
             StorageUnit::create([
                 'storageName' => 'Raktárhelység #'.$j+1,
-                'numberOfRows' => random_int(6,10),
-                'widthNumber' => random_int(5,15),
-                'heightNumber' => random_int(4,8)
+                'numberOfRows' => random_int(3,5),
+                'widthNumber' => random_int(3,7),
+                'heightNumber' => random_int(3,7)
             ]);
         }
         $abc = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
@@ -47,15 +47,15 @@ class DatabaseSeeder extends Seeder
             $line = fgets($myfile);
             $data = explode(';',$line);
             if ($data[0] != null) {
-                $productIds[] = '807'.str_repeat(0,7-strlen($i)).$i;
+                $productIds[] = '800'.str_repeat(0,7-strlen($i)).$i;
                 Product::factory()->create([
-                    'productId' => '807'.str_repeat(0,7-strlen($i)).$i,
+                    'productId' => '800'.str_repeat(0,7-strlen($i)).$i,
                     'productName' => $data[0],
                     'productShortName' => $data[1],
                     'bPrice' => $data[2],
                     'nPrice' => round($data[2]*1.8),
                     'stock' => 0,
-                    'categoryId' => 807,
+                    'categoryId' => 800,
                 ]);
                 $i++;
             }
@@ -137,6 +137,7 @@ class DatabaseSeeder extends Seeder
                     $randomNumbers[] = $randomNumber;
                 }
             }
+            $finished = rand(0,1) == 1;
             for ($l = 0; $l < 8; $l++) {
                 $randomNumber = random_int(5, 15);
                 ProductOut::factory()->create([
@@ -144,20 +145,21 @@ class DatabaseSeeder extends Seeder
                     'howMany' => $randomNumber,
                     'howManyLeft' => $randomNumber,
                     'orderNumber' => $k+1,
-                    'isCompleted' => false,
+                    'isCompleted' => $finished,
                     'created_at' => $randtime
                 ]);
             }
         }
-        for ($m = 0; $m < 3; $m++) {
-            $randomInt = rand(3,5);
+        for ($m = 0; $m < 80; $m++) {
+            $randomInt = rand(10,20);
             $randomProductCode = $productIds[rand(0, count($productIds)-1)];
             for ($n = 0; $n < $randomInt; $n++) {
+                $storage = StorageUnit::all()->random(1)[0];
                 StoragePlace::factory()->create([
                    'productId' =>  $randomProductCode,
                     'index' => $n+1,
                     'howMany' => rand(5,15),
-                    'storagePlace' => random_int(1,5).'-'.$abc[2].'5-4'
+                    'storagePlace' => $storage->storageId.'-'.$abc[rand(0,($storage->numberOfRows-1))].rand(1, $storage->heightNumber).'-'.rand(1, $storage->widthNumber)
                 ]);
             }
         }

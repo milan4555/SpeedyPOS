@@ -74,20 +74,20 @@ class CompanyController extends Controller
      * Hozzáadja a kosár tartalmához az kapott cég id-jét, ezzel jelezve, hogy számla lesz,
      * ha 0 értéket kap, akkor kitörli és csak sima blokk lesz
      */
-    public function addToCurrentCart(Request $request) {
+    public function addToCurrentCart($companyId) {
         DB::table('cash_register_items')
             ->where('howMany', '=', -1)
             ->delete();
-        if ($request['companyId'] == 0) {
+        if ($companyId == 0) {
             return Redirect::back();
         }
         CashRegisterItem::create([
-            'productIdReg' => $request['companyId'],
+            'productIdReg' => $companyId,
             'cashRegisterNumber' => 1,
             'howMany' => -1,
             'currentPrice' => 0
         ]);
-        return Redirect::back();
+        return redirect()->to('/cashRegister');
     }
     public function newCompany(Request $request) {
         if ($request->all() == null) {

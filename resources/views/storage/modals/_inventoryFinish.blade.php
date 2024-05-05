@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="inventoryFinishLabel">Leltározás befejezése</h4>
-                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close" style="margin-left: auto">
                     <span aria-hidden="true">X</span>
                 </button>
             </div>
@@ -12,8 +12,8 @@
                 Ha már biztosan minden tárgyat beolvastál, akkor nyomj a "Folytatás" gombra, egyéb esetben a "Mégse" gombra vagy kattints bárhova, hogy eltűnjön az üzenet.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Mégse</button>
-                <a href="/storage/inventoryMakePDF/{{$selectedStorageId}}" class="btn btn-primary">Folytatás</a>
+                <button type="button" class="btn button-red" data-bs-dismiss="modal">Mégse</button>
+                <a href="/storage/inventoryMakePDF/{{$selectedStorageId}}" class="btn button-blue">Folytatás</a>
             </div>
         </div>
     </div>

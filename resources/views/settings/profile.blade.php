@@ -1,7 +1,7 @@
 @extends('settings.settingsTemplate')
 @section('settingsBody')
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6" style="border-right: solid 3px black">
             <h6>Bejelentkezett dolgozó adatai</h6>
             <p>
                 <b>Név:</b> {{$authInfo->firstName}} {{$authInfo->lastName}}<br>
@@ -18,7 +18,7 @@
                 <input type="password" class="form-control border-dark my-2" id="newPassword" name="newPassword" placeholder="Új jelszó..." >
                 <input type="password" class="form-control border-dark" id="reNewPassword" name="reNewPassword" placeholder="Megerősítés..." >
                 <div class="d-flex justify-content-center">
-                    <input id="submitPasswordButton" type="submit" class="btn btn-primary btn-sm mt-2" value="Megváltoztat">
+                    <input id="submitPasswordButton" type="submit" class="btn button-blue btn-sm mt-2" value="Megváltoztat">
                 </div>
             </form>
         </div>

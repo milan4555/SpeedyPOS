@@ -4,7 +4,7 @@
     <style>
         .my-custom-scrollbar {
             position: relative;
-            height: 440px;
+            height: 470px;
             overflow: auto;
         }
         .table-wrapper-scroll-y {
@@ -16,14 +16,14 @@
     </style>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-7 table-wrapper-scroll-y my-custom-scrollbar">
-                <table class="table table-bordered">
-                    <thead>
+            <div class="col-md-7 table-wrapper-scroll-y my-custom-scrollbar" style="margin: 0;">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-dark">
                         <tr>
                             <th>Számlaszám</th>
                             <th>Vásárlás ideje</th>
                             <th>Fizetés módja</th>
-                            <th>Típusa/kicsoda</th>
+                            <th>Típusa</th>
                             <th>Összeg</th>
                         </tr>
                     </thead>
@@ -53,7 +53,14 @@
                             {{$variables['shopAddress']}}<br>
                             {{$variables['taxNumber']}}</p>
                         <br>
-                        <h5 class="text-center">-----------&ensp;&ensp;NYUGTA&ensp;&ensp;-----------</h5>
+                        @if($receiptInfo->isInvoice != 0)
+                            @php($buyer = \App\Models\Company::find($receiptInfo->isInvoice))
+                            <h5 class="text-center">--------&ensp;&ensp;VÁSÁRLÓ&ensp;&ensp;--------</h5>
+                            <b>Cím:</b><br>{{$buyer->postcode}}, {{$buyer->city}}, {{$buyer->street}} {{$buyer->strreetNumber}}<br>
+                            <b>Név:</b> {{$buyer->companyName}}<br>
+                            <b>Adószám:</b> {{$buyer->taxNumber}}</p>
+                        @endif
+                        <h5 class="text-center">---------&ensp;&ensp;NYUGTA&ensp;&ensp;---------</h5>
                         <br>
                         @foreach($receiptData as $data)
                             <div class="d-flex justify-content-between">
@@ -85,7 +92,7 @@
                         </div>
                         <div class="d-flex justify-content-around">
                             <p>{{date('Y.m.d', strtotime($receiptInfo->created_at))}}</p>
-                            <p>{{date('h:m:s', strtotime($receiptInfo->created_at))}}</p>
+                            <p>{{date('H:m:s', strtotime($receiptInfo->created_at))}}</p>
                         </div>
                         <p></p>
                         <p class="text-center">P 012345678</p>
@@ -97,12 +104,10 @@
 @endsection
 
 @section('buttons')
-    <h4 class="text-center">Szűrési feltételek</h4>
-    <hr>
     <form id="receiptListForm" method="post">
         @csrf
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row mt-2">
+            <div class="col-md-12">
                 <label class="form-label">Fizetés típusa:</label>
                 <select id="paymentTypeSelect" class="form-control border-dark" name="paymentType">
                     <option value="">Válassz fizetési típust...</option>
@@ -110,7 +115,7 @@
                     <option value="B" {{(isset($paymentType) and $paymentType == 'B') ? 'selected' : ''}}>Bankkártya</option>
                 </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12 mt-2">
                 <label class="form-label">Nyugta típusa:</label>
                 <select id="receiptType" class="form-control border-dark" name="receiptType">
                     <option value="">Válassz típust...</option>
@@ -131,8 +136,8 @@
         </div>
         <input type="hidden" id="shownReceiptId" name="shownReceiptId" value="{{isset($receiptData) ? $receiptData[0]->receiptId : ''}}">
         <div class="d-flex justify-content-center mt-4">
-            <input type="submit" class="form-control bg-primary text-white w-25 mx-1" value="Szűrés">
-            <a href="/cashRegister/receiptList" class="btn btn-danger w-25 mx-1">Törlés</a>
+            <input type="submit" class="form-control button-blue w-25 mx-1" value="Szűrés">
+            <a href="/cashRegister/receiptList" class="btn button-red w-25 mx-1">Törlés</a>
         </div>
     </form>
     <script>

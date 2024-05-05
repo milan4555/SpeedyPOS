@@ -50,7 +50,14 @@ class ProductController extends Controller
         if ($request['categoryId'] == '' && $request['newCategoryName'] != '') {
             $request['categoryId'] = CategoryController::addCategory($request['newCategoryName'])->categoryId;
         }
+        $lastProductInCategory = Product::where('categoryId', $request['categoryId'])->orderBy('created_at', 'DESC')->first();
+        if ($lastProductInCategory == null) {
+            $productId = $request['categoryId'].'0000001';
+        } else {
+            $productId = $lastProductInCategory->productId+1;
+        }
         $productHelper = [
+            'productId' => $productId,
             'productName' => $request['productName'],
             'productShortName' => $request['productShortName'],
             'nPrice' => $request['nPrice'],
@@ -75,7 +82,7 @@ class ProductController extends Controller
 
         Product::find($request['productId'])->update($productHelper);
 
-        return Redirect::back()->with('success', 'Sikeresen megváltoztattad a termék paramétereit!');
+        return Redirect::back()->with('success', 'Sikeresen megváltoztattad a termék paramétereit!')->with('redirectProductId', $request['productId']);
     }
 
     public static function getHowManyInStorage($productId) {

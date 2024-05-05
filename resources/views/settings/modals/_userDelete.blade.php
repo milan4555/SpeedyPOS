@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Figyelem! Felhasználó törlésére készülsz!, ezután a felhasználó érvénytelen lesz Ha folytatni szeretnéd, akkor nyomj a "Folytatás" gombra.
+                Figyelem! Felhasználó törlésére készülsz, ezután a felhasználó érvénytelen lesz! Ha folytatni szeretnéd, akkor nyomj a "Folytatás" gombra.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Mégse</button>

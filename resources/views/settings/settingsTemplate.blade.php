@@ -11,6 +11,7 @@
                             </button>
                             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                                 <div class="navbar-nav">
+                                    <a class="nav-item nav-link text-danger" href="/home">Vissza a főmenübe</a>
                                     <a class="nav-item nav-link {{request()->is('settings/profile') ? 'active' : ''}}" href="/settings/profile">Profil</a>
                                     <a class="nav-item nav-link {{request()->is('settings/userRights') ? 'active' : ''}}" href="/settings/userRights">Felhasználók listája</a>
                                     <a class="nav-item nav-link {{request()->is('settings/variables') ? 'active' : ''}}" href="/settings/variables">Bolt adatai</a>

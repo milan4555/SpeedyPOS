@@ -35,7 +35,7 @@ Route::get('/cashRegister/makeReceipt/{paymentType}/{cashGiven}', [\App\Http\Con
 Route::get('/cashRegister/changeQuantity/{productIds}/{value}', [\App\Http\Controllers\CashRegisterItemController::class, 'changeQuantity'])->middleware('ByPositionGroup');
 Route::get('/cashRegister/changePrice/{productIds}/{value}', [\App\Http\Controllers\CashRegisterItemController::class, 'changePrice'])->middleware('ByPositionGroup');
 Route::get('/cashRegister/pricePercent/{productIds}/{value}', [\App\Http\Controllers\CashRegisterItemController::class, 'pricePercent'])->middleware('ByPositionGroup');
-Route::get('/cashRegister/changeCompany', [\App\Http\Controllers\CompanyController::class, 'addToCurrentCart'])->middleware('ByPositionGroup');
+Route::get('/cashRegister/changeCompany/{companyId}', [\App\Http\Controllers\CompanyController::class, 'addToCurrentCart'])->middleware('ByPositionGroup');
 
 //UserTimeLog routes start
 
@@ -94,6 +94,7 @@ Route::get('/storage/menu', function () {return view('storage.storageMenu');})->
 Route::match(array('GET', 'POST'), '/storage/productsList', [\App\Http\Controllers\ProductController::class, 'showProductsPage'])->middleware('ByPositionGroup');
 Route::post('/storage/addProduct', [\App\Http\Controllers\ProductController::class, 'addProduct'])->middleware('ByPositionGroup');
 Route::post('/storage/updateProduct', [\App\Http\Controllers\ProductController::class, 'updateProduct'])->middleware('ByPositionGroup');
+Route::get('/storage/newProductCode/{productId}/{productCode}', [\App\Http\Controllers\ProductCodesController::class, 'newProductCode'])->middleware('ByPositionGroup');
 
 //StorageProductPage routes end
 
@@ -104,6 +105,7 @@ Route::get('/storage/storageUnit/{storageId}/{letter}', [\App\Http\Controllers\S
 Route::get('/storage/storageUnit/{storageId}/{letter}/{height}/{width}', [\App\Http\Controllers\StorageUnitController::class, 'showStorageUnitItems'])->middleware('ByPositionGroup');
 Route::post('/storage/storageUnits/add', [\App\Http\Controllers\StorageUnitController::class, 'addStorageUnit'])->middleware('ByPositionGroup');
 Route::get('/storage/print/{labelType}/{storageId}/{letter?}/{width?}/{height?}', [\App\Http\Controllers\StorageUnitController::class, 'printStorageLabels'])->middleware('ByPositionGroup');
+Route::get('/storage/searchUnit/{searchedId}', [\App\Http\Controllers\StorageUnitController::class, 'searchStorageUnit'])->middleware('ByPositionGroup');
 
 //StorageStorageUnits routes end
 

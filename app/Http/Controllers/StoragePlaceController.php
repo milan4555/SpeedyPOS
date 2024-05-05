@@ -30,14 +30,15 @@ class StoragePlaceController extends Controller
             'product' => $row
         ]);
     }
-    public function checkIfStoragePlaceExists($storageName) {
+    public static function checkIfStoragePlaceExists($storageName) {
         $explodedName = explode('-', $storageName);
         $storage = StorageUnit::find($explodedName[0]);
         $charNumber = ord(strtoupper($explodedName[1][0])) - ord('A') + 1;
+        $heightNumber = substr($explodedName[1], 1);
         if (count($explodedName) != 3) {
             return false;
         }
-        if ($storage->numberOfRows <= $charNumber or $storage->heightNumber <= $explodedName[1][1] or $storage->widthNumber <= $explodedName[2]) {
+        if ($storage->numberOfRows < $charNumber or $storage->heightNumber < $heightNumber or $storage->widthNumber < $explodedName[2]) {
             return false;
         }
         return true;

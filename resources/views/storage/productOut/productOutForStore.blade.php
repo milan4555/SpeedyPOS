@@ -16,16 +16,16 @@
                                 <input type="number" name="howManyOrder" class="form-control border-dark" placeholder="Darabszám" autofocus>
                             </div>
                             <div class="col-md-2">
-                                <input class="btn btn-primary" type="submit" value="Felírás">
+                                <input class="btn button-blue" type="submit" value="Felírás">
                             </div>
                         </div>
                     </form>
                 </td>
                 <td colspan="4">
                     <div class="d-flex justify-content-end">
-                        <a href="/storage/productOut/orders/-1" class="btn btn-primary">Váltás kiadásra</a>
-                        <a href="/storage/productOut/forStore/restart" class="btn btn-warning mx-2">Újrakezdés</a>
-                        <a href="/storage/menu" class="btn btn-danger">Vissza a menübe</a>
+                        <a href="/storage/productOut/orders/-1" class="btn button-blue">Váltás kiadásra</a>
+                        <a href="/storage/productOut/forStore/restart" class="btn button-orange mx-2">Újrakezdés</a>
+                        <a href="/storage/menu" class="btn button-red">Vissza a menübe</a>
                     </div>
                 </td>
             </tr>
@@ -45,8 +45,8 @@
                         <td>{{$storagePlaceInfo->productName}}</td>
                         <td>{{$orderItem->howMany}} db</td>
                         <td id="{{$orderItem->id}}">
-                            <button class="btn btn-primary btn-sm" onclick="quantityDiff({{$orderItem->id}})">Eltérő mennyiség</button>
-                            <a href="/storage/productOut/forStore/remove/{{$orderItem->id}}" class="btn btn-danger btn-sm">Törlés</a>
+                            <button class="btn button-blue btn-sm" onclick="quantityDiff({{$orderItem->id}})">Eltérő mennyiség</button>
+                            <a href="/storage/productOut/forStore/remove/{{$orderItem->id}}" class="btn button-red btn-sm">Törlés</a>
                         </td>
                     </tr>
                 @endforeach
@@ -70,8 +70,8 @@
         function getButtonBack(rowId) {
             console.log(rowId);
             const tableColumn = document.getElementById(rowId)
-            tableColumn.innerHTML = "<button class='btn btn-primary btn-sm mx-1' onclick='quantityDiff(" + rowId + ")'>Eltérő mennyiség</button>" +
-                "<a href='/storage/productOut/forStore/remove/" + rowId + "' class='btn btn-danger btn-sm'>Törlés</a>"
+            tableColumn.innerHTML = "<button class='btn button-blue btn-sm mx-1' onclick='quantityDiff(" + rowId + ")'>Eltérő mennyiség</button>" +
+                "<a href='/storage/productOut/forStore/remove/" + rowId + "' class='btn button-red btn-sm'>Törlés</a>"
         }
     </script>
 {{--    @include('storage.modals._productOutRestoreProgress')--}}

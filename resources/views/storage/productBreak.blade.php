@@ -1,14 +1,14 @@
 @extends('layouts.menu')
 @section('content')
     <div class="d-flex justify-content-center">
-        <div class="card" style="width: 40rem;">
+        <div class="card border border-2 border-dark" style="width: 40rem;">
             <div class="card-body">
                 <label for="productId">Cikkszám:</label>
                 <input id="productId" class="form-control border-dark" name="productId"
                        value="{{isset($product) ? $product->productId.'-'.$product->index : ''}}" autocomplete="off"
                        required>
                 <h6 class="pt-2">Művelet típusa?</h6>
-                <div class="d-flex justify-content-start">
+                <div class="d-flex justify-content-start" {{isset($product) ? '' : 'inert'}}>
                     <div class="mx-2">
                         <input id="productMoveCheck" type="checkbox" name="productMoveCheck" value="productMove"
                                {{session()->get('actionInventory') === 'move' ? 'checked' : ''}}>
@@ -19,32 +19,37 @@
                         <label for="productBreakCheck">Termék bontás</label>
                     </div>
                 </div>
-                <form id="productBreakOrMoveForm" action="/storage/productBreak/addRow" method="post">
+                <form id="productBreakOrMoveForm" method="post">
                     @csrf
-                    <label for="oldStoragePlace">Raktárhelység neve:</label>
-                    <input id="oldStoragePlace" class="form-control border-dark" name="oldStoragePlace"
-                           value="{{isset($product) ? $product->storagePlace : ''}}" disabled>
-                    <label for="howMany">Darabszám:</label>
-                    <input id="howMany" class="form-control border-dark" name="howMany"
-                           value="{{isset($product) ? $product->howMany : ''}}" disabled>
-                    <label for="selectedQuantity">Szétbontott mennyiség:</label>
-                    <input type="number" id="selectedQuantity" class="form-control border-dark" name="selectedQuantity"
-                           max="{{isset($product) ? ($product->howMany-1) : ''}}" value="" autocomplete="off" required>
-                    <label for="newStoragePlace">Új raktári helye:</label>
-                    <input id="newStoragePlace" class="form-control border-dark" name="newStoragePlace" value=""
-                           autocomplete="off" required>
-                    @if(isset($product))
-                        <input type="hidden" name="brokenRowId" value="{{$product->id}}">
-                        <input type="hidden" name="brokenProductId" value="{{$product->productId}}">
-                        <input type="hidden" name="brokenIndex" value="{{$product->index}}">
-                        <input type="hidden" name="oldStoragePlace" value="{{$product->storagePlace}}">
-                    @endif
-                    @if(session()->get('redirectStorageId') != null)
-                        <input type="hidden" name="redirectStorageId" value="{{session()->get('redirectStorageId')}}">
-                    @endif
-                    <div class="d-flex justify-content-end pt-3">
-                        <a href="/storage/productBreak/getProduct" class="btn btn-danger mx-2">Törlés</a>
-                        <input id="submitButton" type="submit" class="btn btn-primary" value="Tétel ???">
+                    <fieldset {{isset($product) ? '' : 'inert'}}>
+                        <label for="oldStoragePlace">Raktárhelység neve:</label>
+                        <input id="oldStoragePlace" class="form-control border-dark" name="oldStoragePlace"
+                               value="{{isset($product) ? $product->storagePlace : ''}}" disabled>
+                        <label for="howMany" class="mt-2">Darabszám:</label>
+                        <input id="howMany" class="form-control border-dark" name="howMany"
+                               value="{{isset($product) ? $product->howMany : ''}}" disabled>
+                        <label for="selectedQuantity" class="mt-2">Szétbontott mennyiség:</label>
+                        <input type="number" id="selectedQuantity" class="form-control border-dark" name="selectedQuantity"
+                               max="{{isset($product) ? ($product->howMany-1) : ''}}" value="" autocomplete="off" required>
+                        <label for="newStoragePlace" class="mt-2">Új raktári helye:</label>
+                        <input id="newStoragePlace" class="form-control border-dark" name="newStoragePlace" value=""
+                               autocomplete="off" required>
+                        @if(isset($product))
+                            <input type="hidden" name="brokenRowId" value="{{$product->id}}">
+                            <input type="hidden" name="brokenProductId" value="{{$product->productId}}">
+                            <input type="hidden" name="brokenIndex" value="{{$product->index}}">
+                            <input type="hidden" name="oldStoragePlace" value="{{$product->storagePlace}}">
+                        @endif
+                        @if(session()->get('redirectStorageId') != null)
+                            <input type="hidden" name="redirectStorageId" value="{{session()->get('redirectStorageId')}}">
+                        @endif
+                    </fieldset>
+                    <div class="d-flex flex-wrap justify-content-center pt-3">
+                        <button type="button" class="btn button-red" onclick="window.location.href = '/storage/menu'" style="margin: 0">Vissza a menübe</button>
+                        <div {{isset($product) ? '' : 'inert'}}>
+                            <input id="submitButton" type="submit" class="btn button-blue mx-2" value="Tétel ???" style="margin: 0">
+                            <a href="/storage/productBreak/getProduct" class="btn button-red">Törlés</a>
+                        </div>
                     </div>
                 </form>
                 <script>

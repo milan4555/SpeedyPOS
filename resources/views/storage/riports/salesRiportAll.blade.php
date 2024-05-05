@@ -2,7 +2,7 @@
 @section('riportPageContent')
     <div class="row">
         <div class="col-md-6">
-            <div class="row mt-2">
+            <div class="row">
                 <form method="post">
                     @csrf
                     <div class="col-md-6 mt-2">
@@ -21,6 +21,9 @@
                 </form>
             </div>
         </div>
+        @if(!isset($topTenProduct))
+            <div class="col-md-6 align-middle mt-2"><h2>A riport elkezdéséhez válaszd ki a megfelelő szűrőket!</h2></div>
+        @else
         <div class="col-md-6">
             <div>
                 <canvas id="topTenProduct"></canvas>
@@ -36,6 +39,7 @@
                 <canvas id="soldItems"></canvas>
             </div>
         </div>
+        @endif
     </div>
     @if(isset($topTenProduct))
         <script>

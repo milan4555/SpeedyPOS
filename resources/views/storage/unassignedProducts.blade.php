@@ -2,11 +2,11 @@
 @section('content')
     <div class="m-3 p-3 border border-dark rounded-3 bg-white">
         <div class="text-center pb-3">
-            <h3>Elrakatlan termékek listája:</h3>
+            <button onclick="window.location.href = '/storage/menu'" class="btn button-red">Vissza a menübe</button>
         </div>
-        <div class="d-flex justify-content-center">
-            <table class="table">
-                <thead>
+        <div class="d-flex table-responsive justify-content-center">
+            <table class="table border border-dark">
+                <thead class="table-dark">
                     <tr>
                         <td>Cikkszám</td>
                         <td>Termék neve</td>
@@ -15,6 +15,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if(count($products) > 0)
                     @foreach($products as $product)
                         <tr>
                             <td>{{$product->productId}}-{{$product->index}}</td>
@@ -33,6 +34,11 @@
                             });
                         </script>
                     @endforeach
+                @else
+                    <tr class="align-middle">
+                        <td colspan="4"><h1 class="text-center mx-auto p-5">Nincsenek olyan termékek, amelyek elhelyezésre várnak a raktárban!</h1></td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
         </div>
