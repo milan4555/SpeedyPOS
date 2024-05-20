@@ -73,4 +73,11 @@ class ProductCodesController extends Controller
         productCodes::create(['productIdCode' => $productId, 'productCode' => $productCode]);
         return redirect()->back()->with('success', 'Sikeres művelet! Felvettél egy új kódot a kiválasztott termékhez!')->with('redirectProductId', $productId);
     }
+
+    public function deleteProductCode($productCodeId) {
+        $row = productCodes::find($productCodeId);
+        $productId = $row->productIdCode;
+        $row->delete();
+        return redirect()->back()->with('success', 'Sikeres művelet! Kitörölted a külsős cikkszámot, így újra fel tudod használni máshol!')->with('redirectProductId', $productId);
+    }
 }

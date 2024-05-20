@@ -74,48 +74,46 @@
 @endsection
 
 @section('buttons')
-    <div class="row border border-2 border-dark p-2">
-        <div class="col-md-12">
-            <button type="button" class="btn button-red w-100" data-bs-toggle="modal" data-bs-target="#emptyCashRegisterModal">
-                Megszakítás
-            </button>
-            @include('cashRegister\modals\_emptyCashRegisterModal')
-        </div>
+    <div class="row border-top border-2 border-dark p-2">
         <div class="col-md-6">
-            <button id="collapseChangeButton" class="btn button-blue w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChange" aria-expanded="false" aria-controls="collapseChange">
-                Készpénzes fizetés
-            </button>
+            <a id="cashRegisterOpenButton" class="btn button-blue w-100" href="/cashRegister/open/{{\Illuminate\Support\Facades\Auth::id()}}">Kassza nyitás</a>
         </div>
+        <script>
+            const cashRegisterOpenButton = document.getElementById('cashRegisterOpenButton')
+            if ({{\App\Http\Controllers\UserTimeLogController::doesHaveOpenCashRegister(\Illuminate\Support\Facades\Auth::id())}} == true) {
+                cashRegisterOpenButton.href = '/cashRegister/close/{{\Illuminate\Support\Facades\Auth::id()}}';
+                cashRegisterOpenButton.innerText = 'Kassza zárás';
+            }
+        </script>
         <div class="col-md-6">
-            <a id="collapseBankCardButton" class="btn button-blue w-100 mt-2" href="/cashRegister/makeReceipt/B/0">
-                Bankkártyás fizetés
-            </a>
+            <a id="cashRegisterBreakButton" class="btn button-orange w-100" href="/cashRegister/haveABreak/{{\Illuminate\Support\Facades\Auth::id()}}">Pénztáros szünet</a>
         </div>
-        <div class="collapse row mt-2 mx-auto w-100" id="collapseChange">
-            <div class="col-md-8">
-                <input type="number" pattern="[0-5][0]{1}" class="form-control border-dark" id="changeAmount" min="{{$sumPrice}}" placeholder="Visszajáró" required>
-            </div>
-            <div class="col-md-4">
-                <a type="button" id="success" class="btn button-red w-100">Véglegesít</a>
-            </div>
+        <script>
+            const cashRegisterBreakButton = document.getElementById('cashRegisterBreakButton')
+            if ({{\App\Http\Controllers\UserTimeLogController::isOnBreak(\Illuminate\Support\Facades\Auth::id())}} == true) {
+                cashRegisterBreakButton.href = '/cashRegister/closeBreak/{{\Illuminate\Support\Facades\Auth::id()}}';
+                cashRegisterBreakButton.innerText = 'Munka folytatás';
+            }
+        </script>
+        <div class="col-md-12 mt-2">
+            <a id="cashRegisterBreakButton" class="btn button-blue w-100" href="/cashRegister/closeDay">Napi zárás</a>
         </div>
     </div>
-    <script>
-        const input = document.getElementById('changeAmount');
-        const successButton = document.getElementById('success');
-        input.addEventListener('input', () => {
-            if (input.validity.valid && (input.value % 5 === 0 || input.value % 10 === 0)) {
-                successButton.classList.add('button-green')
-                successButton.classList.remove('button-red')
-                successButton.href = '/cashRegister/makeReceipt/K/' + input.value;
-            } else {
-                successButton.classList.add('button-red')
-                successButton.classList.remove('button-green')
-                successButton.removeAttribute("href");
-            }
-        });
-    </script>
-    <div class="row border border-2 border-dark p-2">
+    <div class="row border border-2 border-dark p-2" {{\App\Http\Controllers\UserTimeLogController::doesHaveOpenCashRegister(\Illuminate\Support\Facades\Auth::id()) ? '' : 'inert'}}>
+        <div class="col-md-12 mb-2">
+            <select id="companyId" name="companyId" class="form-control border-dark mt-2">
+                <option value="0">Cég: Nincs kiválasztva!</option>
+                @foreach(\App\Models\Company::all()->sortBy('companyName') as $company)
+                    <option value="{{$company->companyId}}" {{($companyCurrent != null and $company->companyId == $companyCurrent->companyId) ? 'selected' : ''}}>{{$company->companyName}} ({{$company->city}}, {{$company->street}} {{$company->streetNumber}}.)</option>
+                @endforeach
+            </select>
+            <script>
+                const companySelector = document.getElementById("companyId")
+                companySelector.addEventListener("input", function() {
+                    window.location.href = "/cashRegister/changeCompany/" + companySelector.value
+                })
+            </script>
+        </div>
         <div class="col-md-6">
             <button id="cashRegisterQuantityChange" class="btn button-blue w-100" type="button">
                 Darabszám
@@ -189,31 +187,47 @@
             });
         </script>
     </div>
-    <div class="row border-top border-2 border-dark p-2">
-        <div class="col-md-6">
-            <a id="cashRegisterOpenButton" class="btn button-blue w-100" href="/cashRegister/open/{{\Illuminate\Support\Facades\Auth::id()}}">Kassza nyitás</a>
+    <div class="row border border-2 border-dark p-2" {{\App\Http\Controllers\UserTimeLogController::doesHaveOpenCashRegister(\Illuminate\Support\Facades\Auth::id()) ? '' : 'inert'}}>
+        <div class="col-md-12">
+            <button type="button" class="btn button-red w-100" data-bs-toggle="modal" data-bs-target="#emptyCashRegisterModal">
+                Megszakítás
+            </button>
+            @include('cashRegister\modals\_emptyCashRegisterModal')
         </div>
-        <script>
-            const cashRegisterOpenButton = document.getElementById('cashRegisterOpenButton')
-            if ({{\App\Http\Controllers\UserTimeLogController::doesHaveOpenCashRegister(\Illuminate\Support\Facades\Auth::id())}} == true) {
-                cashRegisterOpenButton.href = '/cashRegister/close/{{\Illuminate\Support\Facades\Auth::id()}}';
-                cashRegisterOpenButton.innerText = 'Kassza zárás';
-            }
-        </script>
         <div class="col-md-6">
-            <a id="cashRegisterBreakButton" class="btn button-orange w-100" href="/cashRegister/haveABreak/{{\Illuminate\Support\Facades\Auth::id()}}">Pénztáros szünet</a>
+            <button id="collapseChangeButton" class="btn button-blue w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChange" aria-expanded="false" aria-controls="collapseChange">
+                Készpénzes fizetés
+            </button>
         </div>
-        <script>
-            const cashRegisterBreakButton = document.getElementById('cashRegisterBreakButton')
-            if ({{\App\Http\Controllers\UserTimeLogController::isOnBreak(\Illuminate\Support\Facades\Auth::id())}} == true) {
-                cashRegisterBreakButton.href = '/cashRegister/closeBreak/{{\Illuminate\Support\Facades\Auth::id()}}';
-                cashRegisterBreakButton.innerText = 'Munka folytatás';
-            }
-        </script>
-        <div class="col-md-12 mt-2">
-            <a id="cashRegisterBreakButton" class="btn button-blue w-100" href="/cashRegister/closeDay">Napi zárás</a>
+        <div class="col-md-6">
+            <a id="collapseBankCardButton" class="btn button-blue w-100 mt-2" href="/cashRegister/makeReceipt/B/0">
+                Bankkártyás fizetés
+            </a>
+        </div>
+        <div class="collapse row mt-2 mx-auto w-100" id="collapseChange">
+            <div class="col-md-8">
+                <input type="number" pattern="[0-5][0]{1}" class="form-control border-dark" id="changeAmount" min="{{$sumPrice}}" placeholder="Visszajáró" required>
+            </div>
+            <div class="col-md-4">
+                <a type="button" id="success" class="btn button-red w-100">Véglegesít</a>
+            </div>
         </div>
     </div>
+    <script>
+        const input = document.getElementById('changeAmount');
+        const successButton = document.getElementById('success');
+        input.addEventListener('input', () => {
+            if (input.validity.valid && (input.value % 5 === 0 || input.value % 10 === 0)) {
+                successButton.classList.add('button-green')
+                successButton.classList.remove('button-red')
+                successButton.href = '/cashRegister/makeReceipt/K/' + input.value;
+            } else {
+                successButton.classList.add('button-red')
+                successButton.classList.remove('button-green')
+                successButton.removeAttribute("href");
+            }
+        });
+    </script>
 @endsection
 
 @section('other')

@@ -27,7 +27,7 @@
                     </tr>
                     @foreach($products as $product)
                         <tr>
-                            <th id="productId">{{$product->productId}}</th>
+                            <th id="productId">{{$product->productId}}-{{$product->index}}</th>
                             <td id="productName">{{$product->productName}}</td>
                             <td id="productShortName">{{$product->productShortName}}</td>
                             <td id="categoryId">{{$product->categoryName}}</td>

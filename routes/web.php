@@ -95,6 +95,7 @@ Route::match(array('GET', 'POST'), '/storage/productsList', [\App\Http\Controlle
 Route::post('/storage/addProduct', [\App\Http\Controllers\ProductController::class, 'addProduct'])->middleware('ByPositionGroup');
 Route::post('/storage/updateProduct', [\App\Http\Controllers\ProductController::class, 'updateProduct'])->middleware('ByPositionGroup');
 Route::get('/storage/newProductCode/{productId}/{productCode}', [\App\Http\Controllers\ProductCodesController::class, 'newProductCode'])->middleware('ByPositionGroup');
+Route::get('/storage/deleteProductCode/{productCodeId}', [\App\Http\Controllers\ProductCodesController::class, 'deleteProductCode'])->middleware('ByPositionGroup');
 
 //StorageProductPage routes end
 

@@ -26,7 +26,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Sikertelen bejelentkezés! Ilyen felhasználónév nem létezik!');
         }
         if (!Hash::check($request['password'], $user->password)) {
-            return \redirect()->back()->with('error', 'Sikertelen bejelntkezés! Rossz felhasználónév és jelszó páros lett megadva!');
+            return \redirect()->back()->with('error', 'Sikertelen bejelentkezés! Rossz felhasználónév és jelszó páros lett megadva!');
         }
         Auth::login($user);
         return Redirect::to('/home');
@@ -59,17 +59,19 @@ class UserController extends Controller
             $baseUsername .= $nameCount+1;
         }
 
-        $user = User::create([
+        $newPassword = Str::password(8, true, true, false);
+
+        User::create([
             'firstName' => $request['firstName'],
             'lastName' => $request['lastName'],
             'username' => $baseUsername,
-            'password' => Hash::make('xX123456'),
+            'password' => Hash::make($newPassword),
             'phoneNumber' => $request['phoneNumber'],
             'position' => $request['position'],
         ]);
         return Redirect::back()->with('success', 'Sikeresen felvetted az új alkalmazottat!<br>
                                                     A kapott felhasználónév: <b>'.$baseUsername.'</b>
-                                                    <br>Alapértelmezett jelszó: <b>xX123456</b><br>
+                                                    <br>Alapértelmezett jelszó: <b>'.$newPassword.'</b><br>
                                                     <b>Az első bejelentkezésnél kérlek változtatsd meg!</b>');
     }
     public function loadProfilePage() {

@@ -8,6 +8,7 @@ use App\Models\StoragePlace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -47,10 +48,28 @@ class ProductController extends Controller
     }
 
     public function addProduct(Request $request) {
+        $validatorArray = [
+            'productName' => ['required'],
+            'productShortName' => ['required'],
+            'companyId' => ['required'],
+            'nPrice' => ['required'],
+            'bPrice' => ['required']
+        ];
+        if ($request['categoryId'] != null) {
+            $validatorArray['categoryId'] = ['required'];
+        } else {
+            $validatorArray['newCategoryName'] = ['required'];
+        }
+        $validator = Validator::make($request->all(), $validatorArray);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->with('error', 'Sikertelen művelet! Hiányzó adatok voltak a módosítás során!')
+                ->withInput();
+        }
         if ($request['categoryId'] == '' && $request['newCategoryName'] != '') {
             $request['categoryId'] = CategoryController::addCategory($request['newCategoryName'])->categoryId;
         }
-        $lastProductInCategory = Product::where('categoryId', $request['categoryId'])->orderBy('created_at', 'DESC')->first();
+        $lastProductInCategory = Product::where('categoryId', $request['categoryId'])->orderBy('productId', 'DESC')->first();
         if ($lastProductInCategory == null) {
             $productId = $request['categoryId'].'0000001';
         } else {
@@ -73,6 +92,18 @@ class ProductController extends Controller
     }
 
     public function updateProduct(Request $request) {
+        $validator = Validator::make($request->all(),
+            [
+                'productId' => ['required'],
+                'productName' => ['required'],
+                'productShortName' => ['required'],
+                'categoryId' => ['required'],
+                'companyId' => ['required'],
+            ]
+        );
+        if ($validator->fails()) {
+            return redirect()->back()->with('error', 'Sikertelen művelet! Hiányzó adatok voltak a módosítás során!')->with('updatedProduct', $request['productId']);
+        }
         $productHelper = [
             'productName' => $request['productName'],
             'productShortName' => $request['productShortName'],

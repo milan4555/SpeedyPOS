@@ -46,7 +46,7 @@
                         <th class="col-sm-1"></th>
                     </tr>
                 </thead>
-                <tbody class="table-wrapper-scroll-y my-custom-scrollbar" style="height: 300px">
+                <tbody class="table-wrapper-scroll-y my-custom-scrollbar">
                     @if(count($products) > 0)
                         @foreach($products as $product)
                             <tr id="{{$product->productId}}">

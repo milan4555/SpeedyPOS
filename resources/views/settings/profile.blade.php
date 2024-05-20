@@ -5,7 +5,7 @@
             <h6>Bejelentkezett dolgozó adatai</h6>
             <p>
                 <b>Név:</b> {{$authInfo->firstName}} {{$authInfo->lastName}}<br>
-                <b>Felhsználónév:</b> {{$authInfo->username}}<br>
+                <b>Felhasználónév:</b> {{$authInfo->username}}<br>
                 <b>Telefonszám:</b> +36{{$authInfo->phoneNumber}}<br>
                 <b>Feladatkör:</b> {{$authInfo->position}}
             </p>
