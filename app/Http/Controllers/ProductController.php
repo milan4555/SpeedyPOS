@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\cashRegisterItem;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\StoragePlace;
 use Illuminate\Http\Request;
@@ -92,17 +93,23 @@ class ProductController extends Controller
     }
 
     public function updateProduct(Request $request) {
-        $validator = Validator::make($request->all(),
-            [
-                'productId' => ['required'],
-                'productName' => ['required'],
-                'productShortName' => ['required'],
-                'categoryId' => ['required'],
-                'companyId' => ['required'],
-            ]
-        );
+        $validatorArray = [
+            'productName' => ['required'],
+            'productShortName' => ['required'],
+            'companyId' => ['required'],
+        ];
+        if ($request['categoryId'] != null) {
+            $validatorArray['categoryId'] = ['required'];
+        } else {
+            $validatorArray['newCategoryName'] = ['required'];
+        }
+        $validator = Validator::make($request->all(), $validatorArray);
         if ($validator->fails()) {
             return redirect()->back()->with('error', 'Sikertelen művelet! Hiányzó adatok voltak a módosítás során!')->with('updatedProduct', $request['productId']);
+        }
+        if (isset($request['newCategoryName'])) {
+            $newCategory = Category::create(['categoryName' => $request['newCategoryName']]);
+            $request['categoryId'] = $newCategory->categoryId;
         }
         $productHelper = [
             'productName' => $request['productName'],

@@ -19,7 +19,10 @@
                 <td onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->taxNumber}}</td>
                 <td onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->owner != '' ? $company->owner : 'Nincs megadva'}}</td>
                 <td onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">{{$company->phoneNumber != '' ? '+36'.$company->phoneNumber : 'Nincs megadva'}}</td>
-                <td><button type="button" class="btn button-blue btn-sm" data-bs-toggle="collapse" href="#collapseProductCodes{{$company->companyId}}" role="button" aria-expanded="false" aria-controls="collapseExample">Információk</button></td>
+                <td>
+                    <button type="button" class="btn button-blue btn-sm" data-bs-toggle="collapse" href="#collapseProductCodes{{$company->companyId}}" role="button" aria-expanded="false" aria-controls="collapseExample">Információk</button>
+                    <button class="btn button-orange btn-sm" onclick="window.location.href = '/cashRegister/changeCompany/{{$company->companyId}}'">Hozzáadás</button>
+                </td>
             </tr>
             <tr class="collapse {{(session()->has('updatedCompany') and session('updatedCompany') == $company->companyId) ? 'show' : ''}}" id="collapseProductCodes{{$company->companyId}}">
                 <td colspan="6">

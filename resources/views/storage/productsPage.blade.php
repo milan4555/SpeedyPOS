@@ -91,24 +91,24 @@
             </div>
         </div>
         <hr>
-        {{--        <div class="row">--}}
-        {{--            <div class="col-md-5">--}}
-        {{--                <div class="row">--}}
-        {{--                    <div class="col-md-6">--}}
-        {{--                        <input class="form-control mb-2 border-dark" type="text" id="productSearchInput" placeholder="Keresés...">--}}
-        {{--                    </div>--}}
-        {{--                    <div class="col-md-6">--}}
-        {{--                        <select class="form-select border-dark" id="productSearchFilter">--}}
-        {{--                            <option selected value="0">Azonosító</option>--}}
-        {{--                            <option value="1">Termék neve</option>--}}
-        {{--                            <option value="2">Rövid név</option>--}}
-        {{--                            <option value="3">Kategória</option>--}}
-        {{--                            <option value="4">Beszállító</option>--}}
-        {{--                        </select>--}}
-        {{--                    </div>--}}
-        {{--                </div>--}}
-        {{--            </div>--}}
-        {{--        </div>--}}
+        <div class="row">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input class="form-control mb-2 border-dark" onkeyup="searchProducts()" type="text" id="productSearchInput" placeholder="Keresés...">
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-select border-dark" id="productSearchFilter">
+                            <option selected value="0">Azonosító</option>
+                            <option value="1">Termék neve</option>
+                            <option value="2">Rövid név</option>
+                            <option value="3">Kategória</option>
+                            <option value="4">Beszállító</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="my-custom-scrollbar table-wrapper-scroll-y">
             <table id="productTable" class="table table-hover w-100 border border-2 border-dark">
                 <tr class="table-dark">
@@ -124,7 +124,7 @@
                 @foreach($products as $product)
                     <tr id="{{$product->productId}}" onclick="getItemsFromRow({{$product->productId}})"
                         data-productCodes="{{\App\Http\Controllers\ProductCodesController::makeTable($product->productId)}}">
-                        <th id="productId" data-input="{{$product->productId}}">{{$product->productId}}</th>
+                        <td id="productId" data-input="{{$product->productId}}"><b>{{$product->productId}}</b></td>
                         <td id="productName" data-input="{{$product->productName}}">{{$product->productName}}</td>
                         <td id="productShortName"
                             data-input="{{$product->productShortName}}">{{$product->productShortName}}</td>
@@ -170,7 +170,11 @@
             const nPrice = document.getElementById('nPrice');
             const bPrice = document.getElementById('bPrice');
             const supplierSelect = document.getElementById('companyId');
+            const categorySelect = document.getElementById('categoryId');
+            const newCategoryButton = document.getElementById('newCategoryButton');
             supplierSelect.value = '';
+            categorySelect.value = '';
+            newCategoryButton.disabled = false
             nPrice.disabled = false;
             bPrice.disabled = false;
             productCodeDiv.innerHTML = '<h2>Válassz ki egy terméket a tábálázatból, vagy hozz létre egy újjat!</h2>';
@@ -195,5 +199,34 @@
         @if (session()->has("updatedProduct"))
             getItemsFromRow({{session("updatedProduct")}})
         @endif
+    </script>
+    <script>
+        document.getElementById('productSearchFilter').addEventListener('input', function() {
+            document.getElementById("productSearchInput").value = '';
+            table = document.getElementById("productTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                tr[i].style.display = "";
+            }
+        });
+        function searchProducts() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("productSearchInput");
+            columnSearchNumber = document.getElementById('productSearchFilter').value
+            filter = input.value.toUpperCase();
+            table = document.getElementById("productTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[columnSearchNumber];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
     </script>
 @endsection

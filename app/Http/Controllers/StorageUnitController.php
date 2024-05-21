@@ -34,7 +34,7 @@ class StorageUnitController extends Controller
         }
         $explodedStoragePlace = explode('-', $searchedId);
         $heightNumber = substr($explodedStoragePlace[1], 1);
-        return redirect()->to('/storage/storageUnit/'.$explodedStoragePlace[0].'/'.$explodedStoragePlace[1][0].'/'.$heightNumber.'/'.$explodedStoragePlace[2]);
+        return redirect()->to('/storage/storageUnit/'.$explodedStoragePlace[0].'/'.strtoupper($explodedStoragePlace[1][0]).'/'.$heightNumber.'/'.$explodedStoragePlace[2]);
     }
 
     public static function checkIfStorageItemIsEmpty($storagePlace) {

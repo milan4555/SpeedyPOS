@@ -47,7 +47,7 @@
                     <div class="d-flex flex-wrap justify-content-center pt-3">
                         <button type="button" class="btn button-red" onclick="window.location.href = '/storage/menu'" style="margin: 0">Vissza a menübe</button>
                         <div {{isset($product) ? '' : 'inert'}}>
-                            <input id="submitButton" type="submit" class="btn button-blue mx-2" value="Tétel ???" style="margin: 0">
+                            <input id="submitButton" type="submit" class="btn button-blue mx-2" value="Tétel ???" disabled style="margin: 0">
                             <a href="/storage/productBreak/getProduct" class="btn button-red">Törlés</a>
                         </div>
                     </div>
@@ -70,6 +70,7 @@
                         selectedQuantity.disabled = true;
                         form.action = '/storage/productMove/addRow';
                         submitButton.value = 'Termék mozgatás'
+                        submitButton.disabled = false
                     }
                     productMove.addEventListener('change', function () {
                         console.log('ott');
@@ -78,6 +79,7 @@
                             selectedQuantity.disabled = true;
                             form.action = '/storage/productMove/addRow';
                             submitButton.value = 'Termék mozgatás'
+                            submitButton.disabled = false
                         }
                     });
                     productBreak.addEventListener('change', function () {

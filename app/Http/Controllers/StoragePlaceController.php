@@ -16,6 +16,9 @@ class StoragePlaceController extends Controller
             return view('storage.productBreak');
         }
         $explodedProductId = explode('-', $productId);
+        if (count($explodedProductId) != 2) {
+            return redirect()->back()->with('error', 'Sikertelen művelet! Rossz formátumban lett megadva a termékkód!');
+        }
         $row = DB::table('storage_places')
             ->select('*')
             ->where([
@@ -45,6 +48,7 @@ class StoragePlaceController extends Controller
     }
 
     public function addProductBreakRow(Request $request) {
+        $request['newStoragePlace'] = strtoupper($request['newStoragePlace']);
         if ($request['newStoragePlace'] == $request['oldStoragePlace']) {
             return redirect()->back()->with('error', 'A kettő raktárhelység megegyezik, így nem történt semmilyen változtatás!');
         }
@@ -68,6 +72,7 @@ class StoragePlaceController extends Controller
     }
 
     public function updateProductMoveRow(Request $request) {
+        $request['newStoragePlace'] = strtoupper($request['newStoragePlace']);
         if ($request['newStoragePlace'] == $request['oldStoragePlace']) {
             return redirect()->back()->with('error', 'A kettő raktárhelység megegyezik, így nem történt semmilyen változtatás!');
         }
@@ -118,6 +123,7 @@ class StoragePlaceController extends Controller
         if (!$this->checkIfStoragePlaceExists($storagePlace)) {
             return redirect()->back()->with('error', 'Ilyen polccimke nem létezik, vagy a formátum nem megfelelő! Kérlek adj meg egy másikat!');
         }
+        $storagePlace = strtoupper($storagePlace);
         $explodedProductId = explode('-', $productId);
         $unassignedRow = StoragePlace::where([['productId', '=', $explodedProductId[0]],['index', '=', $explodedProductId[1]]])->first();
         $sameProduct = DB::table('storage_places')

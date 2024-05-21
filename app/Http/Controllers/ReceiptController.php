@@ -25,6 +25,10 @@ class ReceiptController extends Controller
     public function makeReceipt($paymentType, $cashGiven) {
         $companyId = DB::table('cash_register_items')->select('productIdReg')->where('howMany', '=', -1)->get()->toArray();
         $change = $cashGiven - CashRegisterItemController::getSumPrice();
+        $cashRegisterItems = CashRegisterItem::all()->where('howMany', '!=', -1);
+        if (count($cashRegisterItems) == 0) {
+            return \redirect()->back()->with('error', "Sikeretelen művelet! Üres volt a kosár így nem történt semmi!");
+        }
         $randomSerialNumber = 0;
         while ($randomSerialNumber == 0) {
             $random = rand(1111111, 9999999);
@@ -42,7 +46,7 @@ class ReceiptController extends Controller
             'paymentType' => $paymentType
         ];
         $receipt = Receipt::create($receiptAdd);
-        foreach (CashRegisterItem::all()->where('howMany', '!=', -1) as $item) {
+        foreach ($cashRegisterItems as $item) {
             $helperAdd = [
                 'productId' => $item->productIdReg,
                 'receiptId' => $receipt->receiptId,
