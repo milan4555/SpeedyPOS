@@ -153,7 +153,7 @@ class ProductInOutController extends Controller
             'supplier' => $supplier,
             'worker' => Auth::user()
         ];
-        $fileName = date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'PDF';
+        $fileName = date('Y_m_d').'_'.str_replace(' ', '-', $supplier->companyName).'.pdf';
         Pdf::loadView('storage.PDFViews.productInPDFView', $viewArray)->save('../public/PDF/'.$fileName);
         FilePath::create(['fileName' => $fileName, 'fileType' => 'PDF', 'category' => 'productIn']);
         DB::table('product_in_outs')->update(['isFinished' => true]);

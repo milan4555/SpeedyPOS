@@ -37,11 +37,11 @@
             <td class="px-5">
                 <h5>Saját adatok:</h5>
                 <p>
-                    <b>Név</b>: {{$supplier->companyName}}<br>
-                    <b>Telephely címe</b>: {{$supplier->postcode}}, {{$supplier->city}}, {{$supplier->street}} {{$supplier->streetNumber}}<br>
-                    <b>Telefonszám</b>: 06{{$supplier->phoneNumber}}<br>
-                    <b>Adószám</b>: {{$supplier->taxNumber}}<br>
-                    <b>Tulajdonos</b>: {{$supplier->owner}}
+                    <b>Név</b>: {{\App\Http\Controllers\VariableController::getVariableValue('companyName')}}<br>
+                    <b>Telephely címe</b>: {{\App\Http\Controllers\VariableController::getVariableValue('companyAddress')}}<br>
+                    <b>Telefonszám</b>: 06{{\App\Http\Controllers\VariableController::getVariableValue('phoneNumber')}}<br>
+                    <b>Adószám</b>: {{\App\Http\Controllers\VariableController::getVariableValue('taxNumber')}}<br>
+                    <b>Tulajdonos</b>: Illés Milán
                 </p>
             </td>
         </tr>
