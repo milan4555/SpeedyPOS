@@ -1,0 +1,12 @@
+800;Kéziszerszámok
+801;Elektromos Szerszámok
+802;Munkavédelmi Eszközök
+803;Kerti Szerszámok
+804;Építőanyagok
+805;Festékek és Lakkok
+806;Szerelvények és Csavarok
+807;Szigetelés és Tetőfedés
+808;Autó Ápolás és Karbantartás
+809;Autó Kiegészítők
+810;Bicikli Tartozékok
+811;Kerékpár Karbantartás

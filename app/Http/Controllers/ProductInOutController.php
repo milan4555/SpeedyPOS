@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Mockery\Exception;
 
 class ProductInOutController extends Controller
 {
@@ -72,7 +73,7 @@ class ProductInOutController extends Controller
         ProductInOut::create([
             'productId' => $product[0]->productId,
             'howMany' => 0,
-            'newBPrice' => $product[0]->bPrice
+            'newBPrice' => $product[0]->nPrice
         ]);
 
         return redirect()->back();
@@ -108,43 +109,41 @@ class ProductInOutController extends Controller
     }
 
     public function finish() {
-//        $fp=pfsockopen("127.0.0.1",9100);
         $allData = DB::table('product_in_outs')
             ->join('products', 'product_in_outs.productId', 'products.productId')
             ->select('*')
-            ->where('howMany', '!=', -1)
+            ->where([['howMany', '!=', -1], ['isFinished', '=', false]])
             ->get()
             ->toArray();
         foreach ($allData as $data) {
             $product = Product::find($data->productId);
-            $product->update(['bPrice' => $data->newBPrice, 'nPrice' => round($data->newBPrice*1.8, -1)]);
+            $product->update(['nPrice' => $data->newBPrice, 'bPrice' => round($data->newBPrice*1.8, -1)]);
             $maxIndex = StoragePlace::where('productId', '=', $product->productId)->max('index');
             StoragePlace::create([
                'productId' => $product->productId,
                'index' => $maxIndex+1,
                'howMany' => $data->howMany
             ]);
-//            for ($i = 0; $i < $data->howMany; $i++) {
-//                $zpl = '
-//                ^XA
-//                ^FO20,20
-//                ^CI28
-//                ^BY4,3,150
-//                ^B3N,N,N,N
-//                ^FD>:'.$data->productId.'^FS
-//                ^FO230,190
-//                ^A0N,80,80
-//                ^FD'.$data->productId.'^FS
-//                ^FO20,260
-//                ^A0N,60,60
-//                ^FD'.$product->productShortName.'^FS
-//                ^FO20,330
-//                ^A0N,60,60
-//                ^FDÁr: '.$data->newBPrice*1.8.' Ft.^FS
-//                ^XZ
-//                ';
-//                fputs($fp,$zpl);
-//            }
+            for ($i = 0; $i < $data->howMany; $i++) {
+                $zpl = '
+                ^XA
+                ^FO20,20
+                ^CI28
+                ^BY4,3,150
+                ^B3N,N,N,N
+                ^FD>:'.$data->productId.'^FS
+                ^FO230,190
+                ^A0N,80,80
+                ^FD'.$data->productId.'^FS
+                ^FO20,260
+                ^A0N,60,60
+                ^FD'.$product->productShortName.'^FS
+                ^FO20,330
+                ^A0N,60,60
+                ^FDÁr: '.$data->newBPrice*1.8.' Ft.^FS
+                ^XZ
+                ';
+            }
         }
         $supplierId = ProductInOut::all()->where('howMany', '==', -1)->first()->productId;
         $supplier = Company::find($supplierId);

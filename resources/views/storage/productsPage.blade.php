@@ -122,6 +122,7 @@
                     <th scope="col">Elérhető mennyiség</th>
                 </tr>
                 @foreach($products as $product)
+                    @php($storageStock = \App\Models\StoragePlace::where('productId', '=', $product->productId)->sum('howMany'))
                     <tr id="{{$product->productId}}" onclick="getItemsFromRow({{$product->productId}})"
                         data-productCodes="{{\App\Http\Controllers\ProductCodesController::makeTable($product->productId)}}">
                         <td id="productId" data-input="{{$product->productId}}"><b>{{$product->productId}}</b></td>
@@ -131,9 +132,9 @@
                         <td id="categoryId" data-input="{{$product->categoryId}}">{{$product->categoryName}}</td>
                         <td id="companyId" data-input="{{$product->companyId}}"
                             class="{{$product->companyName == null ? 'text-danger' : ''}}">{{$product->companyName == null ? 'Nincs beállítva!' : $product->companyName}}</td>
-                        <td id="bPrice" data-input="{{$product->bPrice}}">{{$product->bPrice}} Ft.</td>
                         <td id="nPrice" data-input="{{$product->nPrice}}">{{$product->nPrice}} Ft.</td>
-                        <td id="stock" data-input="{{$product->stock}}">{{$product->stock}} db</td>
+                        <td id="bPrice" data-input="{{$product->bPrice}}">{{$product->bPrice}} Ft.</td>
+                        <td id="stock">{{$storageStock}} db</td>
                     </tr>
                 @endforeach
             </table>
@@ -152,7 +153,6 @@
             document.getElementById('productForm').action = '/storage/updateProduct';
             document.getElementById('nPrice').disabled = true;
             document.getElementById('bPrice').disabled = true;
-            console.log(row.dataset.productcodes)
             productCodeDiv.innerHTML = row.dataset.productcodes;
             return rowId;
         }

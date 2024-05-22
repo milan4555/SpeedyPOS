@@ -1,16 +1,69 @@
-Asztali számítógép;PC;1000;800;10;1;1
-Okostelefon;Telefon;500;400;5;1;1
-Laptop;Laptop;750;600;7;1;1
-Televízió;TV;1200;960;12;1;1
-Szőnyeg;Szőnyeg;350;280;3;1;1
-Hűtőszekrény;Hűtő;900;720;9;1;1
-Konyhapult;Pult;600;480;6;1;1
-Mikrohullámú sütő;Mikró;850;680;8;1;1
-Mosógép;Mosó;1100;880;11;1;1
-Fényképezőgép;Fényképező;450;360;4;1;1
-Vasaló;Vasaló;1300;1040;13;1;1
-Hajszárító;Hajszárító;300;240;2;1;1
-Vízforraló;Forraló;700;560;7;1;1
-Mikrofon;Mikrofon;950;760;9;1;1
-Hálószoba szett;Szett;800;640;8;1;1
-JBL 100TWS;Fejhallgató;20000;22000;8;1;1
+Akkumulátoros fúró;akkufuro;35000;27500;50;801;Szerszám Kft.
+Elektromos csavarhúzó;elektrocsav;25000;19685;70;801;ToolMaster
+Kalapács;kalapacs;5000;3937;120;800;PowerTools
+Csavarkulcs készlet;csavarkulcs;15000;11811;90;800;HandyTools
+Véső készlet;vesok;18000;14173;70;800;HandyTools
+Fúrógép;furogep;45000;35433;60;801;Szerszám Kft.
+Sarokcsiszoló;sarokcsiszolo;30000;23622;50;801;ToolMaster
+Lézeres távolságmérő;lezertav;28000;22047;40;801;PowerTools
+Védősisak;vedosisak;8000;6299;200;802;SafetyFirst
+Munkavédelmi cipő;munkaCipo;12000;9449;150;802;WorkSafe
+Védőkesztyű;vedokesztyu;2000;1574;500;802;SafetyFirst
+Látásvédő szemüveg;vedoszemuveg;4000;3149;300;802;WorkSafe
+Védőoverál;vedooveral;10000;7874;100;802;SafetyFirst
+Fülvédő;fulvedo;6000;4724;250;802;WorkSafe
+Pormaszk;pormaszk;1500;1181;600;802;SafetyFirst
+Térdvédő;terdvedo;3000;2362;180;802;WorkSafe
+Fűnyíró;funyiro;50000;39370;30;803;GardenPro
+Lombfúvó;lombfuvo;25000;19685;40;803;GreenTools
+Kerti olló;kertio;7000;5512;80;803;GardenPro
+Öntöző rendszer;ontozorendszer;40000;31496;25;803;GreenTools
+Kerti traktor;kertitraktor;150000;118110;10;803;GardenPro
+Permetező;permetező;30000;23622;20;803;GreenTools
+Kapa;kapa;6000;4724;90;803;GardenPro
+Kerti szerszámkészlet;szerszamk;20000;15748;50;803;GreenTools
+Olajszűrő;olajszuro;3500;2756;100;808;CarCare
+Akkumulátor töltő;akkutolto;20000;15748;60;808;CarCare
+Polírozógép;polirozogep;18000;14173;40;808;ShinePro
+Motorolaj;motorolaj;8000;6299;80;808;LubriTech
+Kerékpár sisak;kerekparsisak;12000;9449;50;811;BikeGear
+Biciklizár;biciklizar;7000;5512;100;811;SecureBike
+Pumpa;pumpa;4000;3149;200;811;BikeGear
+Kerékpár lámpa;kerekparlampa;5000;3937;150;811;SecureBike
+Csiszolópapír;csiszolopapir;2000;1574;300;800;HandyTools
+Ácskalapács;acskalapacs;6000;4724;80;800;FixTools
+Csőfogó;csöfogo;8000;6299;50;800;ToolPro
+Ütvecs;utvecs;4000;3149;100;800;SafetyGear
+Szerszámos táska;szerszamostaska;10000;7874;40;800;FixTools
+Csővágó;csovago;12000;9449;30;800;ToolPro
+Fúrószett;furoszett;25000;19685;60;801;FixTools
+Körkivágó;korkeivago;18000;14173;45;801;ToolPro
+Sarokcsiszoló tárcsa;sarokcsiszolotarcsa;5000;3937;70;801;FixTools
+Fűkasza;fukasza;35000;27500;20;801;SafetyGear
+Védőszemüveg;vedoszemuveg;4000;3149;150;802;ToolPro
+Szűrőmaszk;szuromaszk;1500;1181;200;802;SafetyGear
+Munkavédelmi kesztyű;munkavedelmikesztyu;2000;1574;250;802;FixTools
+Létratartó;letratarto;8000;6299;80;802;ToolPro
+Kerti gereblye;kertigereblye;7000;5512;100;803;GardenTools
+Szegélyvágó;szegelyvago;12000;9449;50;803;FixTools
+Fűmagvető;fumagveto;3000;2362;200;803;GardenTools
+Gyepszellőztető;gyepszellotzeto;20000;15748;30;803;SafetyGear
+Kerti henger;kertihenger;25000;19685;20;803;FixTools
+Festék henger;festekhenger;3000;2362;150;805;PaintPro
+Alapozó festék;alapozofestek;5000;3937;80;805;FixTools
+Lakk;fakoromlakk;10000;7874;60;805;PaintPro
+Epoxi ragasztó;epoxiragaszto;15000;11811;40;805;ToolPro
+Fém csavar;femcsavar;100;79;500;806;FixTools
+Fa csavar;facsavar;120;95;400;806;ToolPro
+Műanyag csavar;mcsavar;50;39;700;806;FixTools
+Műanyag dugó;mdugo;30;24;1000;806;SafetyGear
+Vas cső;vascso;2000;1574;50;804;ToolPro
+Téglavágó;teglavago;10000;7874;30;804;FixTools
+Zsindely;zsindely;5000;3937;80;804;ToolPro
+Csempe;csempe;2000;1574;150;804;SafetyGear
+Rögzítőszalag;rogzitoszalag;500;394;200;807;FixTools
+Tetőcserép;tetocserep;1500;1181;100;807;ToolPro
+Hőszigetelő anyag;hoszigeteloanyag;20000;15748;40;807;FixTools
+Szivacs;szivacs;100;79;300;807;ToolPro
+Polírozó anyag;polirozoanyag;5000;3937;70;808;PaintPro
+Szélvédő tisztító;szelvidotisztito;2000;1574;120;808;CarCare

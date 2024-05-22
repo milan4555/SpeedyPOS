@@ -92,7 +92,7 @@ class StorageUnitController extends Controller
         try {
             $fp = pfsockopen("127.0.0.1", 9100);
         } catch (Exception $e) {
-            return \redirect()->back()->with('error', 'Sikertelen művelet! A nyomatató nem elérhető a számítógép számára a hálózaton keresztül!');
+            return \redirect()->back()->with('error', 'Sikertelen művelet! A nyomtató nem elérhető a számítógép számára a hálózaton keresztül!');
         }
         if ($labelType == 'rows') {
             $abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

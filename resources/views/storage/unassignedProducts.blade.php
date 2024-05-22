@@ -5,7 +5,7 @@
             <button onclick="window.location.href = '/storage/menu'" class="btn button-red">Vissza a menübe</button>
             <input id="unassignedSearchInput" onkeyup="unassignedLiveSearch()" class="form-control border-dark w-25 mx-2" placeholder="Kereső...">
         </div>
-        <div class="d-flex table-responsive justify-content-center" style="height: 500px">
+        <div class="d-flex table-responsive justify-content-center">
             <table id="unassignedTable" class="table border border-dark">
                 <thead class="table-dark">
                     <tr>

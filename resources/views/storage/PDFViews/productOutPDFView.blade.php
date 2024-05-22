@@ -46,15 +46,15 @@
             <td>{{$data->productId}}</td>
             <td>{{$data->productName}}</td>
             <td>{{$data->howMany}} DB</td>
-            <td>{{$data->bPrice}} Ft.</td>
             <td>{{$data->nPrice}} Ft.</td>
+            <td>{{$data->bPrice}} Ft.</td>
         </tr>
     @endforeach
     <tr>
         <td colspan="2"></td>
         <td><b>{{$orderInfo->totalnumberofitems}} db</b></td>
-        <td><b>{{$orderInfo->totalbsum}} Ft.</b></td>
         <td><b>{{$orderInfo->totalsum}} Ft.</b></td>
+        <td><b>{{$orderInfo->totalbsum}} Ft.</b></td>
     </tr>
     </tbody>
 </table>

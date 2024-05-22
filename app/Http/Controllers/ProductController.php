@@ -52,7 +52,6 @@ class ProductController extends Controller
         $validatorArray = [
             'productName' => ['required'],
             'productShortName' => ['required'],
-            'companyId' => ['required'],
             'nPrice' => ['required'],
             'bPrice' => ['required']
         ];
@@ -96,7 +95,6 @@ class ProductController extends Controller
         $validatorArray = [
             'productName' => ['required'],
             'productShortName' => ['required'],
-            'companyId' => ['required'],
         ];
         if ($request['categoryId'] != null) {
             $validatorArray['categoryId'] = ['required'];
@@ -107,7 +105,7 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->with('error', 'Sikertelen művelet! Hiányzó adatok voltak a módosítás során!')->with('updatedProduct', $request['productId']);
         }
-        if (isset($request['newCategoryName'])) {
+        if ($request['newCategoryName'] != '') {
             $newCategory = Category::create(['categoryName' => $request['newCategoryName']]);
             $request['categoryId'] = $newCategory->categoryId;
         }

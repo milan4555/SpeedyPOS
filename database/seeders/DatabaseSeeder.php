@@ -27,48 +27,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory()->create([
-            'categoryId' => 800,
-            'categoryName' => 'Random termékek'
-        ]);
-        for ($j = 0; $j < 5; $j++) {
-            StorageUnit::create([
-                'storageName' => 'Raktárhelység #'.$j+1,
-                'numberOfRows' => random_int(3,5),
-                'widthNumber' => random_int(3,7),
-                'heightNumber' => random_int(3,7)
-            ]);
-        }
-        $abc = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
-        $myfile = fopen('public/factories/products.txt', "r") or die("Unable to open file!");
-        $i = 1;
-        $productIds = [];
+        $myfile = fopen('public/factories/categories.txt', "r") or die("Unable to open file!");
         while(!feof($myfile)) {
             $line = fgets($myfile);
             $data = explode(';',$line);
             if ($data[0] != null) {
-                $productIds[] = '800'.str_repeat(0,7-strlen($i)).$i;
-                Product::factory()->create([
-                    'productId' => '800'.str_repeat(0,7-strlen($i)).$i,
-                    'productName' => $data[0],
-                    'productShortName' => $data[1],
-                    'bPrice' => $data[2],
-                    'nPrice' => round($data[2]*1.8),
-                    'stock' => 0,
-                    'categoryId' => 800,
-                ]);
-                $i++;
-            }
-        }
-        fclose($myfile);
-        $myfile = fopen('public/factories/productCodes.txt', "r") or die("Unable to open file!");
-        while(!feof($myfile)) {
-            $line = fgets($myfile);
-            $data = explode(';',$line);
-            if ($data[0] != null) {
-                productCodes::factory()->create([
-                    'productIdCode' => $productIds[random_int(0, count($productIds)-1)],
-                    'productCode' => $data[1]
+                Category::factory()->create([
+                    'categoryId' => $data[0],
+                    'categoryName' => $data[1]
                 ]);
             }
         }
@@ -92,6 +58,50 @@ class DatabaseSeeder extends Seeder
             }
         }
         fclose($myfile);
+        for ($j = 0; $j < 5; $j++) {
+            StorageUnit::create([
+                'storageName' => 'Raktárhelység #'.$j+1,
+                'numberOfRows' => random_int(3,5),
+                'widthNumber' => random_int(3,7),
+                'heightNumber' => random_int(3,7)
+            ]);
+        }
+        $abc = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
+        $myfile = fopen('public/factories/products.txt', "r") or die("Unable to open file!");
+        $productIds = [];
+        while(!feof($myfile)) {
+            $line = fgets($myfile);
+            $data = explode(';',$line);
+            if ($data[0] != null) {
+                $companyId = Company::all();
+                $indexNumber = Product::where('categoryId', $data[5])->count() + 1;
+                $productIds[] = $data[5].str_repeat(0,7-strlen($indexNumber)).$indexNumber;
+                Product::factory()->create([
+                    'productId' => $data[5].str_repeat(0,7-strlen($indexNumber)).$indexNumber,
+                    'productName' => $data[0],
+                    'productShortName' => $data[1],
+                    'bPrice' => $data[2],
+                    'nPrice' => $data[3],
+                    'stock' => $data[4],
+                    'categoryId' => $data[5],
+                    'companyId' => random_int(1,100) > 90 ? null : random_int(1, count($companyId))
+                ]);
+            }
+        }
+        fclose($myfile);
+        for ($i = 0; $i < 300; $i++) {
+            $randomCode = null;
+            while ($randomCode == null) {
+                $randomGenerated = random_int(10000000000, 99999999999);
+                if (productCodes::where('productCode', '=', $randomGenerated)->count() == 0) {
+                    $randomCode = $randomGenerated;
+                }
+            }
+            productCodes::factory()->create([
+                'productIdCode' => $productIds[random_int(0, count($productIds)-1)],
+                'productCode' => $randomGenerated
+            ]);
+        }
 
         $shortNames = ['companyName', 'companyAddress', 'shopName', 'shopAddress', 'taxNumber', 'phoneNumber'];
         $variables = ['Cég neve', 'Cég címe', 'Üzlet neve', 'Üzlet címe', 'Adószám', 'Telefonszám'];
@@ -155,9 +165,10 @@ class DatabaseSeeder extends Seeder
             $randomProductCode = $productIds[rand(0, count($productIds)-1)];
             for ($n = 0; $n < $randomInt; $n++) {
                 $storage = StorageUnit::all()->random(1)[0];
+                $index = StoragePlace::where('productId', '=', $randomProductCode)->count() + 1;
                 StoragePlace::factory()->create([
                    'productId' =>  $randomProductCode,
-                    'index' => $n+1,
+                    'index' => $index,
                     'howMany' => rand(5,15),
                     'storagePlace' => $storage->storageId.'-'.$abc[rand(0,($storage->numberOfRows-1))].rand(1, $storage->heightNumber).'-'.rand(1, $storage->widthNumber)
                 ]);

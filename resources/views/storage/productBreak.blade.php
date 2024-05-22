@@ -65,7 +65,6 @@
                     const form = document.getElementById('productBreakOrMoveForm');
                     const submitButton = document.getElementById('submitButton');
                     if (productMove.checked) {
-                        console.log(productMove.value);
                         productBreak.checked = false;
                         selectedQuantity.disabled = true;
                         form.action = '/storage/productMove/addRow';
@@ -73,7 +72,6 @@
                         submitButton.disabled = false
                     }
                     productMove.addEventListener('change', function () {
-                        console.log('ott');
                         if (productMove.checked) {
                             productBreak.checked = false;
                             selectedQuantity.disabled = true;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CashRegisterItem;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -75,6 +76,9 @@ class CompanyController extends Controller
      * ha 0 értéket kap, akkor kitörli és csak sima blokk lesz
      */
     public function addToCurrentCart($companyId) {
+        if (!UserTimeLogController::doesHaveOpenCashRegister(Auth::id())) {
+            return \redirect()->back()->with('error', 'Sikertelen művelet! A cég hozzáadásához elősször nyisd meg a kasszát!');
+        }
         DB::table('cash_register_items')
             ->where('howMany', '=', -1)
             ->delete();

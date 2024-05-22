@@ -18,7 +18,7 @@
                 <td>{{$product->productName}}</td>
                 <td>{{$product->productShortName}}</td>
                 <td>{{$product->categoryName}}</td>
-                <td>{{$product->nPrice}} Ft</td>
+                <td>{{$product->bPrice}} Ft</td>
                 <td>{{$product->stock}} db</td>
                 <td><button class="btn button-blue btn-sm"
                        data-bs-toggle="collapse"

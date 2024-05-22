@@ -46,7 +46,7 @@ class CashRegisterItemController extends Controller
                         'productIdReg' => $productIdReg->productId,
                         'cashRegisterNumber' => 1,
                         'howMany' => count($input) == 2 ? $input[0] : 1,
-                        'currentPrice' => Product::find($productIdReg->productId)->nPrice
+                        'currentPrice' => Product::find($productIdReg->productId)->bPrice
                     ];
                     cashRegisterItem::create($addItem);
                     Product::find($productIdReg->productId)->decrement('stock', count($input) == 2 ? $input[0] : 1);

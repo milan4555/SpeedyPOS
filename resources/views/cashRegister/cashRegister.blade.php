@@ -61,16 +61,16 @@
                     </tr>
                 @endforeach
             @endif
-            @endif
             </tbody>
         </table>
-        @include('cashRegister/modals/_changeModal')
-        <script>
-            document.addEventListener('click', function(e) {
-                const checkBox = document.getElementById('productCheckbox' + e.target.parentNode.dataset.productid);
+    @endif
+    @include('cashRegister/modals/_changeModal')
+    <script>
+        document.addEventListener('click', function(e) {
+            const checkBox = document.getElementById('productCheckbox' + e.target.parentNode.dataset.productid);
                 checkBox.checked = !checkBox.checked;
             });
-        </script>
+    </script>
 @endsection
 
 @section('buttons')
